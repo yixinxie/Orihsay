@@ -48,6 +48,7 @@ int WINAPI WinMain(HINSTANCE hInstance,
 	HWND window = systemInit(hInstance, nCmdShow);
 	DirectX11* renderer = new DirectX11();
 	renderer->init(window);
+	renderer->initQuadBuffer();
 	MSG msg = gameLoop(renderer);
 	// return this part of the WM_QUIT message to Windows
 	return msg.wParam;
@@ -126,6 +127,7 @@ MSG gameLoop(DirectX11* renderer){
 		sceneManager.update();
 		renderer->renderFrame();
 	}
+	renderer->disposeQuadBuffer();
 	renderer->close();
 	delete renderer;
 	return msg;

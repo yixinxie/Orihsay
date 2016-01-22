@@ -119,5 +119,16 @@
     <ClInclude Include="components\Panel.h">
       <Filter>Source Files\components</Filter>
     </ClInclude>
+    <ClInclude Include="misc\CharHelper.h">
+      <Filter>Source Files\misc</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <FxCompile Include="dx\shaders\uiquad_vs.hlsl">
+      <Filter>Source Files\dx</Filter>
+    </FxCompile>
+    <FxCompile Include="dx\shaders\uiquad_ps.hlsl">
+      <Filter>Source Files\dx</Filter>
+    </FxCompile>
   </ItemGroup>
 </Project>

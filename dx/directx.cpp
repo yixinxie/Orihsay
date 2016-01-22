@@ -70,8 +70,123 @@ void DirectX11::renderFrame(void)
 	// clear the back buffer to a deep blue
 	devcon->ClearRenderTargetView(backbuffer, D3DXCOLOR(0.0f, 0.2f, 0.4f, 1.0f));
 
-	// do 3D rendering on the back buffer here
+	// clear the back buffer to a deep blue
+	float color[4] = { 0.0f, 0.2f, 0.4f, 1.0f };
+	//devcon->ClearRenderTargetView(rendertarget.Get(), color);
+
+	// set our new render target object as the active render target
+	devcon->OMSetRenderTargets(1, &backbuffer, nullptr);
+
+	// set the vertex buffer
+	UINT stride = sizeof(D3DXVECTOR3);
+	UINT offset = 0;
+	devcon->IASetVertexBuffers(0, 1, &vertexbuffer, &stride, &offset);
+
+	// set the primitive topology
+	devcon->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+
+	// draw 3 vertices, starting from vertex 0
+	devcon->Draw(3, 0);
 
 	// switch the back buffer and the front buffer
-	swapchain->Present(0, 0);
+	swapchain->Present(1, 0);
+	//swapchain->Present(0, 0);
+}
+void DirectX11::initQuadBuffer(void){
+	D3DXVECTOR3 OurVertices[] =
+	{
+		{ 0.0f, 0.5f, 0.0f },
+		{ 0.45f, -0.5f, 0.0f },
+		{ -0.45f, -0.5f, 0.0f },
+	};
+
+	D3D11_BUFFER_DESC bd = { 0 };
+	bd.ByteWidth = sizeof(D3DXVECTOR3) * ARRAYSIZE(OurVertices);
+	bd.BindFlags = D3D11_BIND_VERTEX_BUFFER;
+	
+
+	D3D11_SUBRESOURCE_DATA srd = { OurVertices, 0, 0 };
+
+	dev->CreateBuffer(&bd, &srd, &vertexbuffer);
+
+
+	CharBuffer* vsBuffer = LoadShaderFile("uiquad_vs.cso");
+	dev->CreateVertexShader(vsBuffer->buffer, vsBuffer->length, nullptr, &vertexshader);
+
+	CharBuffer* psBuffer = LoadShaderFile("uiquad_ps.cso");
+	dev->CreatePixelShader(psBuffer->buffer, psBuffer->length, nullptr, &pixelshader);
+
+	/*delete vsBuffer->buffer;
+	delete vsBuffer;
+
+	delete psBuffer->buffer;
+	delete psBuffer;*/
+
+	devcon->VSSetShader(vertexshader, nullptr, 0);
+	devcon->PSSetShader(pixelshader, nullptr, 0);
+
+	// initialize input layout
+	D3D11_INPUT_ELEMENT_DESC ied[] =
+	{
+		{ "POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 0, D3D11_INPUT_PER_VERTEX_DATA, 0 },
+	};
+
+	// create and set the input layout
+	dev->CreateInputLayout(ied, ARRAYSIZE(ied), vsBuffer->buffer, vsBuffer->length, &inputlayout);
+	devcon->IASetInputLayout(inputlayout);
+	
+	// set the viewport
+	D3D11_VIEWPORT viewport = { 0 };
+
+	viewport.TopLeftX = 0;
+	viewport.TopLeftY = 0;
+	viewport.Width = 300;
+	viewport.Height = 200;
+
+	devcon->RSSetViewports(1, &viewport);
+}
+void DirectX11::disposeQuadBuffer(){
+	if (vertexshader != nullptr){
+		vertexshader->Release();
+
+	}
+	if (pixelshader != nullptr){
+		pixelshader->Release();
+
+	}
+
+	if (vertexbuffer != nullptr){
+		pixelshader->Release();
+
+	}
+	
+	if (inputlayout != nullptr){
+		inputlayout->Release();
+
+	}
+}
+
+
+CharBuffer* DirectX11::LoadShaderFile(std::string File)
+{
+	CharBuffer* fileData = new CharBuffer;
+
+	// open the file
+	std::ifstream shaderFile(File, std::ios::in | std::ios::binary | std::ios::ate);
+
+	// if open was successful
+	if (shaderFile.is_open())
+	{
+		// find the length of the file
+		int Length = (int)shaderFile.tellg();
+
+		// collect the file data
+		fileData->buffer = new char[Length];
+		fileData->length = Length;
+		shaderFile.seekg(0, std::ios::beg);
+		shaderFile.read(fileData->buffer, Length);
+		shaderFile.close();
+		
+	}
+	return fileData;
 }
