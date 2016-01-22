@@ -100,8 +100,8 @@ HWND systemInit(const HINSTANCE instance, const int cmdShow){
 		WS_OVERLAPPEDWINDOW,    // window style
 		300,    // x-position of the window
 		300,    // y-position of the window
-		500,    // width of the window
-		400,    // height of the window
+		800,    // width of the window
+		600,    // height of the window
 		NULL,    // we have no parent window, NULL
 		NULL,    // we aren't using menus, NULL
 		instance,    // application handle
