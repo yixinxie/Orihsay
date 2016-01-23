@@ -5,8 +5,8 @@
 #include <d3dx11.h>
 #include <d3dx10.h>
 #include "../misc/CharHelper.h"
-#include <fstream>
 
+#define SAFE_RELEASE(h) if(h != nullptr){(h)->Release();}
 // include the Direct3D Library file
 #pragma comment (lib, "d3d11.lib")
 #pragma comment (lib, "d3dx11.lib")

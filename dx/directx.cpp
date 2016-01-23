@@ -104,10 +104,10 @@ void DirectX11::initQuadBuffer(void){
 	dev->CreateBuffer(&bd, &srd, &vertexbuffer);
 
 	// shader
-	CharBuffer* vsBuffer = LoadShaderFile("uiquad_vs.cso");
+	CharBuffer* vsBuffer = CharHelper::loadFile("uiquad_vs.cso");
 	dev->CreateVertexShader(vsBuffer->buffer, vsBuffer->length, nullptr, &vertexshader);
 
-	CharBuffer* psBuffer = LoadShaderFile("uiquad_ps.cso");
+	CharBuffer* psBuffer = CharHelper::loadFile("uiquad_ps.cso");
 	dev->CreatePixelShader(psBuffer->buffer, psBuffer->length, nullptr, &pixelshader);
 
 	/*delete vsBuffer->buffer;
@@ -131,47 +131,10 @@ void DirectX11::initQuadBuffer(void){
 
 }
 void DirectX11::disposeQuadBuffer(){
-	if (vertexshader != nullptr){
-		vertexshader->Release();
-
-	}
-	if (pixelshader != nullptr){
-		pixelshader->Release();
-
-	}
-
-	if (vertexbuffer != nullptr){
-		pixelshader->Release();
-
-	}
-	
-	if (inputlayout != nullptr){
-		inputlayout->Release();
-
-	}
+	SAFE_RELEASE(vertexshader);
+	SAFE_RELEASE(pixelshader);
+	SAFE_RELEASE(vertexbuffer);
+	SAFE_RELEASE(inputlayout);
 }
 
 
-CharBuffer* DirectX11::LoadShaderFile(std::string File)
-{
-	CharBuffer* fileData = new CharBuffer;
-
-	// open the file
-	std::ifstream shaderFile(File, std::ios::in | std::ios::binary | std::ios::ate);
-
-	// if open was successful
-	if (shaderFile.is_open())
-	{
-		// find the length of the file
-		int Length = (int)shaderFile.tellg();
-
-		// collect the file data
-		fileData->buffer = new char[Length];
-		fileData->length = Length;
-		shaderFile.seekg(0, std::ios::beg);
-		shaderFile.read(fileData->buffer, Length);
-		shaderFile.close();
-		
-	}
-	return fileData;
-}

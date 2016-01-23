@@ -79,16 +79,19 @@
   <ItemGroup>
     <ClCompile Include="components\Panel.cpp" />
     <ClCompile Include="dx\directx.cpp" />
+    <ClCompile Include="dx\DXInstancing.cpp" />
     <ClCompile Include="gameplay\GameObject.cpp" />
     <ClCompile Include="gameplay\MonoBehaviour.cpp" />
     <ClCompile Include="gameplay\Scene.cpp" />
     <ClCompile Include="gameplay\SceneManager.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="misc\CharHelper.cpp" />
     <ClCompile Include="misc\ClassFactory.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="components\Panel.h" />
     <ClInclude Include="dx\directx.h" />
+    <ClInclude Include="dx\DXInstancing.h" />
     <ClInclude Include="gameplay\GameObject.h" />
     <ClInclude Include="gameplay\MonoBehaviour.h" />
     <ClInclude Include="gameplay\Scene.h" />

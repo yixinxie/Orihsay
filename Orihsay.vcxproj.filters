@@ -54,6 +54,12 @@
     <ClCompile Include="misc\ClassFactory.cpp">
       <Filter>Source Files\misc</Filter>
     </ClCompile>
+    <ClCompile Include="dx\DXInstancing.cpp">
+      <Filter>Source Files\dx</Filter>
+    </ClCompile>
+    <ClCompile Include="misc\CharHelper.cpp">
+      <Filter>Source Files\misc</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="dx\directx.h">
@@ -121,6 +127,9 @@
     </ClInclude>
     <ClInclude Include="misc\CharHelper.h">
       <Filter>Source Files\misc</Filter>
+    </ClInclude>
+    <ClInclude Include="dx\DXInstancing.h">
+      <Filter>Source Files\dx</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
