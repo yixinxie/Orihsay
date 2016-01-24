@@ -24,14 +24,6 @@ private:
 
 	ID3D11RenderTargetView *backbuffer;
 
-	// used by the first iteration draw triangle
-	ID3D11InputLayout* inputlayout;
-	ID3D11Buffer* vertexbuffer;
-
-	ID3D11VertexShader* vertexshader;
-	ID3D11PixelShader* pixelshader;
-
-
 	// instancing
 	DXInstancing* instancedDraw;
 public:
@@ -43,9 +35,5 @@ public:
 	void initInstancing(void);
 	void disposeInstancing(void);
 	void renderWithInstancing(void);
-
-	void initQuadBuffer(void);
-	void disposeQuadBuffer(void);
-	
 
 };

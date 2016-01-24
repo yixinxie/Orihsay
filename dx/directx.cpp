@@ -43,7 +43,6 @@ void DirectX11::init(HWND hWnd)
 	// set the render target as the back buffer -----------camera dependent
 	devcon->OMSetRenderTargets(1, &backbuffer, NULL);
 
-
 	// Set the viewport -----------------camera dependent
 	D3D11_VIEWPORT viewport;
 	ZeroMemory(&viewport, sizeof(D3D11_VIEWPORT));
@@ -65,84 +64,10 @@ void DirectX11::close()
 }
 
 
-void DirectX11::renderFrame(void)
-{
-	// clear the back buffer to a deep blue
-	devcon->ClearRenderTargetView(backbuffer, D3DXCOLOR(0.0f, 0.2f, 0.4f, 1.0f));
-
-	//devcon->OMSetRenderTargets(1, &backbuffer, nullptr);
-
-	// set the vertex buffer
-	UINT stride = sizeof(D3DXVECTOR3);
-	UINT offset = 0;
-	devcon->IASetVertexBuffers(0, 1, &vertexbuffer, &stride, &offset);
-
-	// set the primitive topology
-	devcon->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
-
-	// draw 3 vertices, starting from vertex 0
-	devcon->Draw(3, 0);
-
-	// switch the back buffer and the front buffer
-	swapchain->Present(1, 0);
-	//swapchain->Present(0, 0);
-}
-void DirectX11::initQuadBuffer(void){
-	// vertex buffer
-	D3DXVECTOR3 OurVertices[] =
-	{
-		{ 0.0f, 0.5f, 0.0f },
-		{ 0.45f, -0.5f, 0.0f },
-		{ -0.45f, -0.5f, 0.0f },
-	};
-
-	D3D11_BUFFER_DESC bd = { 0 };
-	bd.ByteWidth = sizeof(D3DXVECTOR3) * ARRAYSIZE(OurVertices);
-	bd.BindFlags = D3D11_BIND_VERTEX_BUFFER;	
-
-	D3D11_SUBRESOURCE_DATA srd = { OurVertices, 0, 0 };
-	dev->CreateBuffer(&bd, &srd, &vertexbuffer);
-
-	// shader
-	CharBuffer* vsBuffer = CharHelper::loadFile("uiquad_vs.cso");
-	dev->CreateVertexShader(vsBuffer->buffer, vsBuffer->length, nullptr, &vertexshader);
-
-	CharBuffer* psBuffer = CharHelper::loadFile("uiquad_ps.cso");
-	dev->CreatePixelShader(psBuffer->buffer, psBuffer->length, nullptr, &pixelshader);
-
-	/*delete vsBuffer->buffer;
-	delete vsBuffer;
-
-	delete psBuffer->buffer;
-	delete psBuffer;*/
-
-	devcon->VSSetShader(vertexshader, nullptr, 0);
-	devcon->PSSetShader(pixelshader, nullptr, 0);
-
-	// input layout
-	D3D11_INPUT_ELEMENT_DESC ied[] =
-	{
-		{ "POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 0, D3D11_INPUT_PER_VERTEX_DATA, 0 },
-	};
-
-	// create and set the input layout
-	dev->CreateInputLayout(ied, ARRAYSIZE(ied), vsBuffer->buffer, vsBuffer->length, &inputlayout);
-	devcon->IASetInputLayout(inputlayout);
-
-}
-void DirectX11::disposeQuadBuffer(){
-	SAFE_RELEASE(vertexshader);
-	SAFE_RELEASE(pixelshader);
-	SAFE_RELEASE(vertexbuffer);
-	SAFE_RELEASE(inputlayout);
-}
-
 
 void DirectX11::initInstancing(){
 	instancedDraw = new DXInstancing(dev, devcon);
 	instancedDraw->init();
-	instancedDraw->initShaders();
-
 }
 void DirectX11::disposeInstancing(){
 	SAFE_DISPOSE(instancedDraw);

@@ -34,10 +34,13 @@ private:
 	//};
 	
 	//MatrixBufferStruct matrixBuffer;
+	void initShadersAndInputLayout(void);
+	void initQuadBuffer(void);
 public:
 	DXInstancing(ID3D11Device *_dev, ID3D11DeviceContext *_devcon);
 	void init(void);
-	void initShaders(void);
+	void updateInstanceBuffer(void);
+	
 	void render(void);
 	void dispose(void);
 };
