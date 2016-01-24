@@ -34,5 +34,5 @@ public:
 
 	void initQuadBuffer(void);
 	void disposeQuadBuffer(void);
-	CharBuffer* LoadShaderFile(std::string File);
+
 };

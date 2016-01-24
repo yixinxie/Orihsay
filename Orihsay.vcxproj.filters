@@ -139,5 +139,11 @@
     <FxCompile Include="dx\shaders\uiquad_ps.hlsl">
       <Filter>Source Files\dx</Filter>
     </FxCompile>
+    <FxCompile Include="dx\shaders\instanced_quad_ps.hlsl">
+      <Filter>Source Files\dx</Filter>
+    </FxCompile>
+    <FxCompile Include="dx\shaders\instanced_quad_vs.hlsl">
+      <Filter>Source Files\dx</Filter>
+    </FxCompile>
   </ItemGroup>
 </Project>

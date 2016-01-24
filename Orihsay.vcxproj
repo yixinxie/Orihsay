@@ -114,6 +114,12 @@
     <ClInclude Include="rapidjson\writer.h" />
   </ItemGroup>
   <ItemGroup>
+    <FxCompile Include="dx\shaders\instanced_quad_ps.hlsl">
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Pixel</ShaderType>
+    </FxCompile>
+    <FxCompile Include="dx\shaders\instanced_quad_vs.hlsl">
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Vertex</ShaderType>
+    </FxCompile>
     <FxCompile Include="dx\shaders\uiquad_ps.hlsl">
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Pixel</ShaderType>
     </FxCompile>

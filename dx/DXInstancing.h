@@ -13,19 +13,24 @@ private:
 	ID3D11Buffer* instanceBuffer;
 	ID3D11Buffer* vertexbuffer;
 	int instanceCount;
+	// per instance data
 	struct InstanceStruct{
 		D3DXVECTOR3 position;
 	};
 	InstanceStruct* instances;
 
-	struct MatrixBufferStruct
-	{
-		D3DXMATRIX world;
-		D3DXMATRIX view;
-		D3DXMATRIX projection;
+	struct PerVertexData{
+		D3DXVECTOR3 position;
 	};
+
+	//struct MatrixBufferStruct
+	//{
+	//	D3DXMATRIX world;
+	//	D3DXMATRIX view;
+	//	D3DXMATRIX projection;
+	//};
 	
-	MatrixBufferStruct matrixBuffer;
+	//MatrixBufferStruct matrixBuffer;
 public:
 	DXInstancing(ID3D11Device *_dev, ID3D11DeviceContext *_devcon);
 	void init(void);
