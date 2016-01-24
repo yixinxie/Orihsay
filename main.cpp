@@ -48,7 +48,7 @@ int WINAPI WinMain(HINSTANCE hInstance,
 	HWND window = systemInit(hInstance, nCmdShow);
 	DirectX11* renderer = new DirectX11();
 	renderer->init(window);
-	renderer->initQuadBuffer();
+	
 	MSG msg = gameLoop(renderer);
 	// return this part of the WM_QUIT message to Windows
 	return msg.wParam;
@@ -114,7 +114,8 @@ HWND systemInit(const HINSTANCE instance, const int cmdShow){
 MSG gameLoop(DirectX11* renderer){
 	MSG msg;
 	SceneManager sceneManager;
-	
+	//renderer->initQuadBuffer();
+	renderer->initInstancing();
 	registerComponentClasses();
 	
 	while (GetMessage(&msg, NULL, 0, 0))
@@ -125,9 +126,11 @@ MSG gameLoop(DirectX11* renderer){
 		// send the message to the WindowProc function
 		DispatchMessage(&msg);
 		sceneManager.update();
-		renderer->renderFrame();
+		//renderer->renderFrame();
+		renderer->renderWithInstancing();
 	}
-	renderer->disposeQuadBuffer();
+	//renderer->disposeQuadBuffer();
+	renderer->disposeInstancing();
 	renderer->close();
 	delete renderer;
 	return msg;

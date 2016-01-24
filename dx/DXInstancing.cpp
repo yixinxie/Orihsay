@@ -1,17 +1,26 @@
 #include "DXInstancing.h"
+#include "directx.h"
 #include "../misc/CharHelper.h"
 DXInstancing::DXInstancing(ID3D11Device *_dev, ID3D11DeviceContext *_devcon) :dev(_dev), devcon(_devcon){
-
+	inputLayout = nullptr;
+	vertexShader = nullptr;
+	pixelShader = nullptr;
 }
 void DXInstancing::initShaders(){
 	HRESULT hr;
 	// shader
 
 	CharBuffer* vsBuffer = CharHelper::loadFile("instanced_quad_vs.cso");
-	dev->CreateVertexShader(vsBuffer->buffer, vsBuffer->length, nullptr, &vertexShader);
+	hr = dev->CreateVertexShader(vsBuffer->buffer, vsBuffer->length, nullptr, &vertexShader);
+	if (FAILED(hr)){
+		TRACE("vertex shader create failed");
+	}
 
 	CharBuffer* psBuffer = CharHelper::loadFile("instanced_quad_ps.cso");
-	dev->CreatePixelShader(psBuffer->buffer, psBuffer->length, nullptr, &pixelShader);
+	hr = dev->CreatePixelShader(psBuffer->buffer, psBuffer->length, nullptr, &pixelShader);
+	if (FAILED(hr)){
+		TRACE("pixel shader create failed");
+	}
 
 	/*delete vsBuffer->buffer;
 	delete vsBuffer;
@@ -52,22 +61,6 @@ void DXInstancing::initShaders(){
 	if (FAILED(hr)){
 		TRACE("input layout create error!");
 	}
-
-	// Setup the description of the dynamic matrix constant buffer that is in the vertex shader.
-	//D3D11_BUFFER_DESC matrixBufferDesc = {
-	//	D3D11_USAGE_DYNAMIC,
-	//	sizeof(MatrixBufferStruct),
-	//	D3D11_BIND_CONSTANT_BUFFER,
-	//	D3D11_CPU_ACCESS_WRITE,
-	//	0,
-	//	0 };
-
-	//// Create the constant buffer pointer so we can access the vertex shader constant buffer from within this class.
-	//hr = dev->CreateBuffer(&matrixBufferDesc, NULL, &m_matrixBuffer);
-	//if (FAILED(hr))
-	//{
-	//}
-
 }
 void DXInstancing::init(){
 	HRESULT hr;
@@ -76,8 +69,7 @@ void DXInstancing::init(){
 	{
 		{ { 0.0f, 0.5f, 0.0f } },
 		{ {0.45f, -0.5f, 0.0f } },
-		{ {-0.45f, -0.5f, 0.0f }
-},
+		{ {-0.45f, -0.5f, 0.0f } },
 	};
 
 	D3D11_BUFFER_DESC bd = { 0 };
@@ -86,9 +78,9 @@ void DXInstancing::init(){
 
 	D3D11_SUBRESOURCE_DATA srd = { quadVertices, 0, 0 };
 
-	hr = dev->CreateBuffer(&bd, &srd, &vertexbuffer);
+	hr = dev->CreateBuffer(&bd, &srd, &vertexBuffer);
 	if (FAILED(hr)){
-
+		TRACE("vertex buffer create failed!");
 	}
 	//// INSTANCE BUFFER
 	{
@@ -97,10 +89,10 @@ void DXInstancing::init(){
 		instances = new InstanceStruct[instanceCount];
 
 		// Load the instance array with data.
-		instances[0].position = D3DXVECTOR3(-1.5f, -1.5f, 5.0f);
-		instances[1].position = D3DXVECTOR3(-1.5f, 1.5f, 5.0f);
-		instances[2].position = D3DXVECTOR3(1.5f, -1.5f, 5.0f);
-		instances[3].position = D3DXVECTOR3(1.5f, 1.5f, 5.0f);
+		instances[0].position = D3DXVECTOR3(0.1f, 0.1f, 0.1f);
+		instances[1].position = D3DXVECTOR3(-0.1f, 0.1f, 0.1f);
+		instances[2].position = D3DXVECTOR3(-0.1f, -0.1f, 0.1f);
+		instances[3].position = D3DXVECTOR3(0.1f, -0.1f, 0.1f);
 
 		D3D11_BUFFER_DESC instanceBufferDesc = { sizeof(InstanceStruct) * instanceCount,
 			D3D11_USAGE_DYNAMIC, //D3D11_USAGE_DEFAULT,
@@ -109,35 +101,21 @@ void DXInstancing::init(){
 			0,
 			0
 		};
-
-		//D3D11_BUFFER_DESC matrixBufferDesc = {
-		//	D3D11_USAGE_DYNAMIC,
-		//	sizeof(MatrixBufferStruct),
-		//	D3D11_BIND_CONSTANT_BUFFER,
-		//	D3D11_CPU_ACCESS_WRITE,
-		//	0,
-		//	0 };
 		D3D11_SUBRESOURCE_DATA srd = { instances, 0, 0 };
 
 		// Create the instance buffer.
 		hr = dev->CreateBuffer(&instanceBufferDesc, &srd, &instanceBuffer);
 		if (FAILED(hr))
 		{
-
+			TRACE("per instance buffer create failed!");
 		}
-
-	// Release the instance array now that the instance buffer has been created and loaded.
-
 	}
 
-	{
-		
-	}
 
 }
 void DXInstancing::render(){
 	// Set the vertex input layout.
-
+	
 	unsigned int strides[2];
 	unsigned int offsets[2];
 	ID3D11Buffer* bufferPointers[2];
@@ -157,7 +135,7 @@ void DXInstancing::render(){
 	//Next we create an array that holds the pointers to the vertex buffer and the instance buffer.
 
 	// Set the array of pointers to the vertex and instance buffers.
-	bufferPointers[0] = vertexbuffer;
+	bufferPointers[0] = vertexBuffer;
 	bufferPointers[1] = instanceBuffer;
 	//Finally we set both the vertex buffer and the instance buffer on the device context in the same call.
 
@@ -179,6 +157,10 @@ void DXInstancing::render(){
 	devcon->DrawInstanced(3, instanceCount, 0, 0);
 }
 void DXInstancing::dispose(){
-	SAFE_RELEASE(vertexbuffer);
+	SAFE_RELEASE(vertexBuffer);
 	SAFE_RELEASE(instanceBuffer);
+	SAFE_RELEASE(vertexShader);
+	SAFE_RELEASE(pixelShader);
+	SAFE_RELEASE(inputLayout);
+
 }

@@ -138,3 +138,21 @@ void DirectX11::disposeQuadBuffer(){
 }
 
 
+void DirectX11::initInstancing(){
+	instancedDraw = new DXInstancing(dev, devcon);
+	instancedDraw->init();
+	instancedDraw->initShaders();
+
+}
+void DirectX11::disposeInstancing(){
+	SAFE_DISPOSE(instancedDraw);
+}
+void DirectX11::renderWithInstancing(){
+	HRESULT hr;
+	devcon->ClearRenderTargetView(backbuffer, D3DXCOLOR(0.0f, 0.2f, 0.4f, 1.0f));
+	instancedDraw->render();
+	hr = swapchain->Present(1, 0);
+	if (FAILED(hr)){
+		TRACE("present failed!");
+	}
+}

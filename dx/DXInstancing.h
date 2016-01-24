@@ -1,4 +1,7 @@
-#include "directx.h"
+#pragma once
+#include <d3d11.h>
+#include <d3dx11.h>
+#include <d3dx10.h>
 class DXInstancing{
 private:
 	ID3D11Device *dev;
@@ -11,7 +14,7 @@ private:
 	ID3D11PixelShader* pixelShader;
 
 	ID3D11Buffer* instanceBuffer;
-	ID3D11Buffer* vertexbuffer;
+	ID3D11Buffer* vertexBuffer;
 	int instanceCount;
 	// per instance data
 	struct InstanceStruct{
