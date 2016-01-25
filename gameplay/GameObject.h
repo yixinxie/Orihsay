@@ -1,6 +1,10 @@
-#include "MonoBehaviour.h"
+#pragma once
 #include <vector>
+#include "MonoBehaviour.h"
+class Transform;
+
 using namespace std;
+
 class GameObject{
 private:
 	GameObject(void);
@@ -9,6 +13,7 @@ private:
 	void dispose(void);
 	
 public:
+	Transform* transform;
 
 	static GameObject* instantiate(void);
 	static GameObject* create(void);

@@ -5,6 +5,7 @@
 #include <d3d11.h>
 #include <d3dx11.h>
 #include <d3dx10.h>
+#include "../graphics/Renderer.h"
 #include "DXInstancing.h"
 #include "../misc/CharHelper.h"
 
@@ -16,24 +17,22 @@
 #pragma comment (lib, "d3dx11.lib")
 #pragma comment (lib, "d3dx10.lib")
 
-class DirectX11{
+class DirectX11 : public Renderer{
 private:
-	IDXGISwapChain *swapchain;             // the pointer to the swap chain interface
-	ID3D11Device *dev;                     // the pointer to our Direct3D device interface
-	ID3D11DeviceContext *devcon;           // the pointer to our Direct3D device context
+	IDXGISwapChain* swapchain;             // the pointer to the swap chain interface
+	ID3D11Device* dev;                     // the pointer to our Direct3D device interface
+	ID3D11DeviceContext* devcon;           // the pointer to our Direct3D device context
 
-	ID3D11RenderTargetView *backbuffer;
+	ID3D11RenderTargetView* backbuffer;
 
 	// instancing
 	DXInstancing* instancedDraw;
 public:
 	DirectX11(void);
-	void init(HWND hwnd);
+	void init(HWND hWnd, int _width, int _height);
 	void close(void);
-	void renderFrame(void);
-
 	void initInstancing(void);
 	void disposeInstancing(void);
-	void renderWithInstancing(void);
+	void render(void);
 
 };

@@ -1,6 +1,9 @@
 #include "GameObject.h"
+#include "Transform.h"
 GameObject::GameObject(void){
-
+	//transform.setGameObject(this);
+	transform = new Transform();
+	transform->setGameObject(this);
 }
 GameObject* GameObject::instantiate(){
 	GameObject* res = nullptr;

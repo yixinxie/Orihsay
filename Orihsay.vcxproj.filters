@@ -28,6 +28,12 @@
     <Filter Include="Source Files\components">
       <UniqueIdentifier>{fea1cfae-0047-4e40-b8d8-00699f25f3fe}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\math">
+      <UniqueIdentifier>{d8402f32-26c3-41e3-b699-3aa9c7b9ac95}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\graphics">
+      <UniqueIdentifier>{181bf48c-e63a-4781-b79f-a8f6dd76c330}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -59,6 +65,15 @@
     </ClCompile>
     <ClCompile Include="misc\CharHelper.cpp">
       <Filter>Source Files\misc</Filter>
+    </ClCompile>
+    <ClCompile Include="components\Camera.cpp">
+      <Filter>Source Files\components</Filter>
+    </ClCompile>
+    <ClCompile Include="Graphics\Renderer.cpp">
+      <Filter>Source Files\graphics</Filter>
+    </ClCompile>
+    <ClCompile Include="gameplay\Transform.cpp">
+      <Filter>Source Files\gameplay</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -130,6 +145,18 @@
     </ClInclude>
     <ClInclude Include="dx\DXInstancing.h">
       <Filter>Source Files\dx</Filter>
+    </ClInclude>
+    <ClInclude Include="components\Camera.h">
+      <Filter>Source Files\components</Filter>
+    </ClInclude>
+    <ClInclude Include="math\EasyMath.h">
+      <Filter>Source Files\math</Filter>
+    </ClInclude>
+    <ClInclude Include="graphics\Renderer.h">
+      <Filter>Source Files\graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="gameplay\Transform.h">
+      <Filter>Source Files\gameplay</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

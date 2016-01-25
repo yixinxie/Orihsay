@@ -1,9 +1,7 @@
 #include <iostream>
 #include <windows.h>
 #include <windowsx.h>
-#include <d3d11.h>
-#include <d3dx11.h>
-#include <d3dx10.h>
+#include "graphics/Renderer.h"
 #include "dx/directx.h"
 
 #include "rapidjson/document.h"
@@ -19,8 +17,8 @@ LRESULT CALLBACK WindowProc(HWND hWnd,
 	UINT message,
 	WPARAM wParam,
 	LPARAM lParam);
-HWND systemInit(const HINSTANCE instance, const int cmdShow);
-MSG gameLoop(DirectX11* renderer);
+HWND systemInit(const HINSTANCE instance, const int cmdShow, const int width, const int height);
+MSG gameLoop(Renderer* renderer);
 void testjson(void){
 	const char* json = "{\"project\":\"rapidjson\",\"stars\":10}";
 	Document d;
@@ -45,9 +43,10 @@ int WINAPI WinMain(HINSTANCE hInstance,
 {
 	testjson();
 	// the handle for the window, filled by a function
-	HWND window = systemInit(hInstance, nCmdShow);
-	DirectX11* renderer = new DirectX11();
-	renderer->init(window);
+	HWND window = systemInit(hInstance, nCmdShow, 800, 600);
+	Renderer* renderer = new DirectX11();
+	G::instance()->renderer = renderer;
+	renderer->init(window, 800, 600);
 	
 	MSG msg = gameLoop(renderer);
 	// return this part of the WM_QUIT message to Windows
@@ -72,7 +71,7 @@ LRESULT CALLBACK WindowProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lPara
 	// Handle any messages the switch statement didn't
 	return DefWindowProc(hWnd, message, wParam, lParam);
 }
-HWND systemInit(const HINSTANCE instance, const int cmdShow){
+HWND systemInit(const HINSTANCE instance, const int cmdShow, const int width, const int height){
 	HWND hWnd;
 
 	// this struct holds information for the window class
@@ -100,8 +99,8 @@ HWND systemInit(const HINSTANCE instance, const int cmdShow){
 		WS_OVERLAPPEDWINDOW,    // window style
 		300,    // x-position of the window
 		300,    // y-position of the window
-		800,    // width of the window
-		600,    // height of the window
+		width,    // width of the window
+		height,    // height of the window
 		NULL,    // we have no parent window, NULL
 		NULL,    // we aren't using menus, NULL
 		instance,    // application handle
@@ -111,7 +110,7 @@ HWND systemInit(const HINSTANCE instance, const int cmdShow){
 	ShowWindow(hWnd, cmdShow);
 	return hWnd;
 }
-MSG gameLoop(DirectX11* renderer){
+MSG gameLoop(Renderer* renderer){
 	MSG msg;
 	SceneManager sceneManager;
 	//renderer->initQuadBuffer();
@@ -127,7 +126,7 @@ MSG gameLoop(DirectX11* renderer){
 		DispatchMessage(&msg);
 		sceneManager.update();
 		//renderer->renderFrame();
-		renderer->renderWithInstancing();
+		renderer->render();
 	}
 	//renderer->disposeQuadBuffer();
 	renderer->disposeInstancing();

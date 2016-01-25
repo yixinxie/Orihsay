@@ -1,8 +1,11 @@
 #include "directx.h"
 DirectX11::DirectX11(void){
 }
-void DirectX11::init(HWND hWnd)
+void DirectX11::init(HWND hWnd, int _width, int _height)
 {
+	mainCameraTransform = nullptr;
+	width = _width;
+	height = _height;
 	// create a struct to hold information about the swap chain
 	DXGI_SWAP_CHAIN_DESC scd;
 
@@ -49,8 +52,8 @@ void DirectX11::init(HWND hWnd)
 
 	viewport.TopLeftX = 0;
 	viewport.TopLeftY = 0;
-	viewport.Width = 800;
-	viewport.Height = 600;
+	viewport.Width = width;
+	viewport.Height = height;
 
 	devcon->RSSetViewports(1, &viewport);
 }
@@ -72,7 +75,7 @@ void DirectX11::initInstancing(){
 void DirectX11::disposeInstancing(){
 	SAFE_DISPOSE(instancedDraw);
 }
-void DirectX11::renderWithInstancing(){
+void DirectX11::render(){
 	HRESULT hr;
 	devcon->ClearRenderTargetView(backbuffer, D3DXCOLOR(0.0f, 0.2f, 0.4f, 1.0f));
 	instancedDraw->render();

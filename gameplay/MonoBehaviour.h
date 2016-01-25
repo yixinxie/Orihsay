@@ -1,8 +1,10 @@
+#pragma once
+class GameObject;
 class MonoBehaviour{
 private:
-	
 
 public:
+	GameObject* gameObject;
 	MonoBehaviour();
 	virtual void awake(void);
 	virtual void start(void);
