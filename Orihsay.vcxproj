@@ -101,6 +101,7 @@
     <ClInclude Include="gameplay\Scene.h" />
     <ClInclude Include="gameplay\SceneManager.h" />
     <ClInclude Include="gameplay\Transform.h" />
+    <ClInclude Include="graphics\CameraParameters.h" />
     <ClInclude Include="graphics\Renderer.h" />
     <ClInclude Include="math\EasyMath.h" />
     <ClInclude Include="misc\CharHelper.h" />

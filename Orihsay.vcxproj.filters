@@ -158,6 +158,9 @@
     <ClInclude Include="gameplay\Transform.h">
       <Filter>Source Files\gameplay</Filter>
     </ClInclude>
+    <ClInclude Include="graphics\CameraParameters.h">
+      <Filter>Source Files\graphics</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="dx\shaders\uiquad_vs.hlsl">

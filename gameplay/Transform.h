@@ -1,7 +1,5 @@
 #pragma once
-// going to be lazy here and just use the stock d3dx math library.
-#include <d3dx11.h>
-#include <d3dx10.h>
+
 class GameObject;
 #include "../math/EasyMath.h"
 

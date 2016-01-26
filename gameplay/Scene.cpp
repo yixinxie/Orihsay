@@ -32,3 +32,10 @@ void Scene::deserialize(){
 	go->addComponent(component);
 	
 }
+void Scene::onDestroy(){
+	for (int i = 0; i < gameObjects.size(); i++){
+		gameObjects.at(i)->onDestroy();
+		delete gameObjects.at(i);
+	}
+
+}

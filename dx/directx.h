@@ -27,6 +27,13 @@ private:
 
 	// instancing
 	DXInstancing* instancedDraw;
+	void prepareCamera(void);
+	struct WorldViewProjection{
+		D3DXMATRIX world;
+		D3DXMATRIX view;
+		D3DXMATRIX projection;
+
+	};
 public:
 	DirectX11(void);
 	void init(HWND hWnd, int _width, int _height);

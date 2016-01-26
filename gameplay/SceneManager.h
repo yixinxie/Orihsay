@@ -8,4 +8,5 @@ private:
 public:
 	SceneManager(void);
 	void update(void);
+	void onDestroy(void);
 };

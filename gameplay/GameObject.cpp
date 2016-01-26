@@ -33,3 +33,9 @@ void GameObject::update(void){
 void GameObject::addComponent(MonoBehaviour* mono){
 	components.push_back(mono);
 }
+void GameObject::onDestroy(){
+	for (int i = 0; i < components.size(); i++){
+		delete components.at(i);
+	}
+	delete transform;
+}

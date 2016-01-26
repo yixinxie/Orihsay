@@ -10,4 +10,5 @@ public:
 	void update(void);
 	void deserialize(void);
 	void serialize(void);
+	void onDestroy(void);
 };

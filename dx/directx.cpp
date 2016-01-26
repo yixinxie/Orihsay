@@ -3,7 +3,6 @@ DirectX11::DirectX11(void){
 }
 void DirectX11::init(HWND hWnd, int _width, int _height)
 {
-	mainCameraTransform = nullptr;
 	width = _width;
 	height = _height;
 	// create a struct to hold information about the swap chain
@@ -52,8 +51,8 @@ void DirectX11::init(HWND hWnd, int _width, int _height)
 
 	viewport.TopLeftX = 0;
 	viewport.TopLeftY = 0;
-	viewport.Width = width;
-	viewport.Height = height;
+	viewport.Width = (int)width;
+	viewport.Height = (int)height;
 
 	devcon->RSSetViewports(1, &viewport);
 }
@@ -77,10 +76,34 @@ void DirectX11::disposeInstancing(){
 }
 void DirectX11::render(){
 	HRESULT hr;
+	prepareCamera();
 	devcon->ClearRenderTargetView(backbuffer, D3DXCOLOR(0.0f, 0.2f, 0.4f, 1.0f));
 	instancedDraw->render();
 	hr = swapchain->Present(1, 0);
 	if (FAILED(hr)){
 		TRACE("present failed!");
 	}
+}
+void DirectX11::prepareCamera(){
+	if (cameras.size() == 0){
+		TRACE("No camera found!");
+		return;
+	}
+	CameraParameters* camParams = cameras.at(0);
+	WorldViewProjection wvp;
+	D3DXMATRIX view, projection;
+	D3DXVECTOR3 camPos(camParams->position.x, camParams->position.y, camParams->position.z);
+	D3DXVECTOR3 lookAt(0,0,0); // undefined!
+	D3DXVECTOR3 up(0, 1, 0); // should be infered from the orientation of the camera.
+
+	D3DXMatrixLookAtLH(&(wvp.view), &camPos, &lookAt, &up);
+	D3DXMatrixPerspectiveFovLH(&(wvp.projection), D3DXToRadian(camParams->fieldOfView), (float)width / height, camParams->nearPlane, camParams->farPlane);
+
+	ID3D11Buffer* matrixConstantBuffer;
+
+	D3D11_BUFFER_DESC cbd = { sizeof(wvp), D3D11_USAGE_DEFAULT, D3D11_BIND_CONSTANT_BUFFER, 0, 0, 0 };
+	D3D11_SUBRESOURCE_DATA cbdInitData = { &view, 0, 0 };
+
+	dev->CreateBuffer(&cbd, &cbdInitData, &matrixConstantBuffer);
+	devcon->VSSetConstantBuffers(0, 1, &matrixConstantBuffer);
 }

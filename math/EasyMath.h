@@ -1,10 +1,8 @@
-#include "D3DX10math.h"
+#pragma once
+
 struct Vector3{
 	float x, y, z;
-	Vector3(D3DXVECTOR3 vec){
-		x = vec.x;
-		y = vec.y;
-		z = vec.z;
+	Vector3(float _x, float _y, float _z) :x(_x), y(_y), z(_z) {
 	}
 	Vector3() :x(0), y(0), z(0){}
 

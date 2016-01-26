@@ -1,6 +1,7 @@
 #pragma once
 #include <vector>
 #include "MonoBehaviour.h"
+#include "Transform.h"
 class Transform;
 
 using namespace std;
@@ -23,4 +24,5 @@ public:
 	void start(void);
 	void update(void);
 	void fixedUpdate(void);
+	void onDestroy(void);
 };
