@@ -86,7 +86,7 @@ void DirectX11::render(){
 }
 void DirectX11::prepareCamera(){
 	if (cameras.size() == 0){
-		TRACE("No camera found!");
+		//TRACE("No camera found!");
 		return;
 	}
 	CameraParameters* camParams = cameras.at(0);

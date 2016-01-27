@@ -7,6 +7,7 @@
 #include <d3dx10.h>
 #include "../graphics/Renderer.h"
 #include "DXInstancing.h"
+#include "DXInstancedMesh.h"
 #include "../misc/CharHelper.h"
 
 #define SAFE_RELEASE(h) if(h != nullptr){(h)->Release(); (h) = nullptr;}

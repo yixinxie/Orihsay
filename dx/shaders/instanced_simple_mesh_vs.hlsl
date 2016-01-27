@@ -1,0 +1,57 @@
+//////////////////
+
+cbuffer VSHADER_CB
+{
+	//matrix worldMatrix;
+	matrix viewMatrix;
+	matrix projectionMatrix;
+};
+struct VertexInputType
+{
+	float4 position : POSITION;
+	float4 color : COLOR;
+	float4 worldMatrix0 : INSTANCE_MATRIX_0;
+	float4 worldMatrix1 : INSTANCE_MATRIX_1;
+	float4 worldMatrix2 : INSTANCE_MATRIX_2;
+	float4 worldMatrix3 : INSTANCE_MATRIX_3;
+	//matrix instanceMatrix : INSTANCE_MATRIX;
+};
+
+struct PixelInputType
+{
+	float4 position : SV_POSITION;
+};
+
+float4x4 CreateMatrixFromCols(float4 c0, float4 c1, float4 c2, float4 c3) {
+	return float4x4(c0.x, c1.x, c2.x, c3.x,
+		c0.y, c1.y, c2.y, c3.y,
+		c0.z, c1.z, c2.z, c3.z,
+		c0.w, c1.w, c2.w, c3.w);
+}
+////////////////////////////////////////////////////////////////////////////////
+// Vertex Shader
+////////////////////////////////////////////////////////////////////////////////
+PixelInputType main(VertexInputType input)
+{
+	PixelInputType output;
+
+
+	// Change the position vector to be 4 units for proper matrix calculations.
+	input.position.w = 1.0f;
+	//Here is where we use the instanced position information to modify the position of each triangle we are drawing.
+
+		// Update the position of the vertices based on the data for this particular instance.
+	/*input.position.x += input.instancePosition.x;
+	input.position.y += input.instancePosition.y;
+	input.position.z += input.instancePosition.z;
+	matrix worldMatrix;*/
+	// Calculate the position of the vertex against the world, view, and projection matrices.
+	matrix world = float4x4(input.worldMatrix0, input.worldMatrix1, input.worldMatrix2, input.worldMatrix3);
+	output.position = mul(input.position, world);
+	output.position = mul(output.position, viewMatrix);
+	output.position = mul(output.position, projectionMatrix);
+	//output.position = input.position;
+
+
+	return output;
+}

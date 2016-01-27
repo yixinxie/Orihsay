@@ -43,10 +43,10 @@ int WINAPI WinMain(HINSTANCE hInstance,
 {
 	testjson();
 	// the handle for the window, filled by a function
-	HWND window = systemInit(hInstance, nCmdShow, 800, 600);
+	HWND window = systemInit(hInstance, nCmdShow, 1024, 768);
 	Renderer* renderer = new DirectX11();
 	G::instance()->renderer = renderer;
-	renderer->init(window, 800, 600);
+	renderer->init(window, 1024, 768);
 	
 	MSG msg = gameLoop(renderer);
 	// return this part of the WM_QUIT message to Windows
@@ -127,6 +127,7 @@ MSG gameLoop(Renderer* renderer){
 		sceneManager.update();
 		//renderer->renderFrame();
 		renderer->render();
+		Sleep(16); // going to fix the gameloop a bit later...
 	}
 	//renderer->disposeQuadBuffer();
 	renderer->disposeInstancing();

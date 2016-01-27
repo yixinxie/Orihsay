@@ -1,29 +1,31 @@
-#include "DXInstancing.h"
+#include "DXInstancedMesh.h"
 #include "directx.h"
 #include "../misc/CharHelper.h"
-DXInstancing::DXInstancing(ID3D11Device *_dev, ID3D11DeviceContext *_devcon) :dev(_dev), devcon(_devcon){
+DXInstancedMesh::DXInstancedMesh(ID3D11Device *_dev, ID3D11DeviceContext *_devcon) :dev(_dev), devcon(_devcon){
 	inputLayout = nullptr;
 	vertexShader = nullptr;
 	pixelShader = nullptr;
 
 	vertexBuffer = nullptr;
+	indexBuffer = nullptr;
 	instanceBuffer = nullptr;
 }
-void DXInstancing::init(){
-	initQuadBuffer();
+void DXInstancedMesh::init(){
+	initCubeBuffer();
 	initShadersAndInputLayout();
+	
 }
-void DXInstancing::initShadersAndInputLayout(){
+void DXInstancedMesh::initShadersAndInputLayout(){
 	HRESULT hr;
 	// shader
 
-	CharBuffer* vsBuffer = CharHelper::loadFile("instanced_quad_vs.cso");
+	CharBuffer* vsBuffer = CharHelper::loadFile("instanced_simple_mesh_vs.cso");
 	hr = dev->CreateVertexShader(vsBuffer->buffer, vsBuffer->length, nullptr, &vertexShader);
 	if (FAILED(hr)){
 		TRACE("vertex shader create failed");
 	}
 
-	CharBuffer* psBuffer = CharHelper::loadFile("instanced_quad_ps.cso");
+	CharBuffer* psBuffer = CharHelper::loadFile("instanced_simple_mesh_ps.cso");
 	hr = dev->CreatePixelShader(psBuffer->buffer, psBuffer->length, nullptr, &pixelShader);
 	if (FAILED(hr)){
 		TRACE("pixel shader create failed");
@@ -31,11 +33,15 @@ void DXInstancing::initShadersAndInputLayout(){
 	
 	// Create the vertex input layout description.
 	// This setup needs to match the VertexType stucture in the ModelClass and in the shader.
-	D3D11_INPUT_ELEMENT_DESC polygonLayout[2] = 
+	D3D11_INPUT_ELEMENT_DESC polygonLayout[] = 
 	{
 		{ "POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 0, D3D11_INPUT_PER_VERTEX_DATA, 0 },
+		{ "COLOR", 0, DXGI_FORMAT_R32G32B32_FLOAT,12, 0, D3D11_INPUT_PER_VERTEX_DATA, 0 },
 		//{ "TEXCOORD", 0, DXGI_FORMAT_R32G32_FLOAT, 0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0 },
-		{ "TEXCOORD", 0, DXGI_FORMAT_R32G32B32_FLOAT, 1, 0, D3D11_INPUT_PER_INSTANCE_DATA, 1 },
+		{ "INSTANCE_MATRIX_0", 0, DXGI_FORMAT_R32G32B32A32_FLOAT, 1, 0, D3D11_INPUT_PER_INSTANCE_DATA, 1 },
+		{ "INSTANCE_MATRIX_1", 1, DXGI_FORMAT_R32G32B32A32_FLOAT, 1, 16, D3D11_INPUT_PER_INSTANCE_DATA, 1 },
+		{ "INSTANCE_MATRIX_2", 2, DXGI_FORMAT_R32G32B32A32_FLOAT, 1, 32, D3D11_INPUT_PER_INSTANCE_DATA, 1 },
+		{ "INSTANCE_MATRIX_3", 3, DXGI_FORMAT_R32G32B32A32_FLOAT, 1, 48, D3D11_INPUT_PER_INSTANCE_DATA, 1 },
 	};
 
 	/*
@@ -65,19 +71,21 @@ void DXInstancing::initShadersAndInputLayout(){
 	delete psBuffer;
 }
 
-void DXInstancing::initQuadBuffer(){
+void DXInstancedMesh::initCubeBuffer(){
 	HRESULT hr;
 	// vertex buffer: the vertex buffer stores the vertices of a quad and it is created only once per execution.
 	PerVertexData quadVertices[] =
 	{
 		// clockwise triangle winding.
-		{ { 0.0f, 0.0f, 0.0f } },
-		{ { 0, 0.1f, 0.0f } },
-		{ { 0.1f, 0, 0.0f } },
+		{ { 0, 0, 0 }, { 0, 1, 0, 1 } },
+		{ { 0, 1, 0 }, { 0, 1, 0, 1 } },
+		{ { 1, 1, 0 }, { 0, 1, 0, 1 } },
+		{ { 1, 0, 0 }, { 0, 1, 0, 1 } },
 
-		{ { 0, 0.1f, 0.0f } },
-		{ { 0.1f, 0.1f, 0.0f } },
-		{ { 0.1f, 0, 0.0f } },
+		{ { 0, 0, 1 }, { 0, 1, 0, 1 } },
+		{ { 0, 1, 1 }, { 0, 1, 0, 1 } },
+		{ { 1, 1, 1 }, { 0, 1, 0, 1 } },
+		{ { 1, 0, 1 }, { 0, 1, 0, 1 } },
 
 	};
 
@@ -91,6 +99,26 @@ void DXInstancing::initQuadBuffer(){
 	if (FAILED(hr)){
 		TRACE("vertex buffer create failed!");
 	}
+	// index buffer
+	{
+		unsigned int indices[] = { 0, 1, 2 };
+
+		// Fill in a buffer description.
+		D3D11_BUFFER_DESC bufferDesc = {
+			sizeof(unsigned int) * 3,
+			D3D11_USAGE_DEFAULT,
+			D3D11_BIND_INDEX_BUFFER,
+			0,
+			0,
+			0
+		};
+
+		// Define the resource data.
+		D3D11_SUBRESOURCE_DATA InitData = { indices , 0, 0};
+
+		// Create the buffer with the device.
+		hr = dev->CreateBuffer(&bufferDesc, &InitData, &indexBuffer);
+	}
 	//// INSTANCE BUFFER
 	// instance buffer is refreshed every update.
 	{
@@ -99,14 +127,15 @@ void DXInstancing::initQuadBuffer(){
 		instances = new InstanceStruct[instanceCount];
 
 		// Load the instance array with data.
-		instances[0].position = D3DXVECTOR3(0.3f, 0.3f, 0);
+		/*instances[0].position = D3DXVECTOR3(0.3f, 0.3f, 0);
 		instances[1].position = D3DXVECTOR3(-0.3f, 0.3f, 0);
 		instances[2].position = D3DXVECTOR3(-0.3f, -0.3f, 0);
-		instances[3].position = D3DXVECTOR3(0.3f, -0.3f, 0);
+		instances[3].position = D3DXVECTOR3(0.3f, -0.3f, 0);*/
 
-		/*instances[0].position = D3DXVECTOR3(0, 0, 0);
+		instances[0].position = D3DXVECTOR3(0, 0, 0);
 		instances[1].position = D3DXVECTOR3(-1, 0, 0);
 		instances[2].position = D3DXVECTOR3(0, -1, 0);
+		instances[3].position = D3DXVECTOR3(-1, -1, 0);
 
 		D3D11_BUFFER_DESC instanceBufferDesc = { sizeof(InstanceStruct) * instanceCount,
 			D3D11_USAGE_DYNAMIC, //D3D11_USAGE_DEFAULT,
@@ -125,7 +154,7 @@ void DXInstancing::initQuadBuffer(){
 		}
 	}
 }
-void DXInstancing::updateInstanceBuffer(){
+void DXInstancedMesh::updateInstanceBuffer(){
 	HRESULT hr;
 	instanceCount = 4;
 	instances = new InstanceStruct[instanceCount];
@@ -152,7 +181,7 @@ void DXInstancing::updateInstanceBuffer(){
 		TRACE("per instance buffer update failed!");
 	}
 }
-void DXInstancing::render(){
+void DXInstancedMesh::render(){
 	unsigned int strides[2];
 	unsigned int offsets[2];
 	ID3D11Buffer* bufferPointers[2];
@@ -167,6 +196,7 @@ void DXInstancing::render(){
 	bufferPointers[1] = instanceBuffer;
 
 	devcon->IASetVertexBuffers(0, 2, bufferPointers, strides, offsets);
+	devcon->IASetIndexBuffer(indexBuffer, DXGI_FORMAT_R32_UINT, 1);
 	devcon->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 	devcon->IASetInputLayout(inputLayout);
 
@@ -176,10 +206,12 @@ void DXInstancing::render(){
 	// Set the sampler state in the pixel shader.
 	//devcon->PSSetSamplers(0, 1, &m_sampleState);
 
-	devcon->DrawInstanced(6, instanceCount, 0, 0);
+	devcon->DrawIndexedInstanced(36, instanceCount, 0, 0, 0);
+	//devcon->DrawInstanced(6, instanceCount, 0, 0);
 }
-void DXInstancing::dispose(){
+void DXInstancedMesh::dispose(){
 	SAFE_RELEASE(vertexBuffer);
+	SAFE_RELEASE(indexBuffer);
 	SAFE_RELEASE(instanceBuffer);
 	SAFE_RELEASE(vertexShader);
 	SAFE_RELEASE(pixelShader);

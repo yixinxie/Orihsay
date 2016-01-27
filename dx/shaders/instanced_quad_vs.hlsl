@@ -6,9 +6,9 @@
 //////////////////
 struct VertexInputType
 {
-	float4 position : POSITION;
+	float3 position : POSITION;
 
-	float3 instancePosition : TEXCOORD1;
+	float3 instancePosition : TEXCOORD;
 };
 
 struct PixelInputType
@@ -26,7 +26,7 @@ PixelInputType main(VertexInputType input)
 
 
 	// Change the position vector to be 4 units for proper matrix calculations.
-	input.position.w = 1.0f;
+	//input.position.w = 1.0f;
 	//Here is where we use the instanced position information to modify the position of each triangle we are drawing.
 
 		// Update the position of the vertices based on the data for this particular instance.
@@ -38,7 +38,9 @@ PixelInputType main(VertexInputType input)
 	/*output.position = mul(input.position, worldMatrix);
 	output.position = mul(output.position, viewMatrix);
 	output.position = mul(output.position, projectionMatrix);*/
-	output.position = input.position;
+	output.position.xyz = input.position.xyz;
+	output.position.w = 1.0f;
+	
 
 
 	return output;

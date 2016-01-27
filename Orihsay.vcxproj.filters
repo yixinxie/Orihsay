@@ -34,6 +34,9 @@
     <Filter Include="Source Files\graphics">
       <UniqueIdentifier>{181bf48c-e63a-4781-b79f-a8f6dd76c330}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\dx\shaders">
+      <UniqueIdentifier>{cebb7eda-83fc-408b-bb99-451d17b4ce31}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -74,6 +77,9 @@
     </ClCompile>
     <ClCompile Include="gameplay\Transform.cpp">
       <Filter>Source Files\gameplay</Filter>
+    </ClCompile>
+    <ClCompile Include="dx\DXInstancedMesh.cpp">
+      <Filter>Source Files\dx</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -161,19 +167,28 @@
     <ClInclude Include="graphics\CameraParameters.h">
       <Filter>Source Files\graphics</Filter>
     </ClInclude>
+    <ClInclude Include="dx\DXInstancedMesh.h">
+      <Filter>Source Files\dx</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <FxCompile Include="dx\shaders\uiquad_vs.hlsl">
-      <Filter>Source Files\dx</Filter>
-    </FxCompile>
-    <FxCompile Include="dx\shaders\uiquad_ps.hlsl">
-      <Filter>Source Files\dx</Filter>
-    </FxCompile>
     <FxCompile Include="dx\shaders\instanced_quad_ps.hlsl">
-      <Filter>Source Files\dx</Filter>
+      <Filter>Source Files\dx\shaders</Filter>
     </FxCompile>
     <FxCompile Include="dx\shaders\instanced_quad_vs.hlsl">
-      <Filter>Source Files\dx</Filter>
+      <Filter>Source Files\dx\shaders</Filter>
+    </FxCompile>
+    <FxCompile Include="dx\shaders\uiquad_ps.hlsl">
+      <Filter>Source Files\dx\shaders</Filter>
+    </FxCompile>
+    <FxCompile Include="dx\shaders\uiquad_vs.hlsl">
+      <Filter>Source Files\dx\shaders</Filter>
+    </FxCompile>
+    <FxCompile Include="dx\shaders\instanced_simple_mesh_ps.hlsl">
+      <Filter>Source Files\dx\shaders</Filter>
+    </FxCompile>
+    <FxCompile Include="dx\shaders\instanced_simple_mesh_vs.hlsl">
+      <Filter>Source Files\dx\shaders</Filter>
     </FxCompile>
   </ItemGroup>
 </Project>
