@@ -107,6 +107,7 @@ void DXInstancing::initQuadBuffer(){
 		/*instances[0].position = D3DXVECTOR3(0, 0, 0);
 		instances[1].position = D3DXVECTOR3(-1, 0, 0);
 		instances[2].position = D3DXVECTOR3(0, -1, 0);
+		instances[3].position = D3DXVECTOR3(-1, -1, 0);*/
 
 		D3D11_BUFFER_DESC instanceBufferDesc = { sizeof(InstanceStruct) * instanceCount,
 			D3D11_USAGE_DYNAMIC, //D3D11_USAGE_DEFAULT,
