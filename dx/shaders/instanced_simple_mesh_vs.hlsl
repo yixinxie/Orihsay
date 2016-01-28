@@ -1,22 +1,22 @@
 //////////////////
 
+
+struct VertexInputType
+{
+	float3 position : POSITION;
+	float3 color : COLOR;
+	float4 worldMatrix0 : INSTANCE_MATRIX0;
+	float4 worldMatrix1 : INSTANCE_MATRIX1;
+	float4 worldMatrix2 : INSTANCE_MATRIX2;
+	float4 worldMatrix3 : INSTANCE_MATRIX3;
+	//matrix instanceMatrix : INSTANCE_MATRIX;
+};
 cbuffer VSHADER_CB
 {
 	//matrix worldMatrix;
 	matrix viewMatrix;
 	matrix projectionMatrix;
 };
-struct VertexInputType
-{
-	float4 position : POSITION;
-	float4 color : COLOR;
-	float4 worldMatrix0 : INSTANCE_MATRIX_0;
-	float4 worldMatrix1 : INSTANCE_MATRIX_1;
-	float4 worldMatrix2 : INSTANCE_MATRIX_2;
-	float4 worldMatrix3 : INSTANCE_MATRIX_3;
-	//matrix instanceMatrix : INSTANCE_MATRIX;
-};
-
 struct PixelInputType
 {
 	float4 position : SV_POSITION;
@@ -34,22 +34,23 @@ float4x4 CreateMatrixFromCols(float4 c0, float4 c1, float4 c2, float4 c3) {
 PixelInputType main(VertexInputType input)
 {
 	PixelInputType output;
-
-
 	// Change the position vector to be 4 units for proper matrix calculations.
-	input.position.w = 1.0f;
-	//Here is where we use the instanced position information to modify the position of each triangle we are drawing.
+	// Here is where we use the instanced position information to modify the position of each triangle we are drawing.
 
-		// Update the position of the vertices based on the data for this particular instance.
+	// Update the position of the vertices based on the data for this particular instance.
 	/*input.position.x += input.instancePosition.x;
 	input.position.y += input.instancePosition.y;
-	input.position.z += input.instancePosition.z;
-	matrix worldMatrix;*/
+	input.position.z += input.instancePosition.z;*/
+
 	// Calculate the position of the vertex against the world, view, and projection matrices.
+//	matrix world = CreateMatrixFromCols(input.worldMatrix0, input.worldMatrix1, input.worldMatrix2, input.worldMatrix3);
 	matrix world = float4x4(input.worldMatrix0, input.worldMatrix1, input.worldMatrix2, input.worldMatrix3);
-	output.position = mul(input.position, world);
+	output.position.w = 1.0f;
+	output.position.xyz = input.position;
+	//output.position = mul(output.position, world);
 	output.position = mul(output.position, viewMatrix);
 	output.position = mul(output.position, projectionMatrix);
+
 	//output.position = input.position;
 
 

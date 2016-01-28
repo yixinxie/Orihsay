@@ -45,6 +45,6 @@ public:
 	void init(void);
 	void updateInstanceBuffer(void);
 	
-	void render(void);
+	void render(ID3D11Buffer** viewProjCB);
 	void dispose(void);
 };

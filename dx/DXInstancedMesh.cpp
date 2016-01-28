@@ -36,23 +36,13 @@ void DXInstancedMesh::initShadersAndInputLayout(){
 	D3D11_INPUT_ELEMENT_DESC polygonLayout[] = 
 	{
 		{ "POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 0, D3D11_INPUT_PER_VERTEX_DATA, 0 },
-		{ "COLOR", 0, DXGI_FORMAT_R32G32B32_FLOAT,12, 0, D3D11_INPUT_PER_VERTEX_DATA, 0 },
-		//{ "TEXCOORD", 0, DXGI_FORMAT_R32G32_FLOAT, 0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0 },
-		{ "INSTANCE_MATRIX_0", 0, DXGI_FORMAT_R32G32B32A32_FLOAT, 1, 0, D3D11_INPUT_PER_INSTANCE_DATA, 1 },
-		{ "INSTANCE_MATRIX_1", 1, DXGI_FORMAT_R32G32B32A32_FLOAT, 1, 16, D3D11_INPUT_PER_INSTANCE_DATA, 1 },
-		{ "INSTANCE_MATRIX_2", 2, DXGI_FORMAT_R32G32B32A32_FLOAT, 1, 32, D3D11_INPUT_PER_INSTANCE_DATA, 1 },
-		{ "INSTANCE_MATRIX_3", 3, DXGI_FORMAT_R32G32B32A32_FLOAT, 1, 48, D3D11_INPUT_PER_INSTANCE_DATA, 1 },
+		{ "COLOR", 0, DXGI_FORMAT_R32G32B32_FLOAT,0, 12, D3D11_INPUT_PER_VERTEX_DATA, 0 },
+		
+		{ "INSTANCE_MATRIX", 0, DXGI_FORMAT_R32G32B32A32_FLOAT, 1, 0, D3D11_INPUT_PER_INSTANCE_DATA, 1 },
+		{ "INSTANCE_MATRIX", 1, DXGI_FORMAT_R32G32B32A32_FLOAT, 1, 16, D3D11_INPUT_PER_INSTANCE_DATA, 1 },
+		{ "INSTANCE_MATRIX", 2, DXGI_FORMAT_R32G32B32A32_FLOAT, 1, 32, D3D11_INPUT_PER_INSTANCE_DATA, 1 },
+		{ "INSTANCE_MATRIX", 3, DXGI_FORMAT_R32G32B32A32_FLOAT, 1, 48, D3D11_INPUT_PER_INSTANCE_DATA, 1 },
 	};
-
-	/*
-	For instancing we are going to add a third element to the layout.As we plan to position the four instanced triangles in different positions in 3D space we need to send the shader 
-	an extra position vector composed of three floats representing x, y, and z.Therefore the format is set to DXGI_FORMAT_R32G32B32_FLOAT.The semantic name is set to TEXCOORD as we are just using 
-	a generic semantic.Note that we have to set the semantic index to 1 in the layout since there is already a TEXCOORD for the texture coordinates using slot 0.
-
-	Now for the instancing specific stuff we set the InputSlotClass to D3D11_INPUT_PER_INSTANCE_DATA which indicates that this is instanced data.Secondly the InstanceDataStepRate is now used and 
-	we set the step rate to 1 so that it will draw one instance before stepping forward a unit in the instance data.Note also that this is the first unit in the instance buffer 
-	so we set the AlignedByteOffset to 0 again since we are not aligning to the vertex buffer with the instance data.
-	*/
 
 	// Get a count of the elements in the layout.
 	int numElements = sizeof(polygonLayout) / sizeof(polygonLayout[0]);
@@ -78,14 +68,16 @@ void DXInstancedMesh::initCubeBuffer(){
 	{
 		// clockwise triangle winding.
 		{ { 0, 0, 0 }, { 0, 1, 0, 1 } },
-		{ { 0, 1, 0 }, { 0, 1, 0, 1 } },
-		{ { 1, 1, 0 }, { 0, 1, 0, 1 } },
 		{ { 1, 0, 0 }, { 0, 1, 0, 1 } },
+		{ { 1, 1, 0 }, { 0, 1, 0, 1 } },
+		{ { 0, 1, 0 }, { 0, 1, 0, 1 } },
 
 		{ { 0, 0, 1 }, { 0, 1, 0, 1 } },
-		{ { 0, 1, 1 }, { 0, 1, 0, 1 } },
-		{ { 1, 1, 1 }, { 0, 1, 0, 1 } },
 		{ { 1, 0, 1 }, { 0, 1, 0, 1 } },
+		{ { 1, 1, 1 }, { 0, 1, 0, 1 } },
+		{ { 0, 1, 1 }, { 0, 1, 0, 1 } },
+
+		
 
 	};
 
@@ -101,11 +93,30 @@ void DXInstancedMesh::initCubeBuffer(){
 	}
 	// index buffer
 	{
-		unsigned int indices[] = { 0, 1, 2 };
+		unsigned int indices[] = { 
+			//0, 1, 2, 
+			0, 2, 1,
+			0, 3, 2,
+
+			1, 2, 6,
+			6, 5, 1,
+
+			4, 5, 6,
+			6, 7, 4,
+
+			2, 3, 6,
+			6, 3, 7,
+
+			0, 7, 3,
+			0, 4, 7,
+
+			0, 1, 5,
+			0, 5, 4
+		};
 
 		// Fill in a buffer description.
 		D3D11_BUFFER_DESC bufferDesc = {
-			sizeof(unsigned int) * 3,
+			sizeof(unsigned int) * 36,
 			D3D11_USAGE_DEFAULT,
 			D3D11_BIND_INDEX_BUFFER,
 			0,
@@ -118,6 +129,9 @@ void DXInstancedMesh::initCubeBuffer(){
 
 		// Create the buffer with the device.
 		hr = dev->CreateBuffer(&bufferDesc, &InitData, &indexBuffer);
+		if (FAILED(hr)){
+			TRACE("index buffer create failed!");
+		}
 	}
 	//// INSTANCE BUFFER
 	// instance buffer is refreshed every update.
@@ -132,10 +146,10 @@ void DXInstancedMesh::initCubeBuffer(){
 		instances[2].position = D3DXVECTOR3(-0.3f, -0.3f, 0);
 		instances[3].position = D3DXVECTOR3(0.3f, -0.3f, 0);*/
 
-		instances[0].position = D3DXVECTOR3(0, 0, 0);
-		instances[1].position = D3DXVECTOR3(-1, 0, 0);
-		instances[2].position = D3DXVECTOR3(0, -1, 0);
-		instances[3].position = D3DXVECTOR3(-1, -1, 0);
+		instances[0].position = D3DXVECTOR3(0, 0, 5);
+		instances[1].position = D3DXVECTOR3(-1, 0, 5);
+		instances[2].position = D3DXVECTOR3(0, -1, 5);
+		instances[3].position = D3DXVECTOR3(-1, -1, 5);
 
 		D3D11_BUFFER_DESC instanceBufferDesc = { sizeof(InstanceStruct) * instanceCount,
 			D3D11_USAGE_DYNAMIC, //D3D11_USAGE_DEFAULT,
@@ -181,7 +195,7 @@ void DXInstancedMesh::updateInstanceBuffer(){
 		TRACE("per instance buffer update failed!");
 	}
 }
-void DXInstancedMesh::render(){
+void DXInstancedMesh::render(ID3D11Buffer** viewProjCB){
 	unsigned int strides[2];
 	unsigned int offsets[2];
 	ID3D11Buffer* bufferPointers[2];
@@ -197,10 +211,12 @@ void DXInstancedMesh::render(){
 
 	devcon->IASetVertexBuffers(0, 2, bufferPointers, strides, offsets);
 	devcon->IASetIndexBuffer(indexBuffer, DXGI_FORMAT_R32_UINT, 1);
+	devcon->VSSetConstantBuffers(0, 1, viewProjCB);
 	devcon->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 	devcon->IASetInputLayout(inputLayout);
-
+	
 	devcon->VSSetShader(vertexShader, NULL, 0);
+	
 	devcon->PSSetShader(pixelShader, NULL, 0);
 
 	// Set the sampler state in the pixel shader.

@@ -31,6 +31,7 @@ void GameObject::update(void){
 	}
 }
 void GameObject::addComponent(MonoBehaviour* mono){
+	mono->gameObject = this;
 	components.push_back(mono);
 }
 void GameObject::onDestroy(){

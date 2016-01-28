@@ -112,10 +112,11 @@ HWND systemInit(const HINSTANCE instance, const int cmdShow, const int width, co
 }
 MSG gameLoop(Renderer* renderer){
 	MSG msg;
+	registerComponentClasses();
 	SceneManager sceneManager;
 	//renderer->initQuadBuffer();
 	renderer->initInstancing();
-	registerComponentClasses();
+	
 	
 	while (GetMessage(&msg, NULL, 0, 0))
 	{
