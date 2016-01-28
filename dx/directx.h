@@ -9,10 +9,8 @@
 #include "DXInstancing.h"
 #include "DXInstancedMesh.h"
 #include "../misc/CharHelper.h"
+#include "../misc/Macros.h"
 
-#define SAFE_RELEASE(h) if(h != nullptr){(h)->Release(); (h) = nullptr;}
-
-#define SAFE_DISPOSE(h) if((h) != nullptr){(h)->dispose(); delete (h); (h) = nullptr;}
 // include the Direct3D Library file
 #pragma comment (lib, "d3d11.lib")
 #pragma comment (lib, "d3dx11.lib")
@@ -40,7 +38,7 @@ private:
 public:
 	DirectX11(void);
 	void init(HWND hWnd, int _width, int _height);
-	void close(void);
+	void dispose(void);
 	void initInstancing(void);
 	void disposeInstancing(void);
 	void render(void);

@@ -10,3 +10,9 @@ struct Vector3{
 struct Vector4{
 	float x, y, z, w;
 };
+struct IntVector2{
+	int x, y;
+	IntVector2(float _x, float _y) :x(_x), y(_y){
+	}
+	IntVector2() :x(0), y(0){}
+};

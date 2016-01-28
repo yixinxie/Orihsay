@@ -37,6 +37,9 @@
     <Filter Include="Source Files\dx\shaders">
       <UniqueIdentifier>{cebb7eda-83fc-408b-bb99-451d17b4ce31}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\input">
+      <UniqueIdentifier>{e326b199-ec90-4c4d-8c1d-9ba53a8a0717}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -80,6 +83,12 @@
     </ClCompile>
     <ClCompile Include="dx\DXInstancedMesh.cpp">
       <Filter>Source Files\dx</Filter>
+    </ClCompile>
+    <ClCompile Include="input\DXInput.cpp">
+      <Filter>Source Files\input</Filter>
+    </ClCompile>
+    <ClCompile Include="gameplay\G.cpp">
+      <Filter>Source Files\gameplay</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -169,6 +178,15 @@
     </ClInclude>
     <ClInclude Include="dx\DXInstancedMesh.h">
       <Filter>Source Files\dx</Filter>
+    </ClInclude>
+    <ClInclude Include="misc\Macros.h">
+      <Filter>Source Files\misc</Filter>
+    </ClInclude>
+    <ClInclude Include="input\DXInput.h">
+      <Filter>Source Files\input</Filter>
+    </ClInclude>
+    <ClInclude Include="gameplay\G.h">
+      <Filter>Source Files\gameplay</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

@@ -13,18 +13,10 @@ protected:
 	vector<CameraParameters*> cameras;
 public:
 	virtual void init(HWND hwnd, int _width, int _height) = 0;
-	virtual void close(void) = 0;
+	virtual void dispose(void) = 0;
 
 	virtual void initInstancing(void) = 0;
 	virtual void disposeInstancing(void) = 0;
 	virtual void render(void) = 0;
 	void setMainCamera(Vector3& pos, Vector3& rot, float fov, float _nearPlane, float _farPlane);
-};
-class G{
-private:
-	G(void);
-	static G* _instance;
-public:
-	static G* instance(void);
-	Renderer* renderer;
 };

@@ -2,7 +2,9 @@
 #include <windows.h>
 #include <windowsx.h>
 #include "graphics/Renderer.h"
+#include "gameplay/G.h"
 #include "dx/directx.h"
+#include "input/DXInput.h"
 
 #include "rapidjson/document.h"
 #include "rapidjson/writer.h"
@@ -18,7 +20,7 @@ LRESULT CALLBACK WindowProc(HWND hWnd,
 	WPARAM wParam,
 	LPARAM lParam);
 HWND systemInit(const HINSTANCE instance, const int cmdShow, const int width, const int height);
-MSG gameLoop(Renderer* renderer);
+MSG gameLoop(Renderer* renderer, DXInput* input);
 void testjson(void){
 	const char* json = "{\"project\":\"rapidjson\",\"stars\":10}";
 	Document d;
@@ -47,8 +49,15 @@ int WINAPI WinMain(HINSTANCE hInstance,
 	Renderer* renderer = new DirectX11();
 	G::instance()->renderer = renderer;
 	renderer->init(window, 1024, 768);
+
+	DXInput* input = new DXInput();
+	G::instance()->input = input;
+	input->init(hInstance, window);
 	
-	MSG msg = gameLoop(renderer);
+	MSG msg = gameLoop(renderer, input);
+
+	SAFE_DISPOSE(renderer);
+	SAFE_DISPOSE(input);
 	// return this part of the WM_QUIT message to Windows
 	return msg.wParam;
 }
@@ -97,8 +106,8 @@ HWND systemInit(const HINSTANCE instance, const int cmdShow, const int width, co
 		L"Editor",    // name of the window class
 		L"Orihsay",   // title of the window
 		WS_OVERLAPPEDWINDOW,    // window style
-		300,    // x-position of the window
-		300,    // y-position of the window
+		200,    // x-position of the window
+		50,    // y-position of the window
 		width,    // width of the window
 		height,    // height of the window
 		NULL,    // we have no parent window, NULL
@@ -110,7 +119,7 @@ HWND systemInit(const HINSTANCE instance, const int cmdShow, const int width, co
 	ShowWindow(hWnd, cmdShow);
 	return hWnd;
 }
-MSG gameLoop(Renderer* renderer){
+MSG gameLoop(Renderer* renderer, DXInput* input){
 	MSG msg;
 	registerComponentClasses();
 	SceneManager sceneManager;
@@ -122,9 +131,9 @@ MSG gameLoop(Renderer* renderer){
 	{
 		// translate keystroke messages into the right format
 		TranslateMessage(&msg);
-
 		// send the message to the WindowProc function
 		DispatchMessage(&msg);
+		input->update();
 		sceneManager.update();
 		//renderer->renderFrame();
 		renderer->render();
@@ -132,7 +141,6 @@ MSG gameLoop(Renderer* renderer){
 	}
 	//renderer->disposeQuadBuffer();
 	renderer->disposeInstancing();
-	renderer->close();
-	delete renderer;
+	
 	return msg;
 }

@@ -1,6 +1,7 @@
 #include "Camera.h"
 #include "../graphics/Renderer.h"
 #include "../gameplay/GameObject.h"
+#include "../gameplay/G.h"
 
 void Camera::awake(){
 	if (_isMain){

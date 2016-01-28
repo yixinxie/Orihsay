@@ -82,12 +82,14 @@
     <ClCompile Include="dx\directx.cpp" />
     <ClCompile Include="dx\DXInstancedMesh.cpp" />
     <ClCompile Include="dx\DXInstancing.cpp" />
+    <ClCompile Include="gameplay\G.cpp" />
     <ClCompile Include="gameplay\GameObject.cpp" />
     <ClCompile Include="gameplay\MonoBehaviour.cpp" />
     <ClCompile Include="gameplay\Scene.cpp" />
     <ClCompile Include="gameplay\SceneManager.cpp" />
     <ClCompile Include="gameplay\Transform.cpp" />
     <ClCompile Include="Graphics\Renderer.cpp" />
+    <ClCompile Include="input\DXInput.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="misc\CharHelper.cpp" />
     <ClCompile Include="misc\ClassFactory.cpp" />
@@ -98,6 +100,7 @@
     <ClInclude Include="dx\directx.h" />
     <ClInclude Include="dx\DXInstancedMesh.h" />
     <ClInclude Include="dx\DXInstancing.h" />
+    <ClInclude Include="gameplay\G.h" />
     <ClInclude Include="gameplay\GameObject.h" />
     <ClInclude Include="gameplay\MonoBehaviour.h" />
     <ClInclude Include="gameplay\Scene.h" />
@@ -105,9 +108,11 @@
     <ClInclude Include="gameplay\Transform.h" />
     <ClInclude Include="graphics\CameraParameters.h" />
     <ClInclude Include="graphics\Renderer.h" />
+    <ClInclude Include="input\DXInput.h" />
     <ClInclude Include="math\EasyMath.h" />
     <ClInclude Include="misc\CharHelper.h" />
     <ClInclude Include="misc\ClassFactory.h" />
+    <ClInclude Include="misc\Macros.h" />
     <ClInclude Include="rapidjson\allocators.h" />
     <ClInclude Include="rapidjson\document.h" />
     <ClInclude Include="rapidjson\encodedstream.h" />

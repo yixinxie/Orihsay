@@ -56,7 +56,7 @@ void DirectX11::init(HWND hWnd, int _width, int _height)
 
 	devcon->RSSetViewports(1, &viewport);
 }
-void DirectX11::close()
+void DirectX11::dispose()
 {
 	// close and release all existing COM objects
 	swapchain->Release();
