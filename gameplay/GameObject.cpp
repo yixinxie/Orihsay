@@ -15,6 +15,9 @@ GameObject* GameObject::create(){
 	res = new GameObject();
 	return res;
 }
+void GameObject::setName(const char* _name){
+	if (std::strlen(_name) <= 64)std::strcpy(name, _name);
+}
 void GameObject::awake(void){
 	for (int i = 0; i < components.size(); i++){
 		components.at(i)->awake();

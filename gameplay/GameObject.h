@@ -15,10 +15,12 @@ private:
 	
 public:
 	Transform* transform;
+	char name[64];
 
 	static GameObject* instantiate(void);
 	static GameObject* create(void);
 	void addComponent(MonoBehaviour* mono);
+	void setName(const char *_name);
 
 	void awake(void);
 	void start(void);

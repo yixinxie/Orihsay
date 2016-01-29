@@ -1,5 +1,6 @@
 #include "directx.h"
 DirectX11::DirectX11(void){
+	viewProjMatrixCB = nullptr;
 }
 void DirectX11::init(HWND hWnd, int _width, int _height)
 {
