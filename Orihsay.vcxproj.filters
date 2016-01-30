@@ -90,6 +90,9 @@
     <ClCompile Include="gameplay\G.cpp">
       <Filter>Source Files\gameplay</Filter>
     </ClCompile>
+    <ClCompile Include="components\CubeMesh.cpp">
+      <Filter>Source Files\components</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="dx\directx.h">
@@ -187,6 +190,9 @@
     </ClInclude>
     <ClInclude Include="gameplay\G.h">
       <Filter>Source Files\gameplay</Filter>
+    </ClInclude>
+    <ClInclude Include="components\CubeMesh.h">
+      <Filter>Source Files\components</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

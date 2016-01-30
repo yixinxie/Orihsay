@@ -1,6 +1,8 @@
 #include "directx.h"
 DirectX11::DirectX11(void){
 	viewProjMatrixCB = nullptr;
+	objectIndexIncrementer = 0;
+	instancedDrawMesh = nullptr;
 }
 void DirectX11::init(HWND hWnd, int _width, int _height)
 {
@@ -60,6 +62,8 @@ void DirectX11::init(HWND hWnd, int _width, int _height)
 void DirectX11::dispose()
 {
 	// close and release all existing COM objects
+	SAFE_DISPOSE(instancedDrawMesh);
+
 	swapchain->Release();
 	backbuffer->Release();
 	dev->Release();
@@ -82,6 +86,7 @@ void DirectX11::disposeInstancing(){
 void DirectX11::render(){
 	HRESULT hr;
 	prepareCamera();
+	assembleDrawables();
 	devcon->ClearRenderTargetView(backbuffer, D3DXCOLOR(0.0f, 0.2f, 0.4f, 1.0f));
 	//devcon->VSSetConstantBuffers(0, 1, &viewProjMatrixCB);
 	instancedDrawMesh->render(&viewProjMatrixCB);
@@ -108,7 +113,7 @@ void DirectX11::prepareCamera(){
 	D3DXMatrixTranspose(&(wvp.view), &(wvp.view));
 	D3DXMatrixTranspose(&(wvp.projection), &(wvp.projection));
 
-	if (viewProjMatrixCB != nullptr){
+	if (viewProjMatrixCB == nullptr){
 
 		D3D11_BUFFER_DESC cbd = { sizeof(wvp), D3D11_USAGE_DEFAULT, D3D11_BIND_CONSTANT_BUFFER, 0, 0, 0 };
 		D3D11_SUBRESOURCE_DATA cbdInitData = { &wvp, 0, 0 };
@@ -120,4 +125,12 @@ void DirectX11::prepareCamera(){
 		
 	}
 	
+}
+void DirectX11::assembleDrawables(){
+	if (instancedDrawMesh == nullptr){
+		instancedDrawMesh = new DXInstancedMesh(dev, devcon);
+		instancedDrawMesh->init();
+	}
+	instancedDrawMesh->updateInstanceBuffer(instancedObjects);
+
 }

@@ -9,11 +9,14 @@ DXInstancedMesh::DXInstancedMesh(ID3D11Device *_dev, ID3D11DeviceContext *_devco
 	vertexBuffer = nullptr;
 	indexBuffer = nullptr;
 	instanceBuffer = nullptr;
+
+	instanceCount = 0;
+	instanceMaxSize = 4;
 }
 void DXInstancedMesh::init(){
 	initCubeBuffer();
 	initShadersAndInputLayout();
-	
+	initInstanceBuffer();
 }
 void DXInstancedMesh::initShadersAndInputLayout(){
 	HRESULT hr;
@@ -76,9 +79,6 @@ void DXInstancedMesh::initCubeBuffer(){
 		{ { 1, 0, 1 }, { 0, 1, 0, 1 } },
 		{ { 1, 1, 1 }, { 0, 1, 0, 1 } },
 		{ { 0, 1, 1 }, { 0, 1, 0, 1 } },
-
-		
-
 	};
 
 	D3D11_BUFFER_DESC bd = { 0 };
@@ -93,8 +93,7 @@ void DXInstancedMesh::initCubeBuffer(){
 	}
 	// index buffer
 	{
-		unsigned int indices[] = { 
-			//0, 1, 2, 
+		unsigned int indices[] = {
 			0, 2, 1,
 			0, 3, 2,
 
@@ -114,7 +113,6 @@ void DXInstancedMesh::initCubeBuffer(){
 			0, 5, 4
 		};
 
-		// Fill in a buffer description.
 		D3D11_BUFFER_DESC bufferDesc = {
 			sizeof(unsigned int) * 36,
 			D3D11_USAGE_DEFAULT,
@@ -125,7 +123,7 @@ void DXInstancedMesh::initCubeBuffer(){
 		};
 
 		// Define the resource data.
-		D3D11_SUBRESOURCE_DATA InitData = { indices , 0, 0};
+		D3D11_SUBRESOURCE_DATA InitData = { indices, 0, 0 };
 
 		// Create the buffer with the device.
 		hr = dev->CreateBuffer(&bufferDesc, &InitData, &indexBuffer);
@@ -133,53 +131,18 @@ void DXInstancedMesh::initCubeBuffer(){
 			TRACE("index buffer create failed!");
 		}
 	}
-	//// INSTANCE BUFFER
-	// instance buffer is refreshed every update.
-	{
-		// Set the number of instances in the array.
-		instanceCount = 4;
-		instances = new InstanceStruct[instanceCount];
-
-		// Load the instance array with data.
-		/*instances[0].position = D3DXVECTOR3(0.3f, 0.3f, 0);
-		instances[1].position = D3DXVECTOR3(-0.3f, 0.3f, 0);
-		instances[2].position = D3DXVECTOR3(-0.3f, -0.3f, 0);
-		instances[3].position = D3DXVECTOR3(0.3f, -0.3f, 0);*/
-
-		instances[0].position = D3DXVECTOR3(0, 0, 5);
-		instances[1].position = D3DXVECTOR3(-1, 0, 5);
-		instances[2].position = D3DXVECTOR3(0, -1, 5);
-		instances[3].position = D3DXVECTOR3(-1, -1, 5);
-
-		D3D11_BUFFER_DESC instanceBufferDesc = { sizeof(InstanceStruct) * instanceCount,
-			D3D11_USAGE_DYNAMIC, //D3D11_USAGE_DEFAULT,
-			D3D11_BIND_CONSTANT_BUFFER, //D3D11_BIND_VERTEX_BUFFER
-			D3D11_CPU_ACCESS_WRITE, //0
-			0,
-			0
-		};
-		D3D11_SUBRESOURCE_DATA srd = { instances, 0, 0 };
-
-		// Create the instance buffer.
-		hr = dev->CreateBuffer(&instanceBufferDesc, &srd, &instanceBuffer);
-		if (FAILED(hr))
-		{
-			TRACE("per instance buffer create failed!");
-		}
-	}
 }
-void DXInstancedMesh::updateInstanceBuffer(){
+void DXInstancedMesh::initInstanceBuffer(){
 	HRESULT hr;
-	instanceCount = 4;
-	instances = new InstanceStruct[instanceCount];
+	instances = new InstanceStruct[instanceMaxSize];
 
-	// Load the instance array with data.
-	instances[0].position = D3DXVECTOR3(0.3f, 0.3f, 0);
-	instances[1].position = D3DXVECTOR3(-0.3f, 0.3f, 0);
-	instances[2].position = D3DXVECTOR3(-0.3f, -0.3f, 0);
-	instances[3].position = D3DXVECTOR3(0.3f, -0.3f, 0);
+	// fill the buffer with placeholder values.
+	for (int i = 0; i < instanceMaxSize; i++){
+		D3DXMatrixScaling(&(instances[i].worldMatrix), 0, 0, 0);
+	}
 
-	D3D11_BUFFER_DESC instanceBufferDesc = { sizeof(InstanceStruct) * instanceCount,
+	D3D11_BUFFER_DESC instanceBufferDesc = { 
+		sizeof(InstanceStruct) * instanceMaxSize,
 		D3D11_USAGE_DYNAMIC, //D3D11_USAGE_DEFAULT,
 		D3D11_BIND_CONSTANT_BUFFER, //D3D11_BIND_VERTEX_BUFFER
 		D3D11_CPU_ACCESS_WRITE, //0
@@ -192,8 +155,42 @@ void DXInstancedMesh::updateInstanceBuffer(){
 	hr = dev->CreateBuffer(&instanceBufferDesc, &srd, &instanceBuffer);
 	if (FAILED(hr))
 	{
-		TRACE("per instance buffer update failed!");
+		TRACE("per instance buffer create failed!");
 	}
+}
+void DXInstancedMesh::updateInstanceBuffer(const std::unordered_map<int, ObjectInstanceTransform*>& instancedObjects){
+	HRESULT hr;
+	int transformCount = instancedObjects.size();
+	// instance buffer is refreshed every update.
+	if (transformCount > instanceMaxSize){
+		// now we need to resize the instance buffer to match the new set of objects.
+		instanceMaxSize *= 2;
+		SAFE_RELEASE(instanceBuffer);
+		initInstanceBuffer();
+	}
+	
+	// after ensuring we have a buffer large enough to hold the object transforms, we copy the transforms to the buffer
+
+
+	D3D11_MAPPED_SUBRESOURCE resource;
+	hr = devcon->Map(instanceBuffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &resource);
+
+	InstanceStruct* instanceData = (InstanceStruct*)resource.pData;
+	int inc = 0;
+	for (auto it = instancedObjects.begin(); it != instancedObjects.end(); ++it){
+		D3DXMATRIX world, rotationX, rotationY, rotationZ, scale;
+		D3DXMatrixTranslation(&world, it->second->position.x, it->second->position.y, it->second->position.z);
+		D3DXMatrixRotationX(&rotationX, it->second->rotation.x);
+		D3DXMatrixRotationY(&rotationY, it->second->rotation.y);
+		D3DXMatrixRotationZ(&rotationZ, it->second->rotation.z);
+		D3DXMatrixScaling(&scale, it->second->scale.x, it->second->scale.y, it->second->scale.z);
+		instanceData[inc].worldMatrix = scale * (rotationX*rotationY*rotationZ)*world;
+		inc++;
+	}
+
+	devcon->Unmap(instanceBuffer, 0);
+
+	instanceCount = transformCount;
 }
 void DXInstancedMesh::render(ID3D11Buffer** viewProjCB){
 	unsigned int strides[2];
@@ -210,7 +207,7 @@ void DXInstancedMesh::render(ID3D11Buffer** viewProjCB){
 	bufferPointers[1] = instanceBuffer;
 
 	devcon->IASetVertexBuffers(0, 2, bufferPointers, strides, offsets);
-	devcon->IASetIndexBuffer(indexBuffer, DXGI_FORMAT_R32_UINT, 1);
+	devcon->IASetIndexBuffer(indexBuffer, DXGI_FORMAT_R32_UINT, 0); // 1??? questionable!
 	devcon->VSSetConstantBuffers(0, 1, viewProjCB);
 	devcon->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 	devcon->IASetInputLayout(inputLayout);
@@ -223,7 +220,6 @@ void DXInstancedMesh::render(ID3D11Buffer** viewProjCB){
 	//devcon->PSSetSamplers(0, 1, &m_sampleState);
 
 	devcon->DrawIndexedInstanced(36, instanceCount, 0, 0, 0);
-	//devcon->DrawInstanced(6, instanceCount, 0, 0);
 }
 void DXInstancedMesh::dispose(){
 	SAFE_RELEASE(vertexBuffer);

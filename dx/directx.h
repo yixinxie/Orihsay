@@ -39,6 +39,8 @@ public:
 	DirectX11(void);
 	void init(HWND hWnd, int _width, int _height);
 	void dispose(void);
+
+	void assembleDrawables(void);
 	void initInstancing(void);
 	void disposeInstancing(void);
 	void render(void);

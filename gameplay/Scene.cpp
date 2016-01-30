@@ -33,20 +33,6 @@ void Scene::update(void){
 void Scene::serialize(){
 
 }
-//void Scene::deserialize(){
-//	GameObject* go = GameObject::instantiate();
-//	gameObjects.push_back(go);
-//	MonoBehaviour* component = (MonoBehaviour*)classFactory.construct("Camera");
-//	go->addComponent(component);
-//	((Camera*)component)->nearPlane = 0.01f;
-//	((Camera*)component)->farPlane = 1000;
-//	((Camera*)component)->fieldOfView = 60;
-//	((Camera*)component)->gameObject->transform->position = Vector3(0, 0, -1);
-//	((Camera*)component)->gameObject->transform->rotation = Vector3(0, 0, 0);
-//	((Camera*)component)->gameObject->transform->scale = Vector3(1, 1, 1);
-//	
-//}
-
 
 void Scene::deserialize(){
 	CharBuffer* rawJSON = CharHelper::loadTextFile("scene0.json");
@@ -76,9 +62,6 @@ void Scene::deserialize(){
 
 			}
 			else if (std::strcmp(componentNode["className"].GetString(), "Transform") == 0){
-				if (componentNode.HasMember("fields") == false){
-					int sd = 0;
-				}
 				const Value& fields = componentNode["fields"];
 				const char* tmpPosition = fields["position"].GetString();
 				go->transform->position = CharHelper::charToVec3(tmpPosition);
@@ -88,8 +71,12 @@ void Scene::deserialize(){
 
 				const char* tmpScale = fields["scale"].GetString();
 				go->transform->scale = CharHelper::charToVec3(tmpScale);
-				
-				int dsdf = 0;
+
+			}
+			else if (std::strcmp(componentNode["className"].GetString(), "Cube") == 0){
+
+				MonoBehaviour* component = (MonoBehaviour*)classFactory.construct("CubeMesh");
+				go->addComponent(component);
 			}
 		}
 

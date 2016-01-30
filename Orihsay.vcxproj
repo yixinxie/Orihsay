@@ -78,6 +78,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="components\Camera.cpp" />
+    <ClCompile Include="components\CubeMesh.cpp" />
     <ClCompile Include="components\Panel.cpp" />
     <ClCompile Include="dx\directx.cpp" />
     <ClCompile Include="dx\DXInstancedMesh.cpp" />
@@ -96,6 +97,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="components\Camera.h" />
+    <ClInclude Include="components\CubeMesh.h" />
     <ClInclude Include="components\Panel.h" />
     <ClInclude Include="dx\directx.h" />
     <ClInclude Include="dx\DXInstancedMesh.h" />

@@ -102,7 +102,7 @@ MSG gameLoop(Renderer* renderer, DXInput* input){
 	registerComponentClasses();
 	SceneManager sceneManager;
 	//renderer->initQuadBuffer();
-	renderer->initInstancing();
+	//renderer->initInstancing();
 	
 	
 	while (GetMessage(&msg, NULL, 0, 0))

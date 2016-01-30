@@ -47,7 +47,7 @@ PixelInputType main(VertexInputType input)
 	matrix world = float4x4(input.worldMatrix0, input.worldMatrix1, input.worldMatrix2, input.worldMatrix3);
 	output.position.w = 1.0f;
 	output.position.xyz = input.position;
-	//output.position = mul(output.position, world);
+	output.position = mul(output.position, world);
 	output.position = mul(output.position, viewMatrix);
 	output.position = mul(output.position, projectionMatrix);
 
