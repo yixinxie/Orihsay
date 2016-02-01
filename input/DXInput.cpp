@@ -24,7 +24,8 @@ void DXInput::init(HINSTANCE hinstance, HWND hwnd){
 	}
 
 	// Set the cooperative level of the keyboard to not share with other programs.
-	result = keyboardDevice->SetCooperativeLevel(hwnd, DISCL_FOREGROUND | DISCL_NONEXCLUSIVE);
+	//result = keyboardDevice->SetCooperativeLevel(hwnd, DISCL_FOREGROUND | DISCL_NONEXCLUSIVE);
+	result = keyboardDevice->SetCooperativeLevel(hwnd, DISCL_NONEXCLUSIVE);
 	if (FAILED(result)){
 	}
 
@@ -44,7 +45,8 @@ void DXInput::init(HINSTANCE hinstance, HWND hwnd){
 	}
 
 	// Set the cooperative level of the mouse to share with other programs.
-	result = mouseDevice->SetCooperativeLevel(hwnd, DISCL_FOREGROUND | DISCL_NONEXCLUSIVE);
+	//result = mouseDevice->SetCooperativeLevel(hwnd, DISCL_FOREGROUND | DISCL_NONEXCLUSIVE);
+	result = mouseDevice->SetCooperativeLevel(hwnd, DISCL_NONEXCLUSIVE);
 	if (FAILED(result)){
 	}
 
@@ -67,12 +69,12 @@ void DXInput::update(){
 	HRESULT result;
 	result = keyboardDevice->GetDeviceState(sizeof(keyboardState), (LPVOID)&keyboardState);
 	if (FAILED(result)){
-		//TRACE("keyboard acquire failed");
+		TRACE("keyboard acquire failed");
 		return;
 	}
 	result = mouseDevice->GetDeviceState(sizeof(DIMOUSESTATE), (LPVOID)&mouseState);
 	if (FAILED(result)){
-		//TRACE("mouse acquire failed");
+		TRACE("mouse acquire failed");
 		return;
 	}
 }

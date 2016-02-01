@@ -16,9 +16,6 @@
     <Filter Include="Source Files\dx">
       <UniqueIdentifier>{6b8b3f93-1a41-41d8-b6d0-d071506ce425}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Source Files\gameplay">
-      <UniqueIdentifier>{34094784-fa06-4e3d-bcc2-0a6d004d93b9}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Source Files\rapidjson">
       <UniqueIdentifier>{47effaa9-ca8a-43c0-8b27-3fee70aba2de}</UniqueIdentifier>
     </Filter>
@@ -39,6 +36,12 @@
     </Filter>
     <Filter Include="Source Files\input">
       <UniqueIdentifier>{e326b199-ec90-4c4d-8c1d-9ba53a8a0717}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\components\scripts">
+      <UniqueIdentifier>{981c82cc-fb16-45cc-95cf-5db3e1a9fe94}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\gameplay">
+      <UniqueIdentifier>{34094784-fa06-4e3d-bcc2-0a6d004d93b9}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -92,6 +95,9 @@
     </ClCompile>
     <ClCompile Include="components\CubeMesh.cpp">
       <Filter>Source Files\components</Filter>
+    </ClCompile>
+    <ClCompile Include="components\InputManager.cpp">
+      <Filter>Source Files\components\scripts</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -193,6 +199,9 @@
     </ClInclude>
     <ClInclude Include="components\CubeMesh.h">
       <Filter>Source Files\components</Filter>
+    </ClInclude>
+    <ClInclude Include="components\InputManager.h">
+      <Filter>Source Files\components\scripts</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

@@ -2,7 +2,7 @@
 #include <string>
 #include <unordered_map>
 #include "../misc/CharHelper.h"
-void Renderer::setMainCamera(Vector3& pos, Vector3& rot, float fov, float _nearPlane, float _farPlane){
+void Renderer::setMainCamera(const Vector3& pos, const Vector3& rot, const float fov, const float _nearPlane, const float _farPlane){
 	CameraParameters* params = new CameraParameters();
 	params->position = pos;
 	params->rotation = rot;
@@ -11,6 +11,12 @@ void Renderer::setMainCamera(Vector3& pos, Vector3& rot, float fov, float _nearP
 	params->farPlane = _farPlane;
 	
 	cameras.push_back(params);
+}
+void Renderer::updateMainCamera(const Vector3& pos, const Vector3& rot){
+	if (cameras.size() == 0 || cameras[0] == nullptr)return;
+	cameras[0]->position = pos;
+	cameras[0]->rotation = rot;
+
 }
 void Renderer::updateInstancedObject(const int id, const Vector3& position, const Vector3& rotation, const Vector3& scale){
 	

@@ -9,3 +9,7 @@ void Camera::awake(){
 		G::instance()->renderer->setMainCamera(gameObject->transform->position, gameObject->transform->rotation, fieldOfView, nearPlane, farPlane);
 	}
 }
+
+void Camera::update(){
+	G::instance()->renderer->updateMainCamera(gameObject->transform->position, gameObject->transform->rotation);
+}

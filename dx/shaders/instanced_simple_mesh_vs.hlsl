@@ -34,13 +34,6 @@ float4x4 CreateMatrixFromCols(float4 c0, float4 c1, float4 c2, float4 c3) {
 PixelInputType main(VertexInputType input)
 {
 	PixelInputType output;
-	// Change the position vector to be 4 units for proper matrix calculations.
-	// Here is where we use the instanced position information to modify the position of each triangle we are drawing.
-
-	// Update the position of the vertices based on the data for this particular instance.
-	/*input.position.x += input.instancePosition.x;
-	input.position.y += input.instancePosition.y;
-	input.position.z += input.instancePosition.z;*/
 
 	// Calculate the position of the vertex against the world, view, and projection matrices.
 //	matrix world = CreateMatrixFromCols(input.worldMatrix0, input.worldMatrix1, input.worldMatrix2, input.worldMatrix3);

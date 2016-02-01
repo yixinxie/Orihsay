@@ -145,7 +145,7 @@ void DXInstancedMesh::initInstanceBuffer(){
 		sizeof(InstanceStruct) * instanceMaxSize,
 		D3D11_USAGE_DYNAMIC, //D3D11_USAGE_DEFAULT,
 		D3D11_BIND_CONSTANT_BUFFER, //D3D11_BIND_VERTEX_BUFFER
-		D3D11_CPU_ACCESS_WRITE, //0
+		D3D11_CPU_ACCESS_WRITE,
 		0,
 		0
 	};

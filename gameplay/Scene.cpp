@@ -17,16 +17,16 @@ void Scene::update(void){
 	if (state == 0){
 		deserialize();
 
-		for (int i = 0; i < gameObjects.size(); i++){
+		for (unsigned int i = 0; i < gameObjects.size(); i++){
 			gameObjects.at(i)->awake();
 		}
 
-		for (int i = 0; i < gameObjects.size(); i++){
+		for (unsigned int i = 0; i < gameObjects.size(); i++){
 			gameObjects.at(i)->start();
 		}
 		state = 1;
 	}
-	for (int i = 0; i < gameObjects.size(); i++){
+	for (unsigned int i = 0; i < gameObjects.size(); i++){
 		gameObjects.at(i)->update();
 	}
 }
@@ -42,14 +42,14 @@ void Scene::deserialize(){
 	bool d = parsed.HasParseError();
 	ParseErrorCode code = parsed.GetParseError();
 	
-	for (int i = 0; i < parsed.Size(); i++){
+	for (unsigned int i = 0; i < parsed.Size(); i++){
 		const Value& gameObjectNode = parsed[i];
 		GameObject* go = GameObject::instantiate();
 		gameObjects.push_back(go);
 		go->setName(gameObjectNode["name"].GetString());
 		const Value& components = gameObjectNode["components"];
 		// deserialize components
-		for (int j = 0; j < components.Size(); j++){
+		for (unsigned int j = 0; j < components.Size(); j++){
 			const Value& componentNode = components[j];
 			const char* dbgstr = componentNode["className"].GetString();
 			if (std::strcmp(componentNode["className"].GetString(), "Camera") == 0){
@@ -78,16 +78,19 @@ void Scene::deserialize(){
 				MonoBehaviour* component = (MonoBehaviour*)classFactory.construct("CubeMesh");
 				go->addComponent(component);
 			}
+			else if (std::strcmp(componentNode["className"].GetString(), "InputManager") == 0){
+
+				MonoBehaviour* component = (MonoBehaviour*)classFactory.construct("InputManager");
+				go->addComponent(component);
+			}
 		}
-
 	}
-
 
 	SAFE_DISPOSE(rawJSON);
 
 }
 void Scene::onDestroy(){
-	for (int i = 0; i < gameObjects.size(); i++){
+	for (unsigned int i = 0; i < gameObjects.size(); i++){
 		gameObjects.at(i)->onDestroy();
 		delete gameObjects.at(i);
 	}

@@ -110,20 +110,32 @@ void DirectX11::prepareCamera(){
 	ViewProjection wvp;
 	D3DXMatrixLookAtLH(&(wvp.view), &camPos, &lookAt, &up);
 	D3DXMatrixPerspectiveFovLH(&(wvp.projection), D3DXToRadian(camParams->fieldOfView), (float)width / height, camParams->nearPlane, camParams->farPlane);
-	D3DXMatrixTranspose(&(wvp.view), &(wvp.view));
-	D3DXMatrixTranspose(&(wvp.projection), &(wvp.projection));
-
+	
+	HRESULT hr;
 	if (viewProjMatrixCB == nullptr){
-
-		D3D11_BUFFER_DESC cbd = { sizeof(wvp), D3D11_USAGE_DEFAULT, D3D11_BIND_CONSTANT_BUFFER, 0, 0, 0 };
+		D3DXMatrixTranspose(&(wvp.view), &(wvp.view));
+		D3DXMatrixTranspose(&(wvp.projection), &(wvp.projection));
+		D3D11_BUFFER_DESC cbd = { sizeof(wvp), D3D11_USAGE_DYNAMIC, D3D11_BIND_CONSTANT_BUFFER, D3D11_CPU_ACCESS_WRITE, 0, 0 };
 		D3D11_SUBRESOURCE_DATA cbdInitData = { &wvp, 0, 0 };
 
-		HRESULT hr = dev->CreateBuffer(&cbd, &cbdInitData, &viewProjMatrixCB);
+		hr = dev->CreateBuffer(&cbd, &cbdInitData, &viewProjMatrixCB);
 		if (FAILED(hr)){
 			TRACE("camera constant buffer create failed!");
 		}
-		
 	}
+	else {
+		// if the view matrix buffer is already created, we just need to update it.
+		D3D11_MAPPED_SUBRESOURCE resource;
+		hr = devcon->Map(viewProjMatrixCB, 0, D3D11_MAP_WRITE_DISCARD, 0, &resource);
+
+		ViewProjection* viewProjectionMatrices = (ViewProjection*)resource.pData;
+		D3DXMatrixTranspose(&(viewProjectionMatrices->view), &(wvp.view));
+		D3DXMatrixTranspose(&(viewProjectionMatrices->projection), &(wvp.projection));
+
+		devcon->Unmap(viewProjMatrixCB, 0);
+
+	}
+
 	
 }
 void DirectX11::assembleDrawables(){
