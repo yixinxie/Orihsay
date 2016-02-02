@@ -21,7 +21,6 @@ private:
 	IDXGISwapChain* swapchain;             // the pointer to the swap chain interface
 	ID3D11Device* dev;                     // the pointer to our Direct3D device interface
 	ID3D11DeviceContext* devcon;           // the pointer to our Direct3D device context
-
 	ID3D11RenderTargetView* backbuffer;
 
 	ID3D11Texture2D* depthStencilTex;

@@ -110,24 +110,15 @@ MSG gameLoop(Renderer* renderer, DXInput* input){
 	MSG msg;
 	registerComponentClasses();
 	SceneManager sceneManager;
-	//renderer->initQuadBuffer();
-	//renderer->initInstancing();
-	
 	
 	while (GetMessage(&msg, NULL, 0, 0))
 	{
-		// translate keystroke messages into the right format
 		TranslateMessage(&msg);
-		// send the message to the WindowProc function
 		DispatchMessage(&msg);
 		input->update();
 		sceneManager.update();
-		//renderer->renderFrame();
 		renderer->render();
 		Sleep(16); // going to fix the gameloop a bit later...
 	}
-	//renderer->disposeQuadBuffer();
-	renderer->disposeInstancing();
-	
 	return msg;
 }

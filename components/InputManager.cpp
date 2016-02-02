@@ -47,5 +47,14 @@ void InputManager::update(void){
 		gameObject->transform->position += gameObject->transform->getRight() * 0.1f;
 
 	}
+	if (G::instance()->input->getKeyDown(KeyCode::Q)){
+		gameObject->transform->position += Vector3(0, 1, 0) * 0.1f;
+
+	}
+	if (G::instance()->input->getKeyDown(KeyCode::Z)){
+		gameObject->transform->position -= Vector3(0, 1, 0) * 0.1f;
+
+
+	}
 	
 }

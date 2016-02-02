@@ -5,7 +5,6 @@ DirectX11::DirectX11(void){
 	swapchain = nullptr;
 	dev = nullptr;
 	devcon = nullptr;
-
 	backbuffer = nullptr;
 	
 	depthStencilTex = nullptr;
@@ -29,12 +28,11 @@ void DirectX11::init(HWND hWnd, int _width, int _height)
 	// clear out the struct for use
 	ZeroMemory(&scd, sizeof(DXGI_SWAP_CHAIN_DESC));
 
-	// fill the swap chain description struct
-	scd.BufferCount = 1;                                    // one back buffer
 	scd.BufferDesc.Format = DXGI_FORMAT_R8G8B8A8_UNORM;     // use 32-bit color
-	scd.BufferUsage = DXGI_USAGE_RENDER_TARGET_OUTPUT;      // how swap chain is to be used
-	scd.OutputWindow = hWnd;                                // the window to be used
 	scd.SampleDesc.Count = 1;                               // how many multisamples
+	scd.BufferUsage = DXGI_USAGE_RENDER_TARGET_OUTPUT;      // how swap chain is to be used
+	scd.BufferCount = 1;                                    // one back buffer
+	scd.OutputWindow = hWnd;                                // the window to be used
 	scd.Windowed = TRUE;                                    // windowed/full-screen mode
 
 	// create a device, device context and swap chain using the information in the scd struct
@@ -55,23 +53,22 @@ void DirectX11::init(HWND hWnd, int _width, int _height)
 	}
 
 	// get the address of the back buffer
-	ID3D11Texture2D *pBackBuffer;
-	hr = swapchain->GetBuffer(0, __uuidof(ID3D11Texture2D), (LPVOID*)&pBackBuffer);
+	ID3D11Texture2D *backBufferTex;
+	hr = swapchain->GetBuffer(0, __uuidof(ID3D11Texture2D), (LPVOID*)&backBufferTex);
 	if (FAILED(hr)){
 		TRACE("GetBuffer failed");
 	}
 	
-	hr = dev->CreateRenderTargetView(pBackBuffer, NULL, &backbuffer);
+	hr = dev->CreateRenderTargetView(backBufferTex, NULL, &backbuffer);
 	if (FAILED(hr)){
 		TRACE("CreateRenderTargetView failed");
 	}
 	D3D11_TEXTURE2D_DESC backBufferDesc;
-	pBackBuffer->GetDesc(&backBufferDesc);
+	backBufferTex->GetDesc(&backBufferDesc);
 	width = backBufferDesc.Width;
 	height = backBufferDesc.Height;
-	pBackBuffer->Release();
+	backBufferTex->Release();
 	initDepthStencil();
-	
 	
 	//devcon->OMSetRenderTargets(1, &backbuffer, NULL);
 	devcon->OMSetRenderTargets(1, &backbuffer, depthStencilView);
@@ -84,10 +81,10 @@ void DirectX11::init(HWND hWnd, int _width, int _height)
 	viewport.TopLeftY = 0;
 	viewport.Width = width;
 	viewport.Height = height;
+	viewport.MinDepth = 0;
+	viewport.MaxDepth = 1;
 
 	devcon->RSSetViewports(1, &viewport);
-
-	
 }
 void DirectX11::initDepthStencil(){
 	HRESULT hr;
@@ -97,8 +94,8 @@ void DirectX11::initDepthStencil(){
 	descDepth.Height = height;
 	descDepth.MipLevels = 1;
 	descDepth.ArraySize = 1;
-	descDepth.Format = DXGI_FORMAT_D24_UNORM_S8_UINT;
-	//descDepth.Format = DXGI_FORMAT_D32_FLOAT;
+	//descDepth.Format = DXGI_FORMAT_D24_UNORM_S8_UINT;
+	descDepth.Format = DXGI_FORMAT_D32_FLOAT;
 	
 	descDepth.SampleDesc.Count = 1;
 	descDepth.SampleDesc.Quality = 0;
@@ -149,7 +146,8 @@ void DirectX11::initDepthStencil(){
 	D3D11_DEPTH_STENCIL_VIEW_DESC descDSV;
 	
 	//descDSV.Format = DXGI_FORMAT_D32_FLOAT_S8X24_UINT;
-	descDSV.Format = DXGI_FORMAT_D24_UNORM_S8_UINT;
+	//descDSV.Format = DXGI_FORMAT_D24_UNORM_S8_UINT;
+	descDSV.Format = DXGI_FORMAT_D32_FLOAT;
 	descDSV.ViewDimension = D3D11_DSV_DIMENSION_TEXTURE2D;
 	descDSV.Flags = 0;
 	descDSV.Texture2D.MipSlice = 0;
@@ -162,17 +160,26 @@ void DirectX11::initDepthStencil(){
 	if (FAILED(hr)){
 		TRACE("CreateDepthStencilView failed!");
 	}
+	int releaseres = depthStencilTex->Release();
+	int sdf = 0;
 	//devcon->OMSetRenderTargets(1, &backbuffer, depthStencilView);
 }
 void DirectX11::dispose()
 {
 	// close and release all existing COM objects
+	// render technique related
+	//SAFE_DISPOSE(instancedDraw);
 	SAFE_DISPOSE(instancedDrawMesh);
 
-	swapchain->Release();
-	backbuffer->Release();
-	dev->Release();
-	devcon->Release();
+	// depth stencil related
+	SAFE_RELEASE(depthStencilView);
+	SAFE_RELEASE(depthStencilState);
+	SAFE_RELEASE(depthStencilTex);
+
+	SAFE_RELEASE(swapchain);
+	SAFE_RELEASE(backbuffer);
+	SAFE_RELEASE(dev);
+	SAFE_RELEASE(devcon);
 }
 
 
@@ -184,10 +191,7 @@ void DirectX11::initInstancing(){
 	instancedDrawMesh = new DXInstancedMesh(dev, devcon);
 	instancedDrawMesh->init();
 }
-void DirectX11::disposeInstancing(){
-	//SAFE_DISPOSE(instancedDraw);
-	SAFE_DISPOSE(instancedDrawMesh);
-}
+
 void DirectX11::render(){
 	HRESULT hr;
 	prepareCamera();
@@ -196,7 +200,7 @@ void DirectX11::render(){
 	devcon->ClearDepthStencilView(depthStencilView, D3D11_CLEAR_DEPTH, 1.0f, 0);
 	//devcon->VSSetConstantBuffers(0, 1, &viewProjMatrixCB);
 	instancedDrawMesh->render(&viewProjMatrixCB);
-	hr = swapchain->Present(1, 0);
+	hr = swapchain->Present(0, 0);
 	if (FAILED(hr)){
 		TRACE("present failed!");
 	}

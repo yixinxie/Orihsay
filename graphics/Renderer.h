@@ -30,7 +30,6 @@ namespace OriGraphics{
 	public:
 		virtual void init(HWND hwnd, int _width, int _height) = 0;
 		virtual void dispose(void) = 0;
-		virtual void disposeInstancing(void) = 0;
 		virtual void render(void) = 0;
 		void setMainCamera(const Vector3& pos, const Vector3& rot, const float fov, const float _nearPlane, const float _farPlane);
 		void updateMainCamera(const Vector3& pos, const Vector3& rot);
