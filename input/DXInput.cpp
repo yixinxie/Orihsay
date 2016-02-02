@@ -84,8 +84,8 @@ IntVector2 DXInput::mousePosition(){
 }
 bool DXInput::getMouseButton(int index){
 	if (index < 0 || index >= 4)return false;
-	return mouseState.rgbButtons[index];
+	return mouseState.rgbButtons[index] > 0;
 }
 bool DXInput::getKeyDown(int index){
-	return keyboardState[index] & 0x80;
+	return (keyboardState[index] & 0x80) > 0;
 }

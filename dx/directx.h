@@ -44,5 +44,5 @@ public:
 	void initInstancing(void);
 	void disposeInstancing(void);
 	void render(void);
-
+	
 };

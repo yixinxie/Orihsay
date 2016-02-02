@@ -1,4 +1,4 @@
-#include "G.h";
+#include "G.h"
 G* G::_instance = nullptr;
 G::G(){
 

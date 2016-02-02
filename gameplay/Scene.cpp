@@ -67,7 +67,7 @@ void Scene::deserialize(){
 				go->transform->position = CharHelper::charToVec3(tmpPosition);
 
 				const char* tmpRotation = fields["rotation"].GetString();
-				go->transform->rotation = CharHelper::charToVec3(tmpRotation);
+				go->transform->fromEuler(CharHelper::charToVec3(tmpRotation));
 
 				const char* tmpScale = fields["scale"].GetString();
 				go->transform->scale = CharHelper::charToVec3(tmpScale);

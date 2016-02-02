@@ -1,4 +1,5 @@
 #include "directx.h"
+#include "../gameplay/Transform.h"
 DirectX11::DirectX11(void){
 	viewProjMatrixCB = nullptr;
 	objectIndexIncrementer = 0;
@@ -95,17 +96,24 @@ void DirectX11::render(){
 		TRACE("present failed!");
 	}
 }
+
 void DirectX11::prepareCamera(){
 	if (cameras.size() == 0){
 		TRACE("No camera found!");
 		return;
 	}
 	CameraParameters* camParams = cameras.at(0);
-	
 
 	D3DXVECTOR3 camPos(camParams->position.x, camParams->position.y, camParams->position.z);
-	D3DXVECTOR3 lookAt(0, 0, 0); // undefined!
-	D3DXVECTOR3 up(0, 1, 0); // should be infered from the orientation of the camera.
+
+	Vector3 _lookat, _up;
+
+	//Transform::getLookatAndUp(Vector3(glm::radians(0.0f), glm::radians(0.0), glm::radians(30.0f)), &_lookat, &_up);
+
+	Transform::getLookatAndUp(camParams->rotation, &_lookat, &_up);
+
+	D3DXVECTOR3 lookAt(camParams->position.x + _lookat.x, camParams->position.y + _lookat.y, camParams->position.z + _lookat.z); // undefined!
+	D3DXVECTOR3 up(_up.x, _up.y, _up.z); // should be infered from the orientation of the camera.
 
 	ViewProjection wvp;
 	D3DXMatrixLookAtLH(&(wvp.view), &camPos, &lookAt, &up);

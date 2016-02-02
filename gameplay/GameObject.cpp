@@ -16,20 +16,20 @@ GameObject* GameObject::create(){
 	return res;
 }
 void GameObject::setName(const char* _name){
-	if (std::strlen(_name) <= 64)std::strcpy(name, _name);
+	if (std::strlen(_name) <= 64)strcpy_s(name, _name);
 }
 void GameObject::awake(void){
-	for (int i = 0; i < components.size(); i++){
+	for (unsigned int i = 0; i < components.size(); i++){
 		components.at(i)->awake();
 	}
 }
 void GameObject::start(void){
-	for (int i = 0; i < components.size(); i++){
+	for (unsigned int i = 0; i < components.size(); i++){
 		components.at(i)->start();
 	}
 }
 void GameObject::update(void){
-	for (int i = 0; i < components.size(); i++){
+	for (unsigned int i = 0; i < components.size(); i++){
 		components.at(i)->update();
 	}
 }
@@ -38,7 +38,7 @@ void GameObject::addComponent(MonoBehaviour* mono){
 	components.push_back(mono);
 }
 void GameObject::onDestroy(){
-	for (int i = 0; i < components.size(); i++){
+	for (unsigned int i = 0; i < components.size(); i++){
 		delete components.at(i);
 	}
 	delete transform;

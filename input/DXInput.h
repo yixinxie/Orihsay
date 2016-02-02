@@ -3,7 +3,7 @@
 #include <windowsx.h>
 #include "dinput.h"
 #include "../math/EasyMath.h"
-#define DIRECTINPUT_VERSION 0x0800
+//#define DIRECTINPUT_VERSION 0x0800
 #pragma comment(lib, "dinput8.lib")
 #pragma comment(lib, "dxguid.lib")
 
@@ -23,7 +23,7 @@ public:
 	bool getMouseButton(int index);
 	bool getKeyDown(int index);
 };
-static class KeyCode{
+class KeyCode{
 public:
 	static const int ESCAPE = 0x01;
 	static const int Num1 = 0x02;

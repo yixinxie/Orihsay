@@ -3,6 +3,7 @@
 class InputManager : public MonoBehaviour{
 private:
 	IntVector2 lastMousePos;
+	bool leftButtonDown;
 public:
 	void awake(void);
 	void update(void);

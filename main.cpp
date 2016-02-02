@@ -48,11 +48,17 @@ LRESULT CALLBACK WindowProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lPara
 	{
 		// this message is read when the window is closed
 	case WM_DESTROY:
-	{
+	
 		// close the application entirely
 		PostQuitMessage(0);
 		return 0;
-	} break;
+		break;
+	case WM_MOUSEMOVE:
+		break;
+	case WM_CHAR:
+		//TRACE("key " << wParam);
+		int sd = 0;
+		break;
 	}
 
 	// Handle any messages the switch statement didn't
