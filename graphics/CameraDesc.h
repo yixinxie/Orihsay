@@ -1,6 +1,6 @@
 #pragma once
 #include "../math/EasyMath.h"
-struct CameraParameters{
+struct CameraDesc{
 	// view matrix related:
 	Vector3 position, rotation;
 	// projection matrix related:

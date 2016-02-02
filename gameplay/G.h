@@ -1,5 +1,6 @@
 #include "../graphics/Renderer.h"
 #include "../input/DXInput.h"
+using namespace OriGraphics;
 class G{
 private:
 	G(void);

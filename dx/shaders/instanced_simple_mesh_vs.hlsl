@@ -4,7 +4,7 @@
 struct VertexInputType
 {
 	float3 position : POSITION;
-	float3 color : COLOR;
+	float4 color : COLOR;
 	float4 worldMatrix0 : INSTANCE_MATRIX0;
 	float4 worldMatrix1 : INSTANCE_MATRIX1;
 	float4 worldMatrix2 : INSTANCE_MATRIX2;
@@ -20,6 +20,7 @@ cbuffer VSHADER_CB
 struct PixelInputType
 {
 	float4 position : SV_POSITION;
+	float4 color : COLOR;
 };
 
 float4x4 CreateMatrixFromCols(float4 c0, float4 c1, float4 c2, float4 c3) {
@@ -43,6 +44,8 @@ PixelInputType main(VertexInputType input)
 	output.position = mul(output.position, world);
 	output.position = mul(output.position, viewMatrix);
 	output.position = mul(output.position, projectionMatrix);
+
+	output.color = input.color;
 
 	//output.position = input.position;
 

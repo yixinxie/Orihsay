@@ -1,5 +1,5 @@
 #include "DXInstancedMesh.h"
-#include "directx.h"
+#include "DXManager.h"
 #include "../misc/CharHelper.h"
 DXInstancedMesh::DXInstancedMesh(ID3D11Device *_dev, ID3D11DeviceContext *_devcon) :dev(_dev), devcon(_devcon){
 	inputLayout = nullptr;
@@ -70,15 +70,15 @@ void DXInstancedMesh::initCubeBuffer(){
 	PerVertexData quadVertices[] =
 	{
 		// clockwise triangle winding.
-		{ { 0, 0, 0 }, { 0, 1, 0, 1 } },
-		{ { 1, 0, 0 }, { 0, 1, 0, 1 } },
-		{ { 1, 1, 0 }, { 0, 1, 0, 1 } },
-		{ { 0, 1, 0 }, { 0, 1, 0, 1 } },
+		{ { -0.5f, -0.5f, -0.5f }, { 1, 0, 0, 1 } },
+		{ { 0.5f, -0.5f, -0.5f }, { 0, 1, 0, 1 } },
+		{ { 0.5f, 0.5f, -0.5f }, { 0, 0, 1, 1 } },
+		{ { -0.5f, 0.5f, -0.5f }, { 0, 1, 1, 1 } },
 
-		{ { 0, 0, 1 }, { 0, 1, 0, 1 } },
-		{ { 1, 0, 1 }, { 0, 1, 0, 1 } },
-		{ { 1, 1, 1 }, { 0, 1, 0, 1 } },
-		{ { 0, 1, 1 }, { 0, 1, 0, 1 } },
+		{ { -0.5f, -0.5f, 0.5f }, { 1, 1, 0, 1 } },
+		{ { 0.5f, -0.5f, 0.5f }, { 1, 0, 1, 1 } },
+		{ { 0.5f, 0.5f, 0.5f }, { 0, 1, 1, 1 } },
+		{ { -0.5f, 0.5f, 0.5f }, { 0.5, 1, 0, 1 } },
 	};
 
 	D3D11_BUFFER_DESC bd = { 0 };
@@ -144,7 +144,7 @@ void DXInstancedMesh::initInstanceBuffer(){
 	D3D11_BUFFER_DESC instanceBufferDesc = { 
 		sizeof(InstanceStruct) * instanceMaxSize,
 		D3D11_USAGE_DYNAMIC, //D3D11_USAGE_DEFAULT,
-		D3D11_BIND_CONSTANT_BUFFER, //D3D11_BIND_VERTEX_BUFFER
+		D3D11_BIND_VERTEX_BUFFER,//D3D11_BIND_CONSTANT_BUFFER, //
 		D3D11_CPU_ACCESS_WRITE,
 		0,
 		0
@@ -158,7 +158,7 @@ void DXInstancedMesh::initInstanceBuffer(){
 		TRACE("per instance buffer create failed!");
 	}
 }
-void DXInstancedMesh::updateInstanceBuffer(const std::unordered_map<int, ObjectInstanceTransform*>& instancedObjects){
+void DXInstancedMesh::updateInstanceBuffer(const std::unordered_map<int, ObjectTransformDesc*>& instancedObjects){
 	HRESULT hr;
 	int transformCount = instancedObjects.size();
 	// instance buffer is refreshed every update.

@@ -1,5 +1,5 @@
 #include "DXInstancing.h"
-#include "directx.h"
+#include "DXManager.h"
 #include "../misc/CharHelper.h"
 DXInstancing::DXInstancing(ID3D11Device *_dev, ID3D11DeviceContext *_devcon) :dev(_dev), devcon(_devcon){
 	inputLayout = nullptr;

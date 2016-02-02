@@ -51,9 +51,6 @@
     <ClCompile Include="main.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="dx\directx.cpp">
-      <Filter>Source Files\dx</Filter>
-    </ClCompile>
     <ClCompile Include="gameplay\GameObject.cpp">
       <Filter>Source Files\gameplay</Filter>
     </ClCompile>
@@ -102,11 +99,11 @@
     <ClCompile Include="components\InputManager.cpp">
       <Filter>Source Files\components\scripts</Filter>
     </ClCompile>
+    <ClCompile Include="dx\DXManager.cpp">
+      <Filter>Source Files\dx</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="dx\directx.h">
-      <Filter>Source Files\dx</Filter>
-    </ClInclude>
     <ClInclude Include="gameplay\GameObject.h">
       <Filter>Source Files\gameplay</Filter>
     </ClInclude>
@@ -184,9 +181,6 @@
     </ClInclude>
     <ClInclude Include="gameplay\Transform.h">
       <Filter>Source Files\gameplay</Filter>
-    </ClInclude>
-    <ClInclude Include="graphics\CameraParameters.h">
-      <Filter>Source Files\graphics</Filter>
     </ClInclude>
     <ClInclude Include="dx\DXInstancedMesh.h">
       <Filter>Source Files\dx</Filter>
@@ -274,6 +268,18 @@
     </ClInclude>
     <ClInclude Include="glm\vector_relational.hpp">
       <Filter>Source Files\glm</Filter>
+    </ClInclude>
+    <ClInclude Include="graphics\CameraDesc.h">
+      <Filter>Source Files\graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="dx\DXManager.h">
+      <Filter>Source Files\dx</Filter>
+    </ClInclude>
+    <ClInclude Include="graphics\LightSourceDesc.h">
+      <Filter>Source Files\graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="graphics\ObjectTransformDesc.h">
+      <Filter>Source Files\graphics</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

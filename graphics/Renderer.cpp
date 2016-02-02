@@ -2,8 +2,10 @@
 #include <string>
 #include <unordered_map>
 #include "../misc/CharHelper.h"
+
+using namespace OriGraphics;
 void Renderer::setMainCamera(const Vector3& pos, const Vector3& rot, const float fov, const float _nearPlane, const float _farPlane){
-	CameraParameters* params = new CameraParameters();
+	CameraDesc* params = new CameraDesc();
 	params->position = pos;
 	params->rotation = rot;
 	params->fieldOfView = fov;
@@ -20,7 +22,7 @@ void Renderer::updateMainCamera(const Vector3& pos, const Vector3& rot){
 }
 void Renderer::updateInstancedObject(const int id, const Vector3& position, const Vector3& rotation, const Vector3& scale){
 	
-	ObjectInstanceTransform* oit = instancedObjects[id];
+	ObjectTransformDesc* oit = instancedObjects[id];
 	if (oit == nullptr){
 		TRACE("cannot find an instanced object with id"<<id);
 	}
@@ -30,12 +32,12 @@ void Renderer::updateInstancedObject(const int id, const Vector3& position, cons
 }
 int Renderer::registerInstancedObject(){
 	int res;
-	ObjectInstanceTransform* oit = new ObjectInstanceTransform();
+	ObjectTransformDesc* oit = new ObjectTransformDesc();
 	oit->position = Vector3(-1,-1,-1);
 	oit->rotation = Vector3(-1, -1, -1);
 	oit->scale = Vector3(-1, -1, -1);
 
-	//instancedObjects.insert(std::make_pair<int, ObjectInstanceTransform*>(objectIndexIncrementer, oit));
+	//instancedObjects.insert(std::make_pair<int, ObjectTransformDesc*>(objectIndexIncrementer, oit));
 	instancedObjects.insert({ objectIndexIncrementer, oit });
 	res = objectIndexIncrementer;
 	objectIndexIncrementer++;

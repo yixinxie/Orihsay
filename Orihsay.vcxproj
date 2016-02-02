@@ -81,7 +81,7 @@
     <ClCompile Include="components\CubeMesh.cpp" />
     <ClCompile Include="components\InputManager.cpp" />
     <ClCompile Include="components\Panel.cpp" />
-    <ClCompile Include="dx\directx.cpp" />
+    <ClCompile Include="dx\DXManager.cpp" />
     <ClCompile Include="dx\DXInstancedMesh.cpp" />
     <ClCompile Include="dx\DXInstancing.cpp" />
     <ClCompile Include="gameplay\G.cpp" />
@@ -101,7 +101,7 @@
     <ClInclude Include="components\CubeMesh.h" />
     <ClInclude Include="components\InputManager.h" />
     <ClInclude Include="components\Panel.h" />
-    <ClInclude Include="dx\directx.h" />
+    <ClInclude Include="dx\DXManager.h" />
     <ClInclude Include="dx\DXInstancedMesh.h" />
     <ClInclude Include="dx\DXInstancing.h" />
     <ClInclude Include="gameplay\G.h" />
@@ -133,7 +133,9 @@
     <ClInclude Include="glm\vec3.hpp" />
     <ClInclude Include="glm\vec4.hpp" />
     <ClInclude Include="glm\vector_relational.hpp" />
-    <ClInclude Include="graphics\CameraParameters.h" />
+    <ClInclude Include="graphics\CameraDesc.h" />
+    <ClInclude Include="graphics\LightSourceDesc.h" />
+    <ClInclude Include="graphics\ObjectTransformDesc.h" />
     <ClInclude Include="graphics\Renderer.h" />
     <ClInclude Include="input\DXInput.h" />
     <ClInclude Include="math\EasyMath.h" />

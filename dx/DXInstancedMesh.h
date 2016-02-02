@@ -5,6 +5,7 @@
 #include <unordered_map>
 #include "../math/EasyMath.h"
 #include "../graphics/Renderer.h"
+using namespace OriGraphics;
 class DXInstancedMesh{
 private:
 	ID3D11Device *dev;
@@ -39,7 +40,7 @@ private:
 public:
 	DXInstancedMesh(ID3D11Device *_dev, ID3D11DeviceContext *_devcon);
 	void init(void);
-	void updateInstanceBuffer(const std::unordered_map<int, ObjectInstanceTransform*>& instancedObjects);
+	void updateInstanceBuffer(const std::unordered_map<int, ObjectTransformDesc*>& instancedObjects);
 	void render(ID3D11Buffer** viewProjCB);
 	void dispose(void);
 };

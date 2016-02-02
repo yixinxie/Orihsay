@@ -7,7 +7,7 @@ Transform::Transform(){
 	scale = Vector3(1, 1, 1);
 }
 void Transform::fromEuler(const Vector3 euler){
-	quaternion = glm::quat(glm::vec3(euler.x, euler.y, euler.z));
+	quaternion = glm::quat(glm::vec3(glm::radians(euler.x), glm::radians(euler.y), glm::radians(euler.z)));
 }
 void Transform::setGameObject(GameObject* _gameObject){
 	gameObject = _gameObject;

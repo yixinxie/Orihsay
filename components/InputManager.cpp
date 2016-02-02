@@ -32,35 +32,20 @@ void InputManager::update(void){
 	//if ((GetAsyncKeyState(0x57) & 0x8000)>0)
 	if (G::instance()->input->getKeyDown(KeyCode::W))
 	{
-		//gameObject->transform->position += gameObject->transform->getLookat() * 0.1f;
-		Vector3 forward = gameObject->transform->getLookat();
-		gameObject->transform->position.x += forward.x * 0.1f;
-		gameObject->transform->position.y += forward.y * 0.1f;
-		gameObject->transform->position.z += forward.z * 0.1f;
+		gameObject->transform->position += gameObject->transform->getLookat() * 0.1f;
+
 	}
 	if (G::instance()->input->getKeyDown(KeyCode::S)){
-		//gameObject->transform->position -= gameObject->transform->getLookat() * 0.1f;
+		gameObject->transform->position -= gameObject->transform->getLookat() * 0.1f;
 
-		Vector3 forward = gameObject->transform->getLookat();
-		gameObject->transform->position.x -= forward.x * 0.1f;
-		gameObject->transform->position.y -= forward.y * 0.1f;
-		gameObject->transform->position.z -= forward.z * 0.1f;
 	}
 	if (G::instance()->input->getKeyDown(KeyCode::A)){
-		//gameObject->transform->position -= gameObject->transform->getRight() * 0.1f;
+		gameObject->transform->position -= gameObject->transform->getRight() * 0.1f;
 
-		Vector3 right = gameObject->transform->getRight();
-		gameObject->transform->position.x -= right.x * 0.1f;
-		gameObject->transform->position.y -= right.y * 0.1f;
-		gameObject->transform->position.z -= right.z * 0.1f;
 	}
 	if (G::instance()->input->getKeyDown(KeyCode::D)){
-		//gameObject->transform->position += gameObject->transform->getRight() * 0.1f;
+		gameObject->transform->position += gameObject->transform->getRight() * 0.1f;
 
-		Vector3 right = gameObject->transform->getRight();
-		gameObject->transform->position.x += right.x * 0.1f;
-		gameObject->transform->position.y += right.y * 0.1f;
-		gameObject->transform->position.z += right.z * 0.1f;
 	}
 	
 }

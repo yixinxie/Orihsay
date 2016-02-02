@@ -3,18 +3,21 @@
 #include <windowsx.h>
 #include "graphics/Renderer.h"
 #include "gameplay/G.h"
-#include "dx/directx.h"
+#include "dx/DXManager.h"
 #include "input/DXInput.h"
 
 #include "gameplay/SceneManager.h"
 #include "misc/ClassFactory.h"
 ClassFactory classFactory;
+using namespace OriGraphics;
+
 // the WindowProc function prototype
 LRESULT CALLBACK WindowProc(HWND hWnd,
 	UINT message,
 	WPARAM wParam,
 	LPARAM lParam);
 HWND systemInit(const HINSTANCE instance, const int cmdShow, const int width, const int height);
+
 MSG gameLoop(Renderer* renderer, DXInput* input);
 
 int WINAPI WinMain(HINSTANCE hInstance,

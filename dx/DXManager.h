@@ -11,11 +11,11 @@
 #include "../misc/CharHelper.h"
 #include "../misc/Macros.h"
 
-// include the Direct3D Library file
 #pragma comment (lib, "d3d11.lib")
 #pragma comment (lib, "d3dx11.lib")
 #pragma comment (lib, "d3dx10.lib")
 
+using namespace OriGraphics;
 class DirectX11 : public Renderer{
 private:
 	IDXGISwapChain* swapchain;             // the pointer to the swap chain interface
@@ -24,23 +24,31 @@ private:
 
 	ID3D11RenderTargetView* backbuffer;
 
+	ID3D11Texture2D* depthStencilTex;
+	ID3D11DepthStencilState* depthStencilState;
+	ID3D11DepthStencilView* depthStencilView;
+
 	// instancing
 	DXInstancing* instancedDraw;
 	DXInstancedMesh* instancedDrawMesh;
-	void prepareCamera(void);
+	ID3D11Buffer* viewProjMatrixCB;
+
 	struct ViewProjection{
 
 		D3DXMATRIX view;
 		D3DXMATRIX projection;
 
 	};
-	ID3D11Buffer* viewProjMatrixCB;
+
+	void initDepthStencil(void);
+	void prepareCamera(void);
+	void assembleDrawables(void);
 public:
 	DirectX11(void);
 	void init(HWND hWnd, int _width, int _height);
 	void dispose(void);
 
-	void assembleDrawables(void);
+	
 	void initInstancing(void);
 	void disposeInstancing(void);
 	void render(void);
