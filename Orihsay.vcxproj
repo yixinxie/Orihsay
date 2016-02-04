@@ -80,10 +80,12 @@
     <ClCompile Include="components\Camera.cpp" />
     <ClCompile Include="components\CubeMesh.cpp" />
     <ClCompile Include="components\InputManager.cpp" />
+    <ClCompile Include="components\LightSource.cpp" />
     <ClCompile Include="components\Panel.cpp" />
     <ClCompile Include="dx\DXManager.cpp" />
     <ClCompile Include="dx\DXInstancedMesh.cpp" />
     <ClCompile Include="dx\DXInstancing.cpp" />
+    <ClCompile Include="dx\DXShadowMap.cpp" />
     <ClCompile Include="gameplay\G.cpp" />
     <ClCompile Include="gameplay\GameObject.cpp" />
     <ClCompile Include="gameplay\MonoBehaviour.cpp" />
@@ -100,10 +102,12 @@
     <ClInclude Include="components\Camera.h" />
     <ClInclude Include="components\CubeMesh.h" />
     <ClInclude Include="components\InputManager.h" />
+    <ClInclude Include="components\LightSource.h" />
     <ClInclude Include="components\Panel.h" />
     <ClInclude Include="dx\DXManager.h" />
     <ClInclude Include="dx\DXInstancedMesh.h" />
     <ClInclude Include="dx\DXInstancing.h" />
+    <ClInclude Include="dx\DXShadowMap.h" />
     <ClInclude Include="gameplay\G.h" />
     <ClInclude Include="gameplay\GameObject.h" />
     <ClInclude Include="gameplay\MonoBehaviour.h" />
@@ -162,6 +166,18 @@
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Pixel</ShaderType>
     </FxCompile>
     <FxCompile Include="dx\shaders\instanced_quad_vs.hlsl">
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Vertex</ShaderType>
+    </FxCompile>
+    <FxCompile Include="dx\shaders\instanced_shadowmap_depth_ps.hlsl">
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Pixel</ShaderType>
+    </FxCompile>
+    <FxCompile Include="dx\shaders\instanced_shadowmap_depth_vs.hlsl">
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Vertex</ShaderType>
+    </FxCompile>
+    <FxCompile Include="dx\shaders\instanced_shadowmap_mesh_ps.hlsl">
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Pixel</ShaderType>
+    </FxCompile>
+    <FxCompile Include="dx\shaders\instanced_shadowmap_mesh_vs.hlsl">
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Vertex</ShaderType>
     </FxCompile>
     <FxCompile Include="dx\shaders\instanced_simple_mesh_ps.hlsl">

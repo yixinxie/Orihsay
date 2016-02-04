@@ -221,6 +221,64 @@ void DXInstancedMesh::render(ID3D11Buffer** viewProjCB){
 
 	devcon->DrawIndexedInstanced(36, instanceCount, 0, 0, 0);
 }
+void DXInstancedMesh::renderDepthOnly(ID3D11Buffer** viewProjCB, ID3D11VertexShader* depthVertexShader, ID3D11PixelShader* depthPixelShader){
+	unsigned int strides[2];
+	unsigned int offsets[2];
+	ID3D11Buffer* bufferPointers[2];
+
+	strides[0] = sizeof(PerVertexData);
+	strides[1] = sizeof(InstanceStruct);
+
+	offsets[0] = 0;
+	offsets[1] = 0;
+
+	bufferPointers[0] = vertexBuffer;
+	bufferPointers[1] = instanceBuffer;
+
+	devcon->IASetVertexBuffers(0, 2, bufferPointers, strides, offsets);
+	devcon->IASetIndexBuffer(indexBuffer, DXGI_FORMAT_R32_UINT, 0); // 1??? questionable!
+	devcon->VSSetConstantBuffers(0, 1, viewProjCB);
+	devcon->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+	devcon->IASetInputLayout(inputLayout);
+
+	devcon->VSSetShader(depthVertexShader, NULL, 0);
+
+	devcon->PSSetShader(depthPixelShader, NULL, 0);
+
+	// Set the sampler state in the pixel shader.
+	//devcon->PSSetSamplers(0, 1, &m_sampleState);
+
+	devcon->DrawIndexedInstanced(36, instanceCount, 0, 0, 0);
+}
+void DXInstancedMesh::renderWithShadowMap(ID3D11Buffer** viewProjCB, ID3D11VertexShader* shadowVertexShader, ID3D11PixelShader* shadowPixelShader){
+	unsigned int strides[2];
+	unsigned int offsets[2];
+	ID3D11Buffer* bufferPointers[2];
+
+	strides[0] = sizeof(PerVertexData);
+	strides[1] = sizeof(InstanceStruct);
+
+	offsets[0] = 0;
+	offsets[1] = 0;
+
+	bufferPointers[0] = vertexBuffer;
+	bufferPointers[1] = instanceBuffer;
+
+	devcon->IASetVertexBuffers(0, 2, bufferPointers, strides, offsets);
+	devcon->IASetIndexBuffer(indexBuffer, DXGI_FORMAT_R32_UINT, 0); // 1??? questionable!
+	devcon->VSSetConstantBuffers(0, 1, viewProjCB);
+	devcon->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+	devcon->IASetInputLayout(inputLayout);
+
+	devcon->VSSetShader(vertexShader, NULL, 0);
+
+	devcon->PSSetShader(pixelShader, NULL, 0);
+
+	// Set the sampler state in the pixel shader.
+	//devcon->PSSetSamplers(0, 1, &m_sampleState);
+
+	devcon->DrawIndexedInstanced(36, instanceCount, 0, 0, 0);
+}
 void DXInstancedMesh::dispose(){
 	SAFE_RELEASE(vertexBuffer);
 	SAFE_RELEASE(indexBuffer);

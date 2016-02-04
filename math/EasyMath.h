@@ -32,6 +32,8 @@ struct Vector3{
 };
 struct Vector4{
 	float x, y, z, w;
+	Vector4(const float _x, const float _y, const float _z, const float _w) :x(_x), y(_y), z(_z), w(_w) {
+	}
 };
 struct IntVector2{
 	int x, y;

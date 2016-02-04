@@ -27,6 +27,8 @@ namespace OriGraphics{
 		vector<CameraDesc*> cameras;
 		int objectIndexIncrementer;
 		std::unordered_map<int, ObjectTransformDesc*> instancedObjects;
+		int lightIndexIncrementer;
+		std::unordered_map<int, LightSourceDesc*> lightSources;
 	public:
 		virtual void init(HWND hwnd, int _width, int _height) = 0;
 		virtual void dispose(void) = 0;
@@ -36,5 +38,7 @@ namespace OriGraphics{
 		int registerInstancedObject(void);
 		void updateInstancedObject(const int id, const Vector3& position, const Vector3& rotation, const Vector3& scale);
 
+		int registerLightSource(void);
+		void updateLightSource(const int id, const Vector3& position, const Vector3& rotation);
 	};
 }

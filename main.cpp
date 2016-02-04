@@ -27,7 +27,7 @@ int WINAPI WinMain(HINSTANCE hInstance,
 {
 	// the handle for the window, filled by a function
 	HWND window = systemInit(hInstance, nCmdShow, 1024, 768);
-	Renderer* renderer = new DirectX11();
+	Renderer* renderer = new DXManager();
 	G::instance()->renderer = renderer;
 	renderer->init(window, 1024, 768);
 

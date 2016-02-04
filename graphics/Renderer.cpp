@@ -20,26 +20,46 @@ void Renderer::updateMainCamera(const Vector3& pos, const Vector3& rot){
 	cameras[0]->rotation = rot;
 
 }
+int Renderer::registerInstancedObject(){
+	int res;
+	ObjectTransformDesc* oit = new ObjectTransformDesc();
+	oit->position = Vector3(-1, -1, -1);
+	oit->rotation = Vector3(-1, -1, -1);
+	oit->scale = Vector3(-1, -1, -1);
+
+	instancedObjects.insert({ objectIndexIncrementer, oit });
+	res = objectIndexIncrementer;
+	objectIndexIncrementer++;
+	return res;
+}
 void Renderer::updateInstancedObject(const int id, const Vector3& position, const Vector3& rotation, const Vector3& scale){
 	
 	ObjectTransformDesc* oit = instancedObjects[id];
 	if (oit == nullptr){
 		TRACE("cannot find an instanced object with id"<<id);
+		return;
 	}
 	oit->position = position;
 	oit->rotation = rotation;
 	oit->scale = scale;
 }
-int Renderer::registerInstancedObject(){
-	int res;
-	ObjectTransformDesc* oit = new ObjectTransformDesc();
-	oit->position = Vector3(-1,-1,-1);
-	oit->rotation = Vector3(-1, -1, -1);
-	oit->scale = Vector3(-1, -1, -1);
 
-	//instancedObjects.insert(std::make_pair<int, ObjectTransformDesc*>(objectIndexIncrementer, oit));
-	instancedObjects.insert({ objectIndexIncrementer, oit });
-	res = objectIndexIncrementer;
-	objectIndexIncrementer++;
+int Renderer::registerLightSource(){
+	int res;
+	LightSourceDesc* lightSourceDesc = new LightSourceDesc();
+
+	lightSources.insert({ lightIndexIncrementer, lightSourceDesc});
+	res = lightIndexIncrementer;
+	lightIndexIncrementer++;
 	return res;
+}
+void Renderer::updateLightSource(const int id, const Vector3& position, const Vector3& rotation){
+
+	LightSourceDesc* lightSourceDesc = lightSources[id];
+	if (lightSourceDesc == nullptr){
+		TRACE("cannot find the light source with id" << id);
+		return;
+	}
+	lightSourceDesc->position = position;
+	lightSourceDesc->rotation = rotation;
 }

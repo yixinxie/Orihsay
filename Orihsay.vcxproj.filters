@@ -102,6 +102,12 @@
     <ClCompile Include="dx\DXManager.cpp">
       <Filter>Source Files\dx</Filter>
     </ClCompile>
+    <ClCompile Include="components\LightSource.cpp">
+      <Filter>Source Files\components</Filter>
+    </ClCompile>
+    <ClCompile Include="dx\DXShadowMap.cpp">
+      <Filter>Source Files\dx</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="gameplay\GameObject.h">
@@ -281,6 +287,12 @@
     <ClInclude Include="graphics\ObjectTransformDesc.h">
       <Filter>Source Files\graphics</Filter>
     </ClInclude>
+    <ClInclude Include="components\LightSource.h">
+      <Filter>Source Files\components</Filter>
+    </ClInclude>
+    <ClInclude Include="dx\DXShadowMap.h">
+      <Filter>Source Files\dx</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="dx\shaders\instanced_quad_ps.hlsl">
@@ -299,6 +311,18 @@
       <Filter>Source Files\dx\shaders</Filter>
     </FxCompile>
     <FxCompile Include="dx\shaders\instanced_simple_mesh_vs.hlsl">
+      <Filter>Source Files\dx\shaders</Filter>
+    </FxCompile>
+    <FxCompile Include="dx\shaders\instanced_shadowmap_mesh_ps.hlsl">
+      <Filter>Source Files\dx\shaders</Filter>
+    </FxCompile>
+    <FxCompile Include="dx\shaders\instanced_shadowmap_mesh_vs.hlsl">
+      <Filter>Source Files\dx\shaders</Filter>
+    </FxCompile>
+    <FxCompile Include="dx\shaders\instanced_shadowmap_depth_ps.hlsl">
+      <Filter>Source Files\dx\shaders</Filter>
+    </FxCompile>
+    <FxCompile Include="dx\shaders\instanced_shadowmap_depth_vs.hlsl">
       <Filter>Source Files\dx\shaders</Filter>
     </FxCompile>
   </ItemGroup>

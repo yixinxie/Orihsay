@@ -1,6 +1,6 @@
 #include "DXManager.h"
 #include "../gameplay/Transform.h"
-DirectX11::DirectX11(void){
+DXManager::DXManager(void){
 	
 	swapchain = nullptr;
 	dev = nullptr;
@@ -13,11 +13,12 @@ DirectX11::DirectX11(void){
 
 	instancedDraw = nullptr;
 	instancedDrawMesh = nullptr;
+	shadowMap = nullptr;
 	viewProjMatrixCB = nullptr;
 	objectIndexIncrementer = 0; // this should not be here probably...
 	
 }
-void DirectX11::init(HWND hWnd, int _width, int _height)
+void DXManager::init(HWND hWnd, int _width, int _height)
 {
 	HRESULT hr;
 	windowWidth = _width;
@@ -69,12 +70,10 @@ void DirectX11::init(HWND hWnd, int _width, int _height)
 	height = backBufferDesc.Height;
 	backBufferTex->Release();
 	initDepthStencil();
-	
-	//devcon->OMSetRenderTargets(1, &backbuffer, NULL);
+
 	devcon->OMSetRenderTargets(1, &backbuffer, depthStencilView);
 
 	// Set the viewport -----------------camera dependent
-	D3D11_VIEWPORT viewport;
 	ZeroMemory(&viewport, sizeof(D3D11_VIEWPORT));
 
 	viewport.TopLeftX = 0;
@@ -85,8 +84,11 @@ void DirectX11::init(HWND hWnd, int _width, int _height)
 	viewport.MaxDepth = 1;
 
 	devcon->RSSetViewports(1, &viewport);
+	shadowMap = new DXShadowMap(dev, devcon);
+	shadowMap->init(width, height);
+
 }
-void DirectX11::initDepthStencil(){
+void DXManager::initDepthStencil(){
 	HRESULT hr;
 	D3D11_TEXTURE2D_DESC descDepth;
 	
@@ -141,7 +143,7 @@ void DirectX11::initDepthStencil(){
 	}
 
 	devcon->OMSetDepthStencilState(depthStencilState, 1);
-
+	
 
 	D3D11_DEPTH_STENCIL_VIEW_DESC descDSV;
 	
@@ -162,13 +164,14 @@ void DirectX11::initDepthStencil(){
 	}
 	int releaseres = depthStencilTex->Release();
 	int sdf = 0;
-	//devcon->OMSetRenderTargets(1, &backbuffer, depthStencilView);
+
 }
-void DirectX11::dispose()
+void DXManager::dispose()
 {
 	// close and release all existing COM objects
 	// render technique related
 	//SAFE_DISPOSE(instancedDraw);
+	SAFE_DISPOSE(shadowMap);
 	SAFE_DISPOSE(instancedDrawMesh);
 
 	// depth stencil related
@@ -184,7 +187,7 @@ void DirectX11::dispose()
 
 
 
-void DirectX11::initInstancing(){
+void DXManager::initInstancing(){
 	/*instancedDraw = new DXInstancing(dev, devcon);
 	instancedDraw->init();*/
 
@@ -192,7 +195,7 @@ void DirectX11::initInstancing(){
 	instancedDrawMesh->init();
 }
 
-void DirectX11::render(){
+void DXManager::renderWithoutShadowMap(){
 	HRESULT hr;
 	prepareCamera();
 	assembleDrawables();
@@ -205,8 +208,45 @@ void DirectX11::render(){
 		TRACE("present failed!");
 	}
 }
-
-void DirectX11::prepareCamera(){
+void DXManager::render(){
+	HRESULT hr;
+	assembleDrawables();
+	// gather light sources
+	// for each light source, render the scene
+	if (lightSources.size() > 0){
+		// create or update the view projection matrix buffer for the light source.
+		// set render target
+		// render with the shadow map shader.
+		shadowMap->prepareLightView();
+		prepareCamera();
+		
+		devcon->ClearRenderTargetView(shadowMap->rgbRTV, D3DXCOLOR(0.0f, 0.2f, 0.4f, 1.0f));
+		devcon->ClearDepthStencilView(shadowMap->depthDSV, D3D11_CLEAR_DEPTH, 1.0f, 0);
+		//devcon->VSSetConstantBuffers(0, 1, &viewProjMatrixCB);
+		instancedDrawMesh->renderDepthOnly(&viewProjMatrixCB, shadowMap->vertexShader, shadowMap->pixelShader);
+		// bind the depth texture to 
+		restoreRenderTarget();
+		devcon->ClearRenderTargetView(backbuffer, D3DXCOLOR(0.0f, 0.2f, 0.4f, 1.0f));
+		devcon->ClearDepthStencilView(depthStencilView, D3D11_CLEAR_DEPTH, 1.0f, 0);
+		instancedDrawMesh->renderWithShadowMap(&viewProjMatrixCB, shadowMap->shadowMapVertexShader, shadowMap->shadowMapPixelShader);
+	}
+	else{
+		prepareCamera();
+		devcon->ClearRenderTargetView(backbuffer, D3DXCOLOR(0.0f, 0.2f, 0.4f, 1.0f));
+		devcon->ClearDepthStencilView(depthStencilView, D3D11_CLEAR_DEPTH, 1.0f, 0);
+		instancedDrawMesh->render(&viewProjMatrixCB);
+	}
+	hr = swapchain->Present(0, 0);
+	if (FAILED(hr)){
+		TRACE("present failed!");
+	}
+}
+void DXManager::restoreRenderTarget(){
+	devcon->OMSetRenderTargets(1, &backbuffer, depthStencilView);
+	devcon->RSSetViewports(1, &viewport);
+	
+}
+void DXManager::prepareCamera(){
 	if (cameras.size() == 0){
 		TRACE("No camera found!");
 		return;
@@ -255,7 +295,7 @@ void DirectX11::prepareCamera(){
 
 	
 }
-void DirectX11::assembleDrawables(){
+void DXManager::assembleDrawables(){
 	if (instancedDrawMesh == nullptr){
 		instancedDrawMesh = new DXInstancedMesh(dev, devcon);
 		instancedDrawMesh->init();

@@ -33,6 +33,9 @@ private:
 		D3DXVECTOR3 position;
 		D3DXVECTOR4 color;
 	};
+	struct PerVertexDataDepthOnly{
+		D3DXVECTOR3 position;
+	};
 	
 	void initShadersAndInputLayout(void);
 	void initCubeBuffer(void);
@@ -42,5 +45,7 @@ public:
 	void init(void);
 	void updateInstanceBuffer(const std::unordered_map<int, ObjectTransformDesc*>& instancedObjects);
 	void render(ID3D11Buffer** viewProjCB);
+	void renderDepthOnly(ID3D11Buffer** viewProjCB, ID3D11VertexShader* depthVertexShader, ID3D11PixelShader* depthPixelShader);
+	void renderWithShadowMap(ID3D11Buffer** viewProjCB, ID3D11VertexShader* shadowVertexShader, ID3D11PixelShader* shadowPixelShader);
 	void dispose(void);
 };
