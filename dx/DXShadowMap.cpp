@@ -131,6 +131,8 @@ void DXShadowMap::init(int width, int height){
 	viewport.TopLeftX = 0.0f;
 	viewport.TopLeftY = 0.0f;
 
+	initShaders();
+
 }
 void DXShadowMap::prepareLightView(){
 	devcon->OMSetRenderTargets(1, &rgbRTV, depthDSV);

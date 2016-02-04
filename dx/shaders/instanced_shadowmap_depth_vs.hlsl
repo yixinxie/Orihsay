@@ -1,7 +1,7 @@
 
 struct VertexInputType
 {
-    float4 position : POSITION;
+    float3 position : POSITION;
 
 	// during the first pass of shadow map, when rendering just the depth values to an RGB buffer,
 	// additional data per vertex data such as color, texture coord are not needed.
@@ -38,10 +38,11 @@ PixelInputType main(VertexInputType input)
     
 	// Change the position vector to be 4 units for proper matrix calculations.
 	matrix worldMatrix = float4x4(input.worldMatrix0, input.worldMatrix1, input.worldMatrix2, input.worldMatrix3);
-    input.position.w = 1.0f;
+    output.position.w = 1.0f;
+	output.position.xyz = input.position;
 
 	// Calculate the position of the vertex against the world, view, and projection matrices.
-    output.position = mul(input.position, worldMatrix);
+    output.position = mul(output.position, worldMatrix);
     output.position = mul(output.position, viewMatrix);
     output.position = mul(output.position, projectionMatrix);
 

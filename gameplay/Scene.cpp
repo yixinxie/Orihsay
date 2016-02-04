@@ -83,6 +83,11 @@ void Scene::deserialize(){
 				MonoBehaviour* component = (MonoBehaviour*)classFactory.construct("InputManager");
 				go->addComponent(component);
 			}
+			else if (std::strcmp(componentNode["className"].GetString(), "Light") == 0){
+
+				MonoBehaviour* component = (MonoBehaviour*)classFactory.construct("LightSource");
+				go->addComponent(component);
+			}
 		}
 	}
 

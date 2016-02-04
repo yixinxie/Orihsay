@@ -35,6 +35,7 @@ private:
 	DXInstancing* instancedDraw;
 	DXInstancedMesh* instancedDrawMesh;
 	ID3D11Buffer* viewProjMatrixCB;
+	ID3D11Buffer* lightViewProjMatrixCB;
 	DXShadowMap* shadowMap;
 
 	struct ViewProjection{
@@ -48,6 +49,7 @@ private:
 
 	void initDepthStencil(void);
 	void prepareCamera(void);
+	void prepareViewProjectionCB(ID3D11Buffer** constantBuffer, const Vector3 position, const Vector3 euler, float fieldOfView, float aspectRatio, float nearPlane, float farPlane);
 	void assembleDrawables(void);
 	void restoreRenderTarget(void);
 public:
