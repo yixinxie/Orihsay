@@ -8,7 +8,7 @@ private:
 
 	ID3D11Texture2D* rgbTex;
 	
-	ID3D11ShaderResourceView* rgbSRV;
+	
 
 	ID3D11Texture2D* depthTex;
 	
@@ -17,6 +17,7 @@ private:
 	
 	void initShaders(void);
 public:
+	ID3D11ShaderResourceView* rgbSRV;
 	ID3D11DepthStencilView* depthDSV;
 	ID3D11RenderTargetView* rgbRTV;
 
@@ -25,6 +26,8 @@ public:
 
 	ID3D11VertexShader* shadowMapVertexShader;
 	ID3D11PixelShader* shadowMapPixelShader;
+
+	ID3D11SamplerState* samplerState;
 
 	DXShadowMap(ID3D11Device* _dev, ID3D11DeviceContext* _devcon);
 	void dispose(void);

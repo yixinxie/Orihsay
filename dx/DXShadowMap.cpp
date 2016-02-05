@@ -11,6 +11,7 @@ rgbTex(nullptr), rgbRTV(nullptr), rgbSRV(nullptr), depthTex(nullptr), depthDSV(n
 	shadowMapPixelShader = nullptr;
 	vertexShader = nullptr;
 	pixelShader = nullptr;
+	samplerState = nullptr;
 }
 void DXShadowMap::initShaders(){
 	HRESULT hr;
@@ -44,6 +45,28 @@ void DXShadowMap::initShaders(){
 		TRACE("shadowmap color pixel shader create failed");
 	}
 	SAFE_DISPOSE(psBuffer);
+
+	D3D11_SAMPLER_DESC samplerDesc;
+	samplerDesc.Filter = D3D11_FILTER_MIN_MAG_MIP_LINEAR;
+	samplerDesc.AddressU = D3D11_TEXTURE_ADDRESS_CLAMP;
+	samplerDesc.AddressV = D3D11_TEXTURE_ADDRESS_CLAMP;
+	samplerDesc.AddressW = D3D11_TEXTURE_ADDRESS_CLAMP;
+	samplerDesc.MipLODBias = 0.0f;
+	samplerDesc.MaxAnisotropy = 1;
+	samplerDesc.ComparisonFunc = D3D11_COMPARISON_ALWAYS;
+	samplerDesc.BorderColor[0] = 0;
+	samplerDesc.BorderColor[1] = 0;
+	samplerDesc.BorderColor[2] = 0;
+	samplerDesc.BorderColor[3] = 0;
+	samplerDesc.MinLOD = 0;
+	samplerDesc.MaxLOD = D3D11_FLOAT32_MAX;
+
+	// Create the texture sampler state.
+	hr = dev->CreateSamplerState(&samplerDesc, &samplerState);
+	if (FAILED(hr))
+	{
+		TRACE("depth map texture sampler state create failed.");
+	}
 }
 void DXShadowMap::init(int width, int height){
 	HRESULT hr;
@@ -135,8 +158,10 @@ void DXShadowMap::init(int width, int height){
 
 }
 void DXShadowMap::prepareLightView(){
+	ID3D11ShaderResourceView* emptySRV[1] = { nullptr };
+	devcon->PSSetShaderResources(0, 1, emptySRV);
 	devcon->OMSetRenderTargets(1, &rgbRTV, depthDSV);
-
+	
 	devcon->RSSetViewports(1, &viewport);
 	float clearColor[4] = { 0, 0, 0, 1 };
 

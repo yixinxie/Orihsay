@@ -11,7 +11,7 @@ namespace OriGraphics{
 
 	/* 
 	the Renderer class serves as an intermediary class between the graphics APIs(directx,
-	opengl etc) that manages the states of all rendering-related objects.
+	opengl etc) and the entity component system. It manages the states of all rendering-related objects.
 
 	*/
 	class Renderer{
