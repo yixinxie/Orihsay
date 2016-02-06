@@ -11,6 +11,7 @@
 #include "DXShadowMap.h"
 #include "../misc/CharHelper.h"
 #include "../misc/Macros.h"
+#include "DXShaderStructs.h"
 
 #pragma comment (lib, "d3d11.lib")
 #pragma comment (lib, "d3dx11.lib")
@@ -32,21 +33,12 @@ private:
 	ID3D11DepthStencilView* depthStencilView;
 
 	// instancing
+	ID3D11Buffer* viewProjMatrixCB;
+
+	// techniques:
 	DXInstancing* instancedDraw;
 	DXInstancedMesh* instancedDrawMesh;
-	ID3D11Buffer* viewProjMatrixCB;
-	ID3D11Buffer* lightViewProjMatrixCB;
 	DXShadowMap* shadowMap;
-
-	struct ViewProjection{
-
-		D3DXMATRIX view;
-		D3DXMATRIX projection;
-	};
-
-	// shadow map related
-	ID3D11Buffer* lightSourceViewProjMatrixCB;
-	ID3D11Buffer* lightSourcePositionCB;
 
 	void initDepthStencil(void);
 	void prepareCamera(void);

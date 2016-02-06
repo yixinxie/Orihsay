@@ -107,6 +107,7 @@
     <ClInclude Include="dx\DXManager.h" />
     <ClInclude Include="dx\DXInstancedMesh.h" />
     <ClInclude Include="dx\DXInstancing.h" />
+    <ClInclude Include="dx\DXShaderStructs.h" />
     <ClInclude Include="dx\DXShadowMap.h" />
     <ClInclude Include="gameplay\G.h" />
     <ClInclude Include="gameplay\GameObject.h" />
@@ -192,6 +193,9 @@
     <FxCompile Include="dx\shaders\uiquad_vs.hlsl">
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Vertex</ShaderType>
     </FxCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="ClassDiagram.cd" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

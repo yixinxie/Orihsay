@@ -15,8 +15,7 @@ DXManager::DXManager(void){
 	instancedDrawMesh = nullptr;
 	shadowMap = nullptr;
 	viewProjMatrixCB = nullptr;
-	lightSourceViewProjMatrixCB = nullptr;
-	lightSourcePositionCB = nullptr;
+	
 	objectIndexIncrementer = 0; // this should not be here probably...
 	lightIndexIncrementer = 0;
 	
@@ -174,6 +173,8 @@ void DXManager::dispose()
 	// close and release all existing COM objects
 	// render technique related
 	//SAFE_DISPOSE(instancedDraw);
+
+
 	SAFE_DISPOSE(shadowMap);
 	SAFE_DISPOSE(instancedDrawMesh);
 
@@ -222,19 +223,19 @@ void DXManager::render(){
 		// render with the shadow map shader.
 		LightSourceDesc* lightSourceDesc = lightSources[0];
 		shadowMap->prepareLightView();
-		prepareViewProjectionCB(&lightSourceViewProjMatrixCB, lightSourceDesc->position, lightSourceDesc->rotation, 60.0f, (float)width / height, 0.3f, 1000.0f, &lightSourcePositionCB);
+		shadowMap->updateLightViewCB(lightSourceDesc->position, lightSourceDesc->rotation, 60.0f, (float)width / height, 0.3f, 1000.0f);
 		
 		devcon->ClearRenderTargetView(shadowMap->rgbRTV, D3DXCOLOR(0.0f, 0.2f, 0.4f, 1.0f));
 		devcon->ClearDepthStencilView(shadowMap->depthDSV, D3D11_CLEAR_DEPTH, 1.0f, 0);
 		//devcon->VSSetConstantBuffers(0, 1, &viewProjMatrixCB);
-		instancedDrawMesh->renderDepthOnly(&lightSourceViewProjMatrixCB, shadowMap->vertexShader, shadowMap->pixelShader);
+		instancedDrawMesh->renderDepthOnly(&(shadowMap->lightSourceViewProjMatrixCB), shadowMap->vertexShader, shadowMap->pixelShader);
 		// bind the depth texture to 
 		restoreRenderTarget();
 		prepareCamera();
 		devcon->ClearRenderTargetView(backbuffer, D3DXCOLOR(0.0f, 0.2f, 0.4f, 1.0f));
 		devcon->ClearDepthStencilView(depthStencilView, D3D11_CLEAR_DEPTH, 1.0f, 0);
 		
-		instancedDrawMesh->renderWithShadowMap(&viewProjMatrixCB, shadowMap->shadowMapVertexShader, shadowMap->shadowMapPixelShader, shadowMap->rgbSRV, shadowMap->samplerState, &lightSourceViewProjMatrixCB, &lightSourcePositionCB);
+		instancedDrawMesh->renderWithShadowMap(shadowMap->shadowMapVertexShader, shadowMap->shadowMapPixelShader, shadowMap->rgbSRV, shadowMap->samplerState, &viewProjMatrixCB, &(shadowMap->lightSourceViewProjMatrixCB), &(shadowMap->lightSourcePositionCB));
 	}
 	else{
 		prepareCamera();
@@ -249,7 +250,7 @@ void DXManager::render(){
 }
 void DXManager::restoreRenderTarget(){
 	devcon->OMSetRenderTargets(1, &backbuffer, depthStencilView);
-	devcon->RSSetViewports(1, &viewport);
+	//devcon->RSSetViewports(1, &viewport);
 	
 }
 void DXManager::prepareCamera(){
@@ -301,66 +302,7 @@ void DXManager::prepareCamera(){
 
 	
 }
-void DXManager::prepareViewProjectionCB(ID3D11Buffer** constantBuffer, const Vector3 position, const Vector3 euler, float fieldOfView, float aspectRatio, float nearPlane, float farPlane, ID3D11Buffer** constantBuffer2){
-	Vector3 _lookat, _up;
 
-	//Transform::getLookatAndUp(Vector3(glm::radians(0.0f), glm::radians(0.0), glm::radians(30.0f)), &_lookat, &_up);
-
-	Transform::getLookatAndUp(euler, &_lookat, &_up);
-
-	D3DXVECTOR3 eye(position.x, position.y, position.z);
-	D3DXVECTOR3 lookAt(position.x + _lookat.x, position.y + _lookat.y, position.z + _lookat.z);
-	D3DXVECTOR3 up(_up.x, _up.y, _up.z);
-
-	ViewProjection wvp;
-	D3DXMatrixLookAtLH(&(wvp.view), &eye, &lookAt, &up);
-	D3DXMatrixPerspectiveFovLH(&(wvp.projection), D3DXToRadian(fieldOfView), aspectRatio, nearPlane, farPlane);
-	HRESULT hr;
-	if (*constantBuffer == nullptr){
-		D3DXMatrixTranspose(&(wvp.view), &(wvp.view));
-		D3DXMatrixTranspose(&(wvp.projection), &(wvp.projection));
-		D3D11_BUFFER_DESC cbd = { sizeof(wvp), D3D11_USAGE_DYNAMIC, D3D11_BIND_CONSTANT_BUFFER, D3D11_CPU_ACCESS_WRITE, 0, 0 };
-		D3D11_SUBRESOURCE_DATA cbdInitData = { &wvp, 0, 0 };
-
-		hr = dev->CreateBuffer(&cbd, &cbdInitData, constantBuffer);
-		if (FAILED(hr)){
-			TRACE("camera constant buffer create failed!");
-		}
-	}
-	else {
-		// if the view matrix buffer is already created, we just need to update it.
-		D3D11_MAPPED_SUBRESOURCE resource;
-		hr = devcon->Map(*constantBuffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &resource);
-
-		ViewProjection* viewProjectionMatrices = (ViewProjection*)resource.pData;
-		D3DXMatrixTranspose(&(viewProjectionMatrices->view), &(wvp.view));
-		D3DXMatrixTranspose(&(viewProjectionMatrices->projection), &(wvp.projection));
-
-		devcon->Unmap(*constantBuffer, 0);
-
-	}
-	if (*constantBuffer2 == nullptr){
-		D3D11_BUFFER_DESC cbd = { sizeof(Vector4), D3D11_USAGE_DYNAMIC, D3D11_BIND_CONSTANT_BUFFER, D3D11_CPU_ACCESS_WRITE, 0, 0 };
-		Vector4 tmp = Vector4(position);
-
-		D3D11_SUBRESOURCE_DATA cbdInitData = { &tmp, 0, 0 };
-
-		hr = dev->CreateBuffer(&cbd, &cbdInitData, constantBuffer2);
-		if (FAILED(hr)){
-			TRACE("camera constant buffer create failed!");
-		}
-	}
-	else{
-		// if the view matrix buffer is already created, we just need to update it.
-		D3D11_MAPPED_SUBRESOURCE resource;
-		hr = devcon->Map(*constantBuffer2, 0, D3D11_MAP_WRITE_DISCARD, 0, &resource);
-
-		Vector3* lightPos = (Vector3*)resource.pData;
-		*lightPos = position;
-
-		devcon->Unmap(*constantBuffer2, 0);
-	}
-}
 void DXManager::assembleDrawables(){
 	if (instancedDrawMesh == nullptr){
 		instancedDrawMesh = new DXInstancedMesh(dev, devcon);

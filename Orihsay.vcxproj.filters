@@ -293,6 +293,9 @@
     <ClInclude Include="dx\DXShadowMap.h">
       <Filter>Source Files\dx</Filter>
     </ClInclude>
+    <ClInclude Include="dx\DXShaderStructs.h">
+      <Filter>Source Files\dx</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="dx\shaders\instanced_quad_ps.hlsl">
@@ -325,5 +328,8 @@
     <FxCompile Include="dx\shaders\instanced_shadowmap_depth_vs.hlsl">
       <Filter>Source Files\dx\shaders</Filter>
     </FxCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="ClassDiagram.cd" />
   </ItemGroup>
 </Project>

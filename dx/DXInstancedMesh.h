@@ -46,6 +46,6 @@ public:
 	void updateInstanceBuffer(const std::unordered_map<int, ObjectTransformDesc*>& instancedObjects);
 	void render(ID3D11Buffer** viewProjCB);
 	void renderDepthOnly(ID3D11Buffer** viewProjCB, ID3D11VertexShader* depthVertexShader, ID3D11PixelShader* depthPixelShader);
-	void renderWithShadowMap(ID3D11Buffer** viewProjCB, ID3D11VertexShader* shadowVertexShader, ID3D11PixelShader* shadowPixelShader, ID3D11ShaderResourceView* shadowMapSRV, ID3D11SamplerState* samplerState, ID3D11Buffer** lightViewProjCB, ID3D11Buffer** lightPositionCB);
+	void renderWithShadowMap(ID3D11VertexShader* shadowVertexShader, ID3D11PixelShader* shadowPixelShader, ID3D11ShaderResourceView* shadowMapSRV, ID3D11SamplerState* samplerState, ID3D11Buffer** viewProjCB, ID3D11Buffer** lightViewProjCB, ID3D11Buffer** lightPositionCB);
 	void dispose(void);
 };

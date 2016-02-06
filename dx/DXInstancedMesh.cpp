@@ -250,7 +250,7 @@ void DXInstancedMesh::renderDepthOnly(ID3D11Buffer** viewProjCB, ID3D11VertexSha
 
 	devcon->DrawIndexedInstanced(36, instanceCount, 0, 0, 0);
 }
-void DXInstancedMesh::renderWithShadowMap(ID3D11Buffer** viewProjCB, ID3D11VertexShader* shadowVertexShader, ID3D11PixelShader* shadowPixelShader, ID3D11ShaderResourceView* shadowMapSRV, ID3D11SamplerState* samplerState, ID3D11Buffer** lightViewProjCB, ID3D11Buffer** lightPositionCB){
+void DXInstancedMesh::renderWithShadowMap(ID3D11VertexShader* shadowVertexShader, ID3D11PixelShader* shadowPixelShader, ID3D11ShaderResourceView* shadowMapSRV, ID3D11SamplerState* samplerState, ID3D11Buffer** viewProjCB, ID3D11Buffer** lightViewProjCB, ID3D11Buffer** lightPositionCB){
 	unsigned int strides[2];
 	unsigned int offsets[2];
 	ID3D11Buffer* bufferPointers[2];
@@ -264,13 +264,11 @@ void DXInstancedMesh::renderWithShadowMap(ID3D11Buffer** viewProjCB, ID3D11Verte
 	bufferPointers[0] = vertexBuffer;
 	bufferPointers[1] = instanceBuffer;
 
-	devcon->IASetVertexBuffers(0, 2, bufferPointers, strides, offsets);
-	devcon->IASetIndexBuffer(indexBuffer, DXGI_FORMAT_R32_UINT, 0); // 1??? questionable!
+	//devcon->IASetVertexBuffers(0, 2, bufferPointers, strides, offsets);
+	//devcon->IASetIndexBuffer(indexBuffer, DXGI_FORMAT_R32_UINT, 0); // 1??? questionable!
 
 	ID3D11Buffer* constantBufferArray[3] = { *viewProjCB, *lightViewProjCB, *lightPositionCB };
 	devcon->VSSetConstantBuffers(0, 3, constantBufferArray);
-	devcon->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
-	devcon->IASetInputLayout(inputLayout);
 
 	devcon->VSSetShader(shadowVertexShader, NULL, 0);
 
@@ -278,8 +276,6 @@ void DXInstancedMesh::renderWithShadowMap(ID3D11Buffer** viewProjCB, ID3D11Verte
 
 	devcon->PSSetShaderResources(0, 1, &shadowMapSRV);
 	devcon->PSSetSamplers(0, 1, &samplerState);
-	// Set the sampler state in the pixel shader.
-	//devcon->PSSetSamplers(0, 1, &m_sampleState);
 
 	devcon->DrawIndexedInstanced(36, instanceCount, 0, 0, 0);
 }
