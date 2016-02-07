@@ -27,7 +27,7 @@ float4 main(PixelInputType input) : SV_TARGET
 		// inside the shadowmap
 		float depthValue = depthMapTex.Sample(samplerClamp, projCoord).r;
 		float lightDepthValue = input.lightViewPosition.z / input.lightViewPosition.w;
-		if (lightDepthValue - 0.001f > depthValue){
+		if (lightDepthValue - 0.00001f > depthValue){
 			outputColor *= 0.5f;
 		}
 

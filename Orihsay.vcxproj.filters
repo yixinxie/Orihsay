@@ -108,6 +108,9 @@
     <ClCompile Include="dx\DXShadowMap.cpp">
       <Filter>Source Files\dx</Filter>
     </ClCompile>
+    <ClCompile Include="dx\DXDeferred.cpp">
+      <Filter>Source Files\dx</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="gameplay\GameObject.h">
@@ -294,6 +297,9 @@
       <Filter>Source Files\dx</Filter>
     </ClInclude>
     <ClInclude Include="dx\DXShaderStructs.h">
+      <Filter>Source Files\dx</Filter>
+    </ClInclude>
+    <ClInclude Include="dx\DXDeferred.h">
       <Filter>Source Files\dx</Filter>
     </ClInclude>
   </ItemGroup>

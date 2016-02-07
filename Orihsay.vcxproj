@@ -82,6 +82,7 @@
     <ClCompile Include="components\InputManager.cpp" />
     <ClCompile Include="components\LightSource.cpp" />
     <ClCompile Include="components\Panel.cpp" />
+    <ClCompile Include="dx\DXDeferred.cpp" />
     <ClCompile Include="dx\DXManager.cpp" />
     <ClCompile Include="dx\DXInstancedMesh.cpp" />
     <ClCompile Include="dx\DXInstancing.cpp" />
@@ -104,6 +105,7 @@
     <ClInclude Include="components\InputManager.h" />
     <ClInclude Include="components\LightSource.h" />
     <ClInclude Include="components\Panel.h" />
+    <ClInclude Include="dx\DXDeferred.h" />
     <ClInclude Include="dx\DXManager.h" />
     <ClInclude Include="dx\DXInstancedMesh.h" />
     <ClInclude Include="dx\DXInstancing.h" />
