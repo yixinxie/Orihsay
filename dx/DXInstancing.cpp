@@ -9,6 +9,13 @@ DXInstancing::DXInstancing(ID3D11Device *_dev, ID3D11DeviceContext *_devcon) :de
 	vertexBuffer = nullptr;
 	instanceBuffer = nullptr;
 }
+void DXInstancing::dispose(){
+	SAFE_RELEASE(vertexBuffer);
+	SAFE_RELEASE(instanceBuffer);
+	SAFE_RELEASE(vertexShader);
+	SAFE_RELEASE(pixelShader);
+	SAFE_RELEASE(inputLayout);
+}
 void DXInstancing::init(){
 	initQuadBuffer();
 	initShadersAndInputLayout();
@@ -68,7 +75,35 @@ void DXInstancing::initShadersAndInputLayout(){
 void DXInstancing::initQuadBuffer(){
 	HRESULT hr;
 	// vertex buffer: the vertex buffer stores the vertices of a quad and it is created only once per execution.
-	PerVertexData quadVertices[] =
+	PerVertexData_Quad quadVertices[] =
+	{
+		// clockwise triangle winding.
+		{ { 0, 0, 0 }, {0, 0} },
+		{ { 0, 0.1f, 0 }, {0, 1} },
+		{ { 0.1f, 0, 0 }, { 1, 0 } },
+
+		{ { 0, 0.1f, 0 }, { 0, 1 } },
+		{ { 0.1f, 0.1f, 0 }, { 1, 1 } },
+		{ { 0.1f, 0, 0 }, { 1, 0 } },
+
+	};
+
+	D3D11_BUFFER_DESC bd = { 0 };
+	bd.ByteWidth = sizeof(PerVertexData_Quad) * ARRAYSIZE(quadVertices);
+	bd.BindFlags = D3D11_BIND_VERTEX_BUFFER;
+
+	D3D11_SUBRESOURCE_DATA srd = { quadVertices, 0, 0 };
+
+	hr = dev->CreateBuffer(&bd, &srd, &vertexBuffer);
+	if (FAILED(hr)){
+		TRACE("quad vertex buffer create failed!");
+	}
+}
+
+void DXInstancing::initUIQuadBuffer(){
+	HRESULT hr;
+	// vertex buffer: the vertex buffer stores the vertices of a quad and it is created only once per execution.
+	PerVertexData_Quad quadVertices[] =
 	{
 		// clockwise triangle winding.
 		{ { 0.0f, 0.0f, 0.0f } },
@@ -82,7 +117,7 @@ void DXInstancing::initQuadBuffer(){
 	};
 
 	D3D11_BUFFER_DESC bd = { 0 };
-	bd.ByteWidth = sizeof(PerVertexData) * ARRAYSIZE(quadVertices);
+	bd.ByteWidth = sizeof(PerVertexData_Quad) * ARRAYSIZE(quadVertices);
 	bd.BindFlags = D3D11_BIND_VERTEX_BUFFER;
 
 	D3D11_SUBRESOURCE_DATA srd = { quadVertices, 0, 0 };
@@ -99,15 +134,11 @@ void DXInstancing::initQuadBuffer(){
 		instances = new InstanceStruct[instanceCount];
 
 		// Load the instance array with data.
-		instances[0].position = D3DXVECTOR3(0.3f, 0.3f, 0);
-		instances[1].position = D3DXVECTOR3(-0.3f, 0.3f, 0);
-		instances[2].position = D3DXVECTOR3(-0.3f, -0.3f, 0);
-		instances[3].position = D3DXVECTOR3(0.3f, -0.3f, 0);
+		//instances[0].position = D3DXVECTOR3(0.3f, 0.3f, 0);
+		//instances[1].position = D3DXVECTOR3(-0.3f, 0.3f, 0);
+		//instances[2].position = D3DXVECTOR3(-0.3f, -0.3f, 0);
+		//instances[3].position = D3DXVECTOR3(0.3f, -0.3f, 0);
 
-		/*instances[0].position = D3DXVECTOR3(0, 0, 0);
-		instances[1].position = D3DXVECTOR3(-1, 0, 0);
-		instances[2].position = D3DXVECTOR3(0, -1, 0);
-		instances[3].position = D3DXVECTOR3(-1, -1, 0);*/
 
 		D3D11_BUFFER_DESC instanceBufferDesc = { sizeof(InstanceStruct) * instanceCount,
 			D3D11_USAGE_DYNAMIC, //D3D11_USAGE_DEFAULT,
@@ -132,10 +163,10 @@ void DXInstancing::updateInstanceBuffer(){
 	instances = new InstanceStruct[instanceCount];
 
 	// Load the instance array with data.
-	instances[0].position = D3DXVECTOR3(0.3f, 0.3f, 0);
-	instances[1].position = D3DXVECTOR3(-0.3f, 0.3f, 0);
-	instances[2].position = D3DXVECTOR3(-0.3f, -0.3f, 0);
-	instances[3].position = D3DXVECTOR3(0.3f, -0.3f, 0);
+	//instances[0].position = D3DXVECTOR3(0.3f, 0.3f, 0);
+	//instances[1].position = D3DXVECTOR3(-0.3f, 0.3f, 0);
+	//instances[2].position = D3DXVECTOR3(-0.3f, -0.3f, 0);
+	//instances[3].position = D3DXVECTOR3(0.3f, -0.3f, 0);
 
 	D3D11_BUFFER_DESC instanceBufferDesc = { sizeof(InstanceStruct) * instanceCount,
 		D3D11_USAGE_DYNAMIC, //D3D11_USAGE_DEFAULT,
@@ -158,7 +189,7 @@ void DXInstancing::render(){
 	unsigned int offsets[2];
 	ID3D11Buffer* bufferPointers[2];
 
-	strides[0] = sizeof(PerVertexData);
+	strides[0] = sizeof(PerVertexData_Quad);
 	strides[1] = sizeof(InstanceStruct);
 
 	offsets[0] = 0;
@@ -179,10 +210,19 @@ void DXInstancing::render(){
 
 	devcon->DrawInstanced(6, instanceCount, 0, 0);
 }
-void DXInstancing::dispose(){
-	SAFE_RELEASE(vertexBuffer);
-	SAFE_RELEASE(instanceBuffer);
-	SAFE_RELEASE(vertexShader);
-	SAFE_RELEASE(pixelShader);
-	SAFE_RELEASE(inputLayout);
+void DXInstancing::setQuadVertexBuffer(){
+	unsigned int strides[1];
+	unsigned int offsets[1];
+	ID3D11Buffer* bufferPointers[1];
+
+	strides[0] = sizeof(PerVertexData_Quad);
+
+	offsets[0] = 0;
+
+	bufferPointers[0] = vertexBuffer;
+
+	devcon->IASetVertexBuffers(0, 1, bufferPointers, strides, offsets);
+}
+void DXInstancing::drawQuad(){
+	devcon->Draw(6, 0);
 }

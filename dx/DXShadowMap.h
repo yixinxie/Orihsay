@@ -34,6 +34,6 @@ public:
 	DXShadowMap(ID3D11Device* _dev, ID3D11DeviceContext* _devcon);
 	void dispose(void);
 	void init(int width, int height);
-	void prepareLightView(void);
+	void setRenderTarget_DepthBuffer(void);
 	void updateLightViewCB(const Vector3 position, const Vector3 euler, float fieldOfView, float aspectRatio, float nearPlane, float farPlane);
 };

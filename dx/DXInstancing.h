@@ -2,6 +2,7 @@
 #include <d3d11.h>
 #include <d3dx11.h>
 #include <d3dx10.h>
+#include "DXShaderStructs.h"
 class DXInstancing{
 private:
 	ID3D11Device *dev;
@@ -16,26 +17,11 @@ private:
 	ID3D11Buffer* instanceBuffer;
 	ID3D11Buffer* vertexBuffer;
 	int instanceCount;
-	// per instance data
-	struct InstanceStruct{
-		D3DXVECTOR3 position;
-	};
+	
 	InstanceStruct* instances;
 
-	struct PerVertexData{
-		D3DXVECTOR3 position;
-	};
-
-	//struct MatrixBufferStruct
-	//{
-	//	D3DXMATRIX world;
-	//	D3DXMATRIX view;
-	//	D3DXMATRIX projection;
-	//};
-	
-	//MatrixBufferStruct matrixBuffer;
 	void initShadersAndInputLayout(void);
-	void initQuadBuffer(void);
+	
 public:
 	DXInstancing(ID3D11Device *_dev, ID3D11DeviceContext *_devcon);
 	void init(void);
@@ -43,4 +29,8 @@ public:
 	
 	void render(void);
 	void dispose(void);
+	void initUIQuadBuffer(void);
+	void initQuadBuffer(void);
+	void setQuadVertexBuffer(void);
+	void drawQuad(void);
 };

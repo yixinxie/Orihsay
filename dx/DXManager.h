@@ -9,6 +9,7 @@
 #include "DXInstancing.h"
 #include "DXInstancedMesh.h"
 #include "DXShadowMap.h"
+#include "DXDeferred.h"
 #include "../misc/CharHelper.h"
 #include "../misc/Macros.h"
 #include "DXShaderStructs.h"
@@ -36,9 +37,10 @@ private:
 	ID3D11Buffer* viewProjMatrixCB;
 
 	// techniques:
-	DXInstancing* instancedDraw;
-	DXInstancedMesh* instancedDrawMesh;
+	DXInstancing* instancedQuads;
+	DXInstancedMesh* instancedMesh;
 	DXShadowMap* shadowMap;
+	DXDeferred* deferredShading;
 
 	void initDepthStencil(void);
 	void prepareCamera(void);

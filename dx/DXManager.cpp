@@ -1,7 +1,7 @@
 #include "DXManager.h"
 #include "../gameplay/Transform.h"
 DXManager::DXManager(void){
-	
+	//ZeroMemory((void*)this, sizeof(DXManager));
 	swapchain = nullptr;
 	dev = nullptr;
 	devcon = nullptr;
@@ -11,14 +11,37 @@ DXManager::DXManager(void){
 	depthStencilState = nullptr;
 	depthStencilView = nullptr;
 
-	instancedDraw = nullptr;
-	instancedDrawMesh = nullptr;
+	instancedQuads = nullptr;
+	instancedMesh = nullptr;
 	shadowMap = nullptr;
+	deferredShading = nullptr;
 	viewProjMatrixCB = nullptr;
 	
 	objectIndexIncrementer = 0; // this should not be here probably...
 	lightIndexIncrementer = 0;
 	
+}
+void DXManager::dispose()
+{
+	// close and release all existing COM objects
+	// render technique related
+
+
+
+	SAFE_DISPOSE(shadowMap);
+	SAFE_DISPOSE(instancedMesh);
+	SAFE_DISPOSE(instancedQuads);
+	SAFE_DISPOSE(deferredShading);
+
+	// depth stencil related
+	SAFE_RELEASE(depthStencilView);
+	SAFE_RELEASE(depthStencilState);
+	SAFE_RELEASE(depthStencilTex);
+
+	SAFE_RELEASE(swapchain);
+	SAFE_RELEASE(backbuffer);
+	SAFE_RELEASE(dev);
+	SAFE_RELEASE(devcon);
 }
 void DXManager::init(HWND hWnd, int _width, int _height)
 {
@@ -89,6 +112,11 @@ void DXManager::init(HWND hWnd, int _width, int _height)
 	shadowMap = new DXShadowMap(dev, devcon);
 	shadowMap->init(width, height);
 
+	deferredShading = new DXDeferred(dev, devcon);
+	deferredShading->init(width, height);
+
+	instancedQuads = new DXInstancing(dev, devcon);
+	instancedQuads->initQuadBuffer();
 }
 void DXManager::initDepthStencil(){
 	HRESULT hr;
@@ -164,39 +192,11 @@ void DXManager::initDepthStencil(){
 	if (FAILED(hr)){
 		TRACE("CreateDepthStencilView failed!");
 	}
-	int releaseres = depthStencilTex->Release();
+	depthStencilTex->Release();
+	
 	int sdf = 0;
 
-}
-void DXManager::dispose()
-{
-	// close and release all existing COM objects
-	// render technique related
-	//SAFE_DISPOSE(instancedDraw);
 
-
-	SAFE_DISPOSE(shadowMap);
-	SAFE_DISPOSE(instancedDrawMesh);
-
-	// depth stencil related
-	SAFE_RELEASE(depthStencilView);
-	SAFE_RELEASE(depthStencilState);
-	SAFE_RELEASE(depthStencilTex);
-
-	SAFE_RELEASE(swapchain);
-	SAFE_RELEASE(backbuffer);
-	SAFE_RELEASE(dev);
-	SAFE_RELEASE(devcon);
-}
-
-
-
-void DXManager::initInstancing(){
-	/*instancedDraw = new DXInstancing(dev, devcon);
-	instancedDraw->init();*/
-
-	instancedDrawMesh = new DXInstancedMesh(dev, devcon);
-	instancedDrawMesh->init();
 }
 
 void DXManager::renderWithoutShadowMap(){
@@ -206,12 +206,48 @@ void DXManager::renderWithoutShadowMap(){
 	devcon->ClearRenderTargetView(backbuffer, D3DXCOLOR(0.0f, 0.2f, 0.4f, 1.0f));
 	devcon->ClearDepthStencilView(depthStencilView, D3D11_CLEAR_DEPTH, 1.0f, 0);
 	//devcon->VSSetConstantBuffers(0, 1, &viewProjMatrixCB);
-	instancedDrawMesh->render(&viewProjMatrixCB);
+	instancedMesh->render(&viewProjMatrixCB);
 	hr = swapchain->Present(0, 0);
 	if (FAILED(hr)){
 		TRACE("present failed!");
 	}
 }
+void DXManager::renderWithShadowMap(){
+	HRESULT hr;
+	assembleDrawables();
+	// gather light sources
+	// for each light source, render the scene
+	if (lightSources.size() > 0){
+		// create or update the view projection matrix buffer for the light source.
+		
+		// render with the depth-only shader.
+		LightSourceDesc* lightSourceDesc = lightSources[0];
+
+		shadowMap->setRenderTarget_DepthBuffer();
+		shadowMap->updateLightViewCB(lightSourceDesc->position, lightSourceDesc->rotation, 60.0f, (float)width / height, 0.3f, 1000.0f);
+		devcon->ClearRenderTargetView(shadowMap->rgbRTV, D3DXCOLOR(0.0f, 0.2f, 0.4f, 1.0f));
+		devcon->ClearDepthStencilView(shadowMap->depthDSV, D3D11_CLEAR_DEPTH, 1.0f, 0);
+		instancedMesh->renderDepthOnly(&(shadowMap->lightSourceViewProjMatrixCB), shadowMap->vertexShader, shadowMap->pixelShader);
+		
+		restoreRenderTarget();
+		prepareCamera();
+		devcon->ClearRenderTargetView(backbuffer, D3DXCOLOR(0.0f, 0.2f, 0.4f, 1.0f));
+		devcon->ClearDepthStencilView(depthStencilView, D3D11_CLEAR_DEPTH, 1.0f, 0);
+		
+		instancedMesh->renderWithShadowMap(shadowMap->shadowMapVertexShader, shadowMap->shadowMapPixelShader, shadowMap->rgbSRV, shadowMap->samplerState, &viewProjMatrixCB, &(shadowMap->lightSourceViewProjMatrixCB), &(shadowMap->lightSourcePositionCB));
+	}
+	else{
+		prepareCamera();
+		devcon->ClearRenderTargetView(backbuffer, D3DXCOLOR(0.0f, 0.2f, 0.4f, 1.0f));
+		devcon->ClearDepthStencilView(depthStencilView, D3D11_CLEAR_DEPTH, 1.0f, 0);
+		instancedMesh->render(&viewProjMatrixCB);
+	}
+	hr = swapchain->Present(0, 0);
+	if (FAILED(hr)){
+		TRACE("present failed!");
+	}
+}
+// render with deferred-shading
 void DXManager::render(){
 	HRESULT hr;
 	assembleDrawables();
@@ -219,29 +255,36 @@ void DXManager::render(){
 	// for each light source, render the scene
 	if (lightSources.size() > 0){
 		// create or update the view projection matrix buffer for the light source.
-		// set render target
-		// render with the shadow map shader.
+
+		// render with the depth-only shader.
 		LightSourceDesc* lightSourceDesc = lightSources[0];
-		shadowMap->prepareLightView();
+
+		shadowMap->setRenderTarget_DepthBuffer();
 		shadowMap->updateLightViewCB(lightSourceDesc->position, lightSourceDesc->rotation, 60.0f, (float)width / height, 0.3f, 1000.0f);
 		
-		devcon->ClearRenderTargetView(shadowMap->rgbRTV, D3DXCOLOR(0.0f, 0.2f, 0.4f, 1.0f));
-		devcon->ClearDepthStencilView(shadowMap->depthDSV, D3D11_CLEAR_DEPTH, 1.0f, 0);
-		//devcon->VSSetConstantBuffers(0, 1, &viewProjMatrixCB);
-		instancedDrawMesh->renderDepthOnly(&(shadowMap->lightSourceViewProjMatrixCB), shadowMap->vertexShader, shadowMap->pixelShader);
-		// bind the depth texture to 
+		instancedMesh->renderDepthOnly(&(shadowMap->lightSourceViewProjMatrixCB), shadowMap->vertexShader, shadowMap->pixelShader);
+		////////
+		prepareCamera();		
+		deferredShading->setRenderTargets_GBuffers();//OMSetRenderTargets
+		deferredShading->setShaders();
+		instancedMesh->setInputLayout();
+		deferredShading->setShaderConstants(&viewProjMatrixCB);
+		instancedMesh->setVertexAndIndexBuffers();
+		instancedMesh->draw();
+		////////
 		restoreRenderTarget();
-		prepareCamera();
-		devcon->ClearRenderTargetView(backbuffer, D3DXCOLOR(0.0f, 0.2f, 0.4f, 1.0f));
-		devcon->ClearDepthStencilView(depthStencilView, D3D11_CLEAR_DEPTH, 1.0f, 0);
-		
-		instancedDrawMesh->renderWithShadowMap(shadowMap->shadowMapVertexShader, shadowMap->shadowMapPixelShader, shadowMap->rgbSRV, shadowMap->samplerState, &viewProjMatrixCB, &(shadowMap->lightSourceViewProjMatrixCB), &(shadowMap->lightSourcePositionCB));
+		deferredShading->setInputLayout_Shading();
+		instancedQuads->setQuadVertexBuffer();
+		deferredShading->setShaders_Shading();
+		deferredShading->setShaderConstants_Shading(nullptr, shadowMap->samplerState);
+		instancedQuads->drawQuad();
+		deferredShading->postDraw();
 	}
 	else{
 		prepareCamera();
 		devcon->ClearRenderTargetView(backbuffer, D3DXCOLOR(0.0f, 0.2f, 0.4f, 1.0f));
 		devcon->ClearDepthStencilView(depthStencilView, D3D11_CLEAR_DEPTH, 1.0f, 0);
-		instancedDrawMesh->render(&viewProjMatrixCB);
+		instancedMesh->render(&viewProjMatrixCB);
 	}
 	hr = swapchain->Present(0, 0);
 	if (FAILED(hr)){
@@ -304,10 +347,10 @@ void DXManager::prepareCamera(){
 }
 
 void DXManager::assembleDrawables(){
-	if (instancedDrawMesh == nullptr){
-		instancedDrawMesh = new DXInstancedMesh(dev, devcon);
-		instancedDrawMesh->init();
+	if (instancedMesh == nullptr){
+		instancedMesh = new DXInstancedMesh(dev, devcon);
+		instancedMesh->init();
 	}
-	instancedDrawMesh->updateInstanceBuffer(instancedObjects);
+	instancedMesh->updateInstanceBuffer(instancedObjects);
 
 }

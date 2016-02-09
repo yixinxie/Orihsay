@@ -182,16 +182,13 @@ void DXShadowMap::init(int width, int height){
 	initShaders();
 
 }
-void DXShadowMap::prepareLightView(){
+void DXShadowMap::setRenderTarget_DepthBuffer(){
 	ID3D11ShaderResourceView* emptySRV[1] = { nullptr };
 	devcon->PSSetShaderResources(0, 1, emptySRV);
 	devcon->OMSetRenderTargets(1, &rgbRTV, depthDSV);
-	
-	//devcon->RSSetViewports(1, &viewport);
-	//float clearColor[4] = { 0, 0, 0, 1 };
 
-	//devcon->ClearRenderTargetView(rgbRTV, clearColor);
-	//devcon->ClearDepthStencilView(depthDSV, D3D11_CLEAR_DEPTH, 1.0f, 0);
+	devcon->ClearRenderTargetView(rgbRTV, D3DXCOLOR(0.0f, 0.2f, 0.4f, 1.0f));
+	devcon->ClearDepthStencilView(depthDSV, D3D11_CLEAR_DEPTH, 1.0f, 0);
 }
 
 void DXShadowMap::updateLightViewCB(const Vector3 position, const Vector3 euler, float fieldOfView, float aspectRatio, float nearPlane, float farPlane){

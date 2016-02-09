@@ -334,6 +334,18 @@
     <FxCompile Include="dx\shaders\instanced_shadowmap_depth_vs.hlsl">
       <Filter>Source Files\dx\shaders</Filter>
     </FxCompile>
+    <FxCompile Include="dx\shaders\instanced_deferred_gbuffer_ps.hlsl">
+      <Filter>Source Files\dx\shaders</Filter>
+    </FxCompile>
+    <FxCompile Include="dx\shaders\instanced_deferred_gbuffer_vs.hlsl">
+      <Filter>Source Files\dx\shaders</Filter>
+    </FxCompile>
+    <FxCompile Include="dx\shaders\deferred_quad_ps.hlsl">
+      <Filter>Source Files\dx\shaders</Filter>
+    </FxCompile>
+    <FxCompile Include="dx\shaders\deferred_quad_vs.hlsl">
+      <Filter>Source Files\dx\shaders</Filter>
+    </FxCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="ClassDiagram.cd" />

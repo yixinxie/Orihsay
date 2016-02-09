@@ -8,6 +8,7 @@ struct VertexInputType
 	// we could optimize this by not passing the additional stuff to the vertex shader by
 	// creating another vertex buffer that only holds the position data. 
 	float4 color : COLOR;
+	float3 normal : NORMAL;
 	// although for instanced drawing with the shadow map technique, the world matrix is still required.
 	float4 worldMatrix0 : INSTANCE_MATRIX0;
 	float4 worldMatrix1 : INSTANCE_MATRIX1;

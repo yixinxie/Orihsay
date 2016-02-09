@@ -6,8 +6,8 @@
 using namespace OriGraphics;
 void Renderer::setMainCamera(const Vector3& pos, const Vector3& rot, const float fov, const float _nearPlane, const float _farPlane){
 	CameraDesc* params = new CameraDesc();
-	params->position = pos;
-	params->rotation = rot;
+	//params->position = pos;
+	//params->rotation = rot;
 	params->fieldOfView = fov;
 	params->nearPlane = _nearPlane;
 	params->farPlane = _farPlane;

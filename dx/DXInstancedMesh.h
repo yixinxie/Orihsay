@@ -5,6 +5,7 @@
 #include <unordered_map>
 #include "../math/EasyMath.h"
 #include "../graphics/Renderer.h"
+#include "DXShaderStructs.h"
 using namespace OriGraphics;
 class DXInstancedMesh{
 private:
@@ -24,18 +25,8 @@ private:
 	int instanceCount;
 	int instanceMaxSize;
 	// per instance data
-	struct InstanceStruct{
-		D3DXMATRIX worldMatrix;
-	};
+	
 	InstanceStruct* instances;
-
-	struct PerVertexData{
-		D3DXVECTOR3 position;
-		D3DXVECTOR4 color;
-	};
-	struct PerVertexDataDepthOnly{
-		D3DXVECTOR3 position;
-	};
 	
 	void initShadersAndInputLayout(void);
 	void initCubeBuffer(void);
@@ -48,4 +39,9 @@ public:
 	void renderDepthOnly(ID3D11Buffer** viewProjCB, ID3D11VertexShader* depthVertexShader, ID3D11PixelShader* depthPixelShader);
 	void renderWithShadowMap(ID3D11VertexShader* shadowVertexShader, ID3D11PixelShader* shadowPixelShader, ID3D11ShaderResourceView* shadowMapSRV, ID3D11SamplerState* samplerState, ID3D11Buffer** viewProjCB, ID3D11Buffer** lightViewProjCB, ID3D11Buffer** lightPositionCB);
 	void dispose(void);
+
+	void setVertexAndIndexBuffers(void);
+	void draw(void);
+	void initCubeBufferWithNormal(void);
+	void setInputLayout(void);
 };

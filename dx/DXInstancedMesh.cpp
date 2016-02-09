@@ -1,6 +1,14 @@
 #include "DXInstancedMesh.h"
 #include "DXManager.h"
 #include "../misc/CharHelper.h"
+#define COLOR0 1, 0, 0, 1
+#define COLOR1 0, 1, 0, 1
+#define COLOR2 0, 0, 1, 1
+#define COLOR3 1, 1, 0, 1
+#define COLOR4 1, 0, 1, 1
+#define COLOR5 0, 1, 1, 1
+#define COLOR6 1, 1, 1, 1
+#define COLOR7 0.5f, 0.5f, 0.5f, 1
 DXInstancedMesh::DXInstancedMesh(ID3D11Device *_dev, ID3D11DeviceContext *_devcon) :dev(_dev), devcon(_devcon){
 	inputLayout = nullptr;
 	vertexShader = nullptr;
@@ -14,7 +22,7 @@ DXInstancedMesh::DXInstancedMesh(ID3D11Device *_dev, ID3D11DeviceContext *_devco
 	instanceMaxSize = 4;
 }
 void DXInstancedMesh::init(){
-	initCubeBuffer();
+	initCubeBufferWithNormal();
 	initShadersAndInputLayout();
 	initInstanceBuffer();
 }
@@ -35,11 +43,12 @@ void DXInstancedMesh::initShadersAndInputLayout(){
 	}
 	
 	// Create the vertex input layout description.
-	// This setup needs to match the VertexType stucture in the ModelClass and in the shader.
 	D3D11_INPUT_ELEMENT_DESC polygonLayout[] = 
 	{
 		{ "POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 0, D3D11_INPUT_PER_VERTEX_DATA, 0 },
-		{ "COLOR", 0, DXGI_FORMAT_R32G32B32_FLOAT,0, 12, D3D11_INPUT_PER_VERTEX_DATA, 0 },
+		{ "COLOR", 0, DXGI_FORMAT_R32G32B32A32_FLOAT, 0, 12, D3D11_INPUT_PER_VERTEX_DATA, 0 },
+		{ "NORMAL", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 28, D3D11_INPUT_PER_VERTEX_DATA, 0 },
+
 		
 		{ "INSTANCE_MATRIX", 0, DXGI_FORMAT_R32G32B32A32_FLOAT, 1, 0, D3D11_INPUT_PER_INSTANCE_DATA, 1 },
 		{ "INSTANCE_MATRIX", 1, DXGI_FORMAT_R32G32B32A32_FLOAT, 1, 16, D3D11_INPUT_PER_INSTANCE_DATA, 1 },
@@ -64,6 +73,100 @@ void DXInstancedMesh::initShadersAndInputLayout(){
 	delete psBuffer;
 }
 
+
+void DXInstancedMesh::initCubeBufferWithNormal(){
+	HRESULT hr;
+	// vertex buffer: the vertex buffer stores the vertices of a quad and it is created only once per execution.
+	PerVertexData quadVertices[] =
+	{
+		{ { 0.5, -0.5, 0.5 }, {COLOR0}, { 0, 0, 1 } },
+		{ { -0.5, -0.5, 0.5 }, { COLOR1 }, { 0, 0, 1 } },
+		{ { 0.5, 0.5, 0.5 }, {COLOR2}, { 0, 0, 1 } },
+		{ { -0.5, 0.5, 0.5 }, { COLOR3}, { 0, 0, 1 } },
+		{ { 0.5, 0.5, -0.5 }, {COLOR4}, { 0, 1, 0 } },
+		{ { -0.5, 0.5, -0.5 }, { COLOR5 }, { 0, 1, 0 } },
+		{ { 0.5, -0.5, -0.5 }, {COLOR6}, { 0, 0, -1 } },
+		{ { -0.5, -0.5, -0.5 }, { COLOR7 }, { 0, 0, -1 } },
+		{ { 0.5, 0.5, 0.5 }, { COLOR2 }, { 0, 1, 0 } },
+		{ { -0.5, 0.5, 0.5 }, { COLOR3}, { 0, 1, 0 } },
+		{ { 0.5, 0.5, -0.5 }, { COLOR4 }, { 0, 0, -1 } },
+		{ { -0.5, 0.5, -0.5 }, { COLOR5 }, { 0, 0, -1 } },
+		{ { 0.5, -0.5, -0.5 }, { COLOR6 }, { 0, -1, 0 } },
+		{ { -0.5, -0.5, 0.5 }, {COLOR1}, { 0, -1, 0 } },
+		{ { -0.5, -0.5, -0.5 }, { COLOR7 }, { 0, -1, 0 } },
+		{ { 0.5, -0.5, 0.5 }, { COLOR0 }, { 0, -1, 0 } },
+		{ { -0.5, -0.5, 0.5 }, { COLOR1 }, { -1, 0, 0 } },
+		{ { -0.5, 0.5, -0.5 }, { COLOR5}, { -1, 0, 0 } },
+		{ { -0.5, -0.5, -0.5 }, { COLOR7}, { -1, 0, 0 } },
+		{ { -0.5, 0.5, 0.5 }, { COLOR3}, { -1, 0, 0 } },
+		{ { 0.5, -0.5, -0.5 }, { COLOR6 }, { 1, 0, 0 } },
+		{ { 0.5, 0.5, 0.5 }, { COLOR2 }, { 1, 0, 0 } },
+		{ { 0.5, -0.5, 0.5 }, { COLOR0 }, { 1, 0, 0 } },
+		{ { 0.5, 0.5, -0.5 }, { COLOR4 }, { 1, 0, 0 } },
+
+		// clockwise triangle winding.
+
+		// 0 1 2
+		{ { -0.5f, -0.5f, -0.5f }, { 1, 0, 0, 1 }, { -1, 0, 0 } },
+		{ { -0.5f, -0.5f, -0.5f }, { 1, 0, 0, 1 }, { 0, -1, 0 } },
+		{ { -0.5f, -0.5f, -0.5f }, { 1, 0, 0, 1 }, { 0, 0, -1 } },
+		
+		// 3 4 5
+		{ { 0.5f, -0.5f, -0.5f }, { 0, 1, 0, 1 }, { -1, 0, 0 } },
+		{ { 0.5f, -0.5f, -0.5f }, { 0, 1, 0, 1 }, { -1, 0, 0 } },
+		{ { 0.5f, -0.5f, -0.5f }, { 0, 1, 0, 1 }, { -1, 0, 0 } },
+
+		// 6 7 8
+		{ { 0.5f, 0.5f, -0.5f }, { 0, 0, 1, 1 } },
+
+		// 9 10 11
+		{ { -0.5f, 0.5f, -0.5f }, { 0, 1, 1, 1 } },
+		////////////////////////////////////////
+		// 12 13 14
+		{ { -0.5f, -0.5f, 0.5f }, { 1, 1, 0, 1 } },
+		// 15 16 17
+		{ { 0.5f, -0.5f, 0.5f }, { 1, 0, 1, 1 } },
+		// 18 19 20
+		{ { 0.5f, 0.5f, 0.5f }, { 0, 1, 1, 1 } },
+		// 21 22 23
+		{ { -0.5f, 0.5f, 0.5f }, { 0.5, 1, 0, 1 } },
+	};
+
+	D3D11_BUFFER_DESC bd = { 0 };
+	bd.ByteWidth = sizeof(PerVertexData) * ARRAYSIZE(quadVertices);
+	bd.BindFlags = D3D11_BIND_VERTEX_BUFFER;
+
+	D3D11_SUBRESOURCE_DATA srd = { quadVertices, 0, 0 };
+
+	hr = dev->CreateBuffer(&bd, &srd, &vertexBuffer);
+	if (FAILED(hr)){
+		TRACE("vertex buffer create failed!");
+	}
+	// index buffer
+	{
+		unsigned int indices[] = {
+			0, 3, 1, 0, 2, 3, 8, 5, 9, 8, 4, 5, 10, 7, 11, 10, 6, 7, 12, 13, 14, 12, 15, 13, 16, 17, 18, 16, 19, 17, 20, 21, 22, 20, 23, 21,
+		};
+
+		D3D11_BUFFER_DESC bufferDesc = {
+			sizeof(unsigned int) * 36,
+			D3D11_USAGE_DEFAULT,
+			D3D11_BIND_INDEX_BUFFER,
+			0,
+			0,
+			0
+		};
+
+		// Define the resource data.
+		D3D11_SUBRESOURCE_DATA InitData = { indices, 0, 0 };
+
+		// Create the buffer with the device.
+		hr = dev->CreateBuffer(&bufferDesc, &InitData, &indexBuffer);
+		if (FAILED(hr)){
+			TRACE("index buffer create failed!");
+		}
+	}
+}
 void DXInstancedMesh::initCubeBuffer(){
 	HRESULT hr;
 	// vertex buffer: the vertex buffer stores the vertices of a quad and it is created only once per execution.
@@ -278,6 +381,30 @@ void DXInstancedMesh::renderWithShadowMap(ID3D11VertexShader* shadowVertexShader
 	devcon->PSSetSamplers(0, 1, &samplerState);
 
 	devcon->DrawIndexedInstanced(36, instanceCount, 0, 0, 0);
+}
+void DXInstancedMesh::setVertexAndIndexBuffers(){
+	unsigned int strides[2];
+	unsigned int offsets[2];
+	ID3D11Buffer* bufferPointers[2];
+
+	strides[0] = sizeof(PerVertexData);
+	strides[1] = sizeof(InstanceStruct);
+
+	offsets[0] = 0;
+	offsets[1] = 0;
+
+	bufferPointers[0] = vertexBuffer;
+	bufferPointers[1] = instanceBuffer;
+
+	devcon->IASetVertexBuffers(0, 2, bufferPointers, strides, offsets);
+	devcon->IASetIndexBuffer(indexBuffer, DXGI_FORMAT_R32_UINT, 0);
+}
+void DXInstancedMesh::draw(){
+	devcon->DrawIndexedInstanced(36, instanceCount, 0, 0, 0);
+}
+void DXInstancedMesh::setInputLayout(){
+	devcon->IASetInputLayout(inputLayout);
+
 }
 void DXInstancedMesh::dispose(){
 	SAFE_RELEASE(vertexBuffer);
