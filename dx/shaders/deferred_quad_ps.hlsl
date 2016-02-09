@@ -15,6 +15,6 @@ struct PixelInputType
 
 float4 main(PixelInputType input) : SV_TARGET
 {
-	//return float4(diffuseTex.Sample(diffuseSampler, input.tex).rgb, 1);
-	return float4(1.0f, 0, 0, 1.0f);
+	return float4(diffuseTex.Sample(diffuseSampler, input.tex).rgb, 1);
+	//return float4(1.0f, 0, 0, 1.0f);
 }

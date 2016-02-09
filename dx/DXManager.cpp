@@ -293,6 +293,9 @@ void DXManager::render(){
 }
 void DXManager::restoreRenderTarget(){
 	devcon->OMSetRenderTargets(1, &backbuffer, depthStencilView);
+
+	devcon->ClearRenderTargetView(backbuffer, D3DXCOLOR(0.0f, 0.2f, 0.4f, 1.0f));
+	devcon->ClearDepthStencilView(depthStencilView, D3D11_CLEAR_DEPTH, 1.0f, 0);
 	//devcon->RSSetViewports(1, &viewport);
 	
 }
