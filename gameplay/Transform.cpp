@@ -1,5 +1,5 @@
 #include "Transform.h"
-#include "../glm/gtx/rotate_vector.hpp"
+#include "glm/gtx/rotate_vector.hpp"
 Transform::Transform(){
 	
 	position = Vector3(0, 0, 0);

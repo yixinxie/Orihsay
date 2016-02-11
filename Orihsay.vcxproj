@@ -41,6 +41,7 @@
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <LinkIncremental>true</LinkIncremental>
+    <IncludePath>D:\dxapp\Orihsay;$(IncludePath)</IncludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LinkIncremental>false</LinkIncremental>
@@ -117,29 +118,6 @@
     <ClInclude Include="gameplay\Scene.h" />
     <ClInclude Include="gameplay\SceneManager.h" />
     <ClInclude Include="gameplay\Transform.h" />
-    <ClInclude Include="glm\common.hpp" />
-    <ClInclude Include="glm\exponential.hpp" />
-    <ClInclude Include="glm\ext.hpp" />
-    <ClInclude Include="glm\fwd.hpp" />
-    <ClInclude Include="glm\geometric.hpp" />
-    <ClInclude Include="glm\glm.hpp" />
-    <ClInclude Include="glm\integer.hpp" />
-    <ClInclude Include="glm\mat2x2.hpp" />
-    <ClInclude Include="glm\mat2x3.hpp" />
-    <ClInclude Include="glm\mat2x4.hpp" />
-    <ClInclude Include="glm\mat3x2.hpp" />
-    <ClInclude Include="glm\mat3x3.hpp" />
-    <ClInclude Include="glm\mat3x4.hpp" />
-    <ClInclude Include="glm\mat4x2.hpp" />
-    <ClInclude Include="glm\mat4x3.hpp" />
-    <ClInclude Include="glm\mat4x4.hpp" />
-    <ClInclude Include="glm\matrix.hpp" />
-    <ClInclude Include="glm\packing.hpp" />
-    <ClInclude Include="glm\trigonometric.hpp" />
-    <ClInclude Include="glm\vec2.hpp" />
-    <ClInclude Include="glm\vec3.hpp" />
-    <ClInclude Include="glm\vec4.hpp" />
-    <ClInclude Include="glm\vector_relational.hpp" />
     <ClInclude Include="graphics\CameraDesc.h" />
     <ClInclude Include="graphics\LightSourceDesc.h" />
     <ClInclude Include="graphics\ObjectTransformDesc.h" />
@@ -149,20 +127,6 @@
     <ClInclude Include="misc\CharHelper.h" />
     <ClInclude Include="misc\ClassFactory.h" />
     <ClInclude Include="misc\Macros.h" />
-    <ClInclude Include="rapidjson\allocators.h" />
-    <ClInclude Include="rapidjson\document.h" />
-    <ClInclude Include="rapidjson\encodedstream.h" />
-    <ClInclude Include="rapidjson\encodings.h" />
-    <ClInclude Include="rapidjson\filereadstream.h" />
-    <ClInclude Include="rapidjson\filewritestream.h" />
-    <ClInclude Include="rapidjson\memorybuffer.h" />
-    <ClInclude Include="rapidjson\memorystream.h" />
-    <ClInclude Include="rapidjson\pointer.h" />
-    <ClInclude Include="rapidjson\prettywriter.h" />
-    <ClInclude Include="rapidjson\rapidjson.h" />
-    <ClInclude Include="rapidjson\reader.h" />
-    <ClInclude Include="rapidjson\stringbuffer.h" />
-    <ClInclude Include="rapidjson\writer.h" />
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="dx\shaders\deferred_quad_ps.hlsl">

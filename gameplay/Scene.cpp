@@ -3,9 +3,9 @@
 #include "../misc/ClassFactory.h"
 #include "../components/Camera.h"
 #include "../misc/CharHelper.h"
-#include "../rapidjson/document.h"
-#include "../rapidjson/writer.h"
-#include "../rapidjson/stringbuffer.h"
+#include "rapidjson/document.h"
+#include "rapidjson/writer.h"
+#include "rapidjson/stringbuffer.h"
 #include "../misc/Macros.h"
 using namespace rapidjson;
 

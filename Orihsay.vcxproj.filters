@@ -16,9 +16,6 @@
     <Filter Include="Source Files\dx">
       <UniqueIdentifier>{6b8b3f93-1a41-41d8-b6d0-d071506ce425}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Source Files\rapidjson">
-      <UniqueIdentifier>{47effaa9-ca8a-43c0-8b27-3fee70aba2de}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Source Files\misc">
       <UniqueIdentifier>{f21aa9d9-3043-4436-a888-3ac14dd691c0}</UniqueIdentifier>
     </Filter>
@@ -42,9 +39,6 @@
     </Filter>
     <Filter Include="Source Files\gameplay">
       <UniqueIdentifier>{34094784-fa06-4e3d-bcc2-0a6d004d93b9}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Source Files\glm">
-      <UniqueIdentifier>{cb20ddbb-6bef-40a7-a3f0-4db374f380f0}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -125,48 +119,6 @@
     <ClInclude Include="gameplay\SceneManager.h">
       <Filter>Source Files\gameplay</Filter>
     </ClInclude>
-    <ClInclude Include="rapidjson\allocators.h">
-      <Filter>Source Files\rapidjson</Filter>
-    </ClInclude>
-    <ClInclude Include="rapidjson\document.h">
-      <Filter>Source Files\rapidjson</Filter>
-    </ClInclude>
-    <ClInclude Include="rapidjson\encodedstream.h">
-      <Filter>Source Files\rapidjson</Filter>
-    </ClInclude>
-    <ClInclude Include="rapidjson\encodings.h">
-      <Filter>Source Files\rapidjson</Filter>
-    </ClInclude>
-    <ClInclude Include="rapidjson\filereadstream.h">
-      <Filter>Source Files\rapidjson</Filter>
-    </ClInclude>
-    <ClInclude Include="rapidjson\filewritestream.h">
-      <Filter>Source Files\rapidjson</Filter>
-    </ClInclude>
-    <ClInclude Include="rapidjson\memorybuffer.h">
-      <Filter>Source Files\rapidjson</Filter>
-    </ClInclude>
-    <ClInclude Include="rapidjson\memorystream.h">
-      <Filter>Source Files\rapidjson</Filter>
-    </ClInclude>
-    <ClInclude Include="rapidjson\pointer.h">
-      <Filter>Source Files\rapidjson</Filter>
-    </ClInclude>
-    <ClInclude Include="rapidjson\prettywriter.h">
-      <Filter>Source Files\rapidjson</Filter>
-    </ClInclude>
-    <ClInclude Include="rapidjson\rapidjson.h">
-      <Filter>Source Files\rapidjson</Filter>
-    </ClInclude>
-    <ClInclude Include="rapidjson\reader.h">
-      <Filter>Source Files\rapidjson</Filter>
-    </ClInclude>
-    <ClInclude Include="rapidjson\stringbuffer.h">
-      <Filter>Source Files\rapidjson</Filter>
-    </ClInclude>
-    <ClInclude Include="rapidjson\writer.h">
-      <Filter>Source Files\rapidjson</Filter>
-    </ClInclude>
     <ClInclude Include="misc\ClassFactory.h">
       <Filter>Source Files\misc</Filter>
     </ClInclude>
@@ -208,75 +160,6 @@
     </ClInclude>
     <ClInclude Include="components\InputManager.h">
       <Filter>Source Files\components\scripts</Filter>
-    </ClInclude>
-    <ClInclude Include="glm\common.hpp">
-      <Filter>Source Files\glm</Filter>
-    </ClInclude>
-    <ClInclude Include="glm\exponential.hpp">
-      <Filter>Source Files\glm</Filter>
-    </ClInclude>
-    <ClInclude Include="glm\ext.hpp">
-      <Filter>Source Files\glm</Filter>
-    </ClInclude>
-    <ClInclude Include="glm\fwd.hpp">
-      <Filter>Source Files\glm</Filter>
-    </ClInclude>
-    <ClInclude Include="glm\geometric.hpp">
-      <Filter>Source Files\glm</Filter>
-    </ClInclude>
-    <ClInclude Include="glm\glm.hpp">
-      <Filter>Source Files\glm</Filter>
-    </ClInclude>
-    <ClInclude Include="glm\integer.hpp">
-      <Filter>Source Files\glm</Filter>
-    </ClInclude>
-    <ClInclude Include="glm\mat2x2.hpp">
-      <Filter>Source Files\glm</Filter>
-    </ClInclude>
-    <ClInclude Include="glm\mat2x3.hpp">
-      <Filter>Source Files\glm</Filter>
-    </ClInclude>
-    <ClInclude Include="glm\mat2x4.hpp">
-      <Filter>Source Files\glm</Filter>
-    </ClInclude>
-    <ClInclude Include="glm\mat3x2.hpp">
-      <Filter>Source Files\glm</Filter>
-    </ClInclude>
-    <ClInclude Include="glm\mat3x3.hpp">
-      <Filter>Source Files\glm</Filter>
-    </ClInclude>
-    <ClInclude Include="glm\mat3x4.hpp">
-      <Filter>Source Files\glm</Filter>
-    </ClInclude>
-    <ClInclude Include="glm\mat4x2.hpp">
-      <Filter>Source Files\glm</Filter>
-    </ClInclude>
-    <ClInclude Include="glm\mat4x3.hpp">
-      <Filter>Source Files\glm</Filter>
-    </ClInclude>
-    <ClInclude Include="glm\mat4x4.hpp">
-      <Filter>Source Files\glm</Filter>
-    </ClInclude>
-    <ClInclude Include="glm\matrix.hpp">
-      <Filter>Source Files\glm</Filter>
-    </ClInclude>
-    <ClInclude Include="glm\packing.hpp">
-      <Filter>Source Files\glm</Filter>
-    </ClInclude>
-    <ClInclude Include="glm\trigonometric.hpp">
-      <Filter>Source Files\glm</Filter>
-    </ClInclude>
-    <ClInclude Include="glm\vec2.hpp">
-      <Filter>Source Files\glm</Filter>
-    </ClInclude>
-    <ClInclude Include="glm\vec3.hpp">
-      <Filter>Source Files\glm</Filter>
-    </ClInclude>
-    <ClInclude Include="glm\vec4.hpp">
-      <Filter>Source Files\glm</Filter>
-    </ClInclude>
-    <ClInclude Include="glm\vector_relational.hpp">
-      <Filter>Source Files\glm</Filter>
     </ClInclude>
     <ClInclude Include="graphics\CameraDesc.h">
       <Filter>Source Files\graphics</Filter>
