@@ -21,6 +21,7 @@ class CharHelper{
 public:
 	static CharBuffer* loadFile(std::string File);
 	static CharBuffer* loadTextFile(std::string File);
+	static void writeTextFile(const char* fileName, const CharBuffer& charBuffer);
 	static std::vector<std::string> split(const std::string &s, char delim);
 	static std::vector<std::string>& split(const std::string &s, char delim, std::vector<std::string> &elems);
 	static Vector3 charToVec3(const char* chars);

@@ -48,6 +48,16 @@ CharBuffer* CharHelper::loadTextFile(std::string File)
 	}
 	return fileData;
 }
+void CharHelper::writeTextFile(const char* fileName, const CharBuffer& charBuffer)
+{
+	std::ofstream file(fileName, std::ios::out | std::ios::ate);
+
+	if (file.is_open())
+	{
+		file.write(charBuffer.buffer, charBuffer.length);
+		file.close();
+	}
+}
 std::vector<std::string>& CharHelper::split(const std::string &s, char delim, std::vector<std::string> &elems) {
 	std::stringstream ss(s);
 	std::string item;
