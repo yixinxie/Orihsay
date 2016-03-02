@@ -50,7 +50,7 @@ CharBuffer* CharHelper::loadTextFile(std::string File)
 }
 void CharHelper::writeTextFile(const char* fileName, const CharBuffer& charBuffer)
 {
-	std::ofstream file(fileName, std::ios::out | std::ios::ate);
+	std::ofstream file(fileName, std::ios::out | std::ios::trunc);
 
 	if (file.is_open())
 	{
@@ -74,7 +74,7 @@ std::vector<std::string> CharHelper::split(const std::string &s, char delim) {
 	return elems;
 }
 Vector3 CharHelper::charToVec3(const char* tmp){
-	vector<string> splitString = CharHelper::split((tmp), ',');
+	std::vector<std::string> splitString = CharHelper::split((tmp), ',');
 	//go->transform->position = Vector3()
 	float x = std::stod(splitString[0]);
 	float y = std::stod(splitString[1]);
@@ -82,6 +82,6 @@ Vector3 CharHelper::charToVec3(const char* tmp){
 	return Vector3(x, y, z);
 }
 float CharHelper::charToFloat(const char* tmp){
-	std::string _tmp = string(tmp);
+	std::string _tmp = std::string(tmp);
 	return std::stod(_tmp);
 }

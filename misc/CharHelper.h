@@ -4,7 +4,7 @@
 #include <vector>
 #include "../math/EasyMath.h"
 #define TRACE(x)	do {std::stringstream s; s << x; OutputDebugStringA(s.str().c_str()); } while (0)
-using namespace std;
+
 struct CharBuffer{
 	char* buffer;
 	int length;
