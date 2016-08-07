@@ -44,7 +44,7 @@ void Scene::deserialize(){
 	
 	for (unsigned int i = 0; i < parsed.Size(); i++){
 		const Value& gameObjectNode = parsed[i];
-		GameObject* go = GameObject::instantiate();
+		GameObject* go = GameObject::instantiate(GameObject::UseTransform);
 		gameObjects.push_back(go);
 		go->setName(gameObjectNode["name"].GetString());
 		const Value& components = gameObjectNode["components"];
@@ -64,13 +64,13 @@ void Scene::deserialize(){
 			else if (std::strcmp(componentNode["className"].GetString(), "Transform") == 0){
 				const Value& fields = componentNode["fields"];
 				const char* tmpPosition = fields["position"].GetString();
-				go->transform->position = CharHelper::charToVec3(tmpPosition);
+				go->transform()->position = CharHelper::charToVec3(tmpPosition);
 
 				const char* tmpRotation = fields["rotation"].GetString();
-				go->transform->fromEuler(CharHelper::charToVec3(tmpRotation));
+				go->transform()->fromEuler(CharHelper::charToVec3(tmpRotation));
 
 				const char* tmpScale = fields["scale"].GetString();
-				go->transform->scale = CharHelper::charToVec3(tmpScale);
+				go->transform()->scale = CharHelper::charToVec3(tmpScale);
 
 			}
 			else if (std::strcmp(componentNode["className"].GetString(), "Cube") == 0){

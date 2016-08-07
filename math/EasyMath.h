@@ -1,5 +1,31 @@
 #pragma once
+struct Vector2{
+	float x, y;
+	Vector2(const float _x, const float _y) :x(_x), y(_y) {
+	}
+	Vector2() :x(0), y(0){}
 
+	Vector2 operator*(const float val)
+	{
+		Vector2 vec;
+		vec.x = this->x * val;
+		vec.y = this->y * val;
+		return vec;
+	}
+	Vector2 operator+=(const Vector2& rhs)
+	{
+		this->x += rhs.x;
+		this->y += rhs.y;
+		return *this;
+	}
+	Vector2 operator-=(const Vector2& rhs)
+	{
+		this->x -= rhs.x;
+		this->y -= rhs.y;
+		return *this;
+	}
+
+};
 struct Vector3{
 	float x, y, z;
 	Vector3(const float _x, const float _y, const float _z) :x(_x), y(_y), z(_z) {

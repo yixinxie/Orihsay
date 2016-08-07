@@ -41,7 +41,7 @@
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <LinkIncremental>true</LinkIncremental>
-    <IncludePath>D:\dxapp\Orihsay;$(IncludePath)</IncludePath>
+    <IncludePath>D:\dxapp\Orihsay;D:\dxapp\Orihsay\sdl\include;$(IncludePath)</IncludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LinkIncremental>false</LinkIncremental>
@@ -78,12 +78,17 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="..\lodepng\lodepng.cpp" />
+    <ClCompile Include="..\lodepng\lodepng_util.cpp" />
+    <ClCompile Include="..\lodepng\pngdetail.cpp" />
     <ClCompile Include="components\Camera.cpp" />
     <ClCompile Include="components\CubeMesh.cpp" />
     <ClCompile Include="components\InputManager.cpp" />
     <ClCompile Include="components\LightSource.cpp" />
     <ClCompile Include="components\Panel.cpp" />
+    <ClCompile Include="components\RawImage.cpp" />
     <ClCompile Include="dx\DXDeferred.cpp" />
+    <ClCompile Include="dx\DXInstancedSprite.cpp" />
     <ClCompile Include="dx\DXManager.cpp" />
     <ClCompile Include="dx\DXInstancedMesh.cpp" />
     <ClCompile Include="dx\DXInstancing.cpp" />
@@ -91,6 +96,7 @@
     <ClCompile Include="gameplay\G.cpp" />
     <ClCompile Include="gameplay\GameObject.cpp" />
     <ClCompile Include="gameplay\MonoBehaviour.cpp" />
+    <ClCompile Include="gameplay\RectTransform.cpp" />
     <ClCompile Include="gameplay\Scene.cpp" />
     <ClCompile Include="gameplay\SceneManager.cpp" />
     <ClCompile Include="gameplay\Transform.cpp" />
@@ -101,20 +107,27 @@
     <ClCompile Include="misc\ClassFactory.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="..\lodepng\lodepng.h" />
+    <ClInclude Include="..\lodepng\lodepng_util.h" />
     <ClInclude Include="components\Camera.h" />
     <ClInclude Include="components\CubeMesh.h" />
     <ClInclude Include="components\InputManager.h" />
     <ClInclude Include="components\LightSource.h" />
     <ClInclude Include="components\Panel.h" />
+    <ClInclude Include="components\RawImage.h" />
     <ClInclude Include="dx\DXDeferred.h" />
+    <ClInclude Include="dx\DXInstancedSprite.h" />
     <ClInclude Include="dx\DXManager.h" />
     <ClInclude Include="dx\DXInstancedMesh.h" />
     <ClInclude Include="dx\DXInstancing.h" />
     <ClInclude Include="dx\DXShaderStructs.h" />
     <ClInclude Include="dx\DXShadowMap.h" />
+    <ClInclude Include="dx\DXTexture.h" />
     <ClInclude Include="gameplay\G.h" />
     <ClInclude Include="gameplay\GameObject.h" />
+    <ClInclude Include="gameplay\ITransform.h" />
     <ClInclude Include="gameplay\MonoBehaviour.h" />
+    <ClInclude Include="gameplay\RectTransform.h" />
     <ClInclude Include="gameplay\Scene.h" />
     <ClInclude Include="gameplay\SceneManager.h" />
     <ClInclude Include="gameplay\Transform.h" />
@@ -126,7 +139,6 @@
     <ClInclude Include="math\EasyMath.h" />
     <ClInclude Include="misc\CharHelper.h" />
     <ClInclude Include="misc\ClassFactory.h" />
-    <ClInclude Include="misc\Macros.h" />
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="dx\shaders\deferred_quad_ps.hlsl">
@@ -173,6 +185,7 @@
     </FxCompile>
   </ItemGroup>
   <ItemGroup>
+    <None Include="..\lodepng\README.md" />
     <None Include="ClassDiagram.cd" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

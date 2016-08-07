@@ -10,5 +10,5 @@ void CubeMesh::awake(void){
 }
 void CubeMesh::update(){
 	// send the transform information to the graphics API so it can update its instance buffer.
-	G::instance()->renderer->updateInstancedObject(drawId, gameObject->transform->position, gameObject->transform->getEuler(), gameObject->transform->scale);
+	G::instance()->renderer->updateInstancedObject(drawId, gameObject->transform()->position, gameObject->transform()->getEuler(), gameObject->transform()->scale);
 }

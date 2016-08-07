@@ -6,8 +6,10 @@
 #include <d3dx11.h>
 #include <d3dx10.h>
 #include "../graphics/Renderer.h"
+#include "DXTexture.h"
 #include "DXInstancing.h"
 #include "DXInstancedMesh.h"
+#include "DXInstancedSprite.h"
 #include "DXShadowMap.h"
 #include "DXDeferred.h"
 #include "../misc/CharHelper.h"
@@ -37,10 +39,15 @@ private:
 	ID3D11Buffer* viewProjMatrixCB;
 
 	// techniques:
+	DXInstancedSprite* instancedSprites;
 	DXInstancing* instancedQuads;
+	
 	DXInstancedMesh* instancedMesh;
 	DXShadowMap* shadowMap;
 	DXDeferred* deferredShading;
+
+	// resources
+	vector<DXTextureResource> textures;
 
 	void initDepthStencil(void);
 	void prepareCamera(void);
@@ -49,9 +56,10 @@ private:
 	void restoreRenderTarget(void);
 public:
 	DXManager(void);
+	// overrides
 	void init(HWND hWnd, int _width, int _height);
 	void dispose(void);
-
+	int createTexture(unsigned int width, unsigned int height, const unsigned char* initialData);
 	
 	void initInstancing(void);
 	void disposeInstancing(void);

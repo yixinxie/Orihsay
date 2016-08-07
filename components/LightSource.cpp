@@ -5,5 +5,5 @@ void LightSource::awake(){
 	drawId = G::instance()->renderer->registerLightSource();
 }
 void LightSource::update(){
-	G::instance()->renderer->updateLightSource(drawId, gameObject->transform->position,  gameObject->transform->getEuler());
+	G::instance()->renderer->updateLightSource(drawId, gameObject->transform()->position,  gameObject->transform()->getEuler());
 }

@@ -3,8 +3,8 @@
 class GameObject;
 #include "../math/EasyMath.h"
 #include "glm/gtc/quaternion.hpp"
-
-class Transform{
+#include "ITransform.h"
+class Transform : public ITransform{
 private:
 	
 	GameObject* gameObject;

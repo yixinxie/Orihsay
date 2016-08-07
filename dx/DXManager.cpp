@@ -1,4 +1,5 @@
 #include "DXManager.h"
+
 #include "../gameplay/Transform.h"
 DXManager::DXManager(void){
 	//ZeroMemory((void*)this, sizeof(DXManager));
@@ -117,6 +118,11 @@ void DXManager::init(HWND hWnd, int _width, int _height)
 
 	instancedQuads = new DXInstancing(dev, devcon);
 	instancedQuads->initQuadBuffer();
+
+	instancedSprites = new DXInstancedSprite(dev, devcon);
+	instancedSprites->init();
+
+
 }
 void DXManager::initDepthStencil(){
 	HRESULT hr;
@@ -286,6 +292,8 @@ void DXManager::render(){
 		devcon->ClearDepthStencilView(depthStencilView, D3D11_CLEAR_DEPTH, 1.0f, 0);
 		instancedMesh->render(&viewProjMatrixCB);
 	}
+	// 2d rendering
+	instancedSprites->render(&viewProjMatrixCB);
 	hr = swapchain->Present(0, 0);
 	if (FAILED(hr)){
 		TRACE("present failed!");
@@ -356,4 +364,56 @@ void DXManager::assembleDrawables(){
 	}
 	instancedMesh->updateInstanceBuffer(instancedObjects);
 
+}
+int DXManager::createTexture(unsigned int width, unsigned int height, const unsigned char* initialData){
+
+	DXTextureResource tex;
+
+
+	D3D11_TEXTURE2D_DESC textureDesc;
+	D3D11_SHADER_RESOURCE_VIEW_DESC shaderResourceViewDesc;
+	HRESULT hr;
+
+	ZeroMemory(&textureDesc, sizeof(textureDesc));
+	ZeroMemory(&textureDesc, sizeof(shaderResourceViewDesc));
+
+	// Setup the texture description.
+	textureDesc.Width = width;
+	textureDesc.Height = height;
+	textureDesc.MipLevels = 1;
+	textureDesc.ArraySize = 1;
+	textureDesc.Format = DXGI_FORMAT_R8G8B8A8_UNORM;
+	textureDesc.SampleDesc.Count = 1;
+	textureDesc.Usage = D3D11_USAGE_DEFAULT;
+	textureDesc.BindFlags = D3D11_BIND_SHADER_RESOURCE;
+	textureDesc.CPUAccessFlags = 0;
+	textureDesc.MiscFlags = 0;
+
+	// 
+	D3D11_SUBRESOURCE_DATA initData;
+	initData.pSysMem = initialData;
+	initData.SysMemPitch = width;
+	initData.SysMemSlicePitch = 0;
+
+	// Create the texture.
+	hr = dev->CreateTexture2D(&textureDesc, &initData, &(tex.texture));
+	if (FAILED(hr)){
+		return false;
+	}
+
+	// Setup the description of the shader resource view.
+	shaderResourceViewDesc.Format = textureDesc.Format;
+	shaderResourceViewDesc.ViewDimension = D3D11_SRV_DIMENSION_TEXTURE2D;
+	shaderResourceViewDesc.Texture2D.MostDetailedMip = 0;
+	shaderResourceViewDesc.Texture2D.MipLevels = 1;
+
+	// Create the shader resource view.
+	hr = dev->CreateShaderResourceView(tex.texture, &shaderResourceViewDesc, &tex.textureSRV);
+	if (FAILED(hr)){
+		return false;
+	}
+
+	textures.push_back(tex);
+
+	return textures.size();
 }

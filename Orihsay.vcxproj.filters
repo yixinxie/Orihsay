@@ -40,6 +40,9 @@
     <Filter Include="Source Files\gameplay">
       <UniqueIdentifier>{34094784-fa06-4e3d-bcc2-0a6d004d93b9}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\misc\lodepng">
+      <UniqueIdentifier>{958de8d1-48a9-40d2-8faa-a29cf9c07339}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -105,6 +108,24 @@
     <ClCompile Include="dx\DXDeferred.cpp">
       <Filter>Source Files\dx</Filter>
     </ClCompile>
+    <ClCompile Include="dx\DXInstancedSprite.cpp">
+      <Filter>Source Files\dx</Filter>
+    </ClCompile>
+    <ClCompile Include="gameplay\RectTransform.cpp">
+      <Filter>Source Files\gameplay</Filter>
+    </ClCompile>
+    <ClCompile Include="components\RawImage.cpp">
+      <Filter>Source Files\components</Filter>
+    </ClCompile>
+    <ClCompile Include="..\lodepng\pngdetail.cpp">
+      <Filter>Source Files\misc</Filter>
+    </ClCompile>
+    <ClCompile Include="..\lodepng\lodepng_util.cpp">
+      <Filter>Source Files\misc\lodepng</Filter>
+    </ClCompile>
+    <ClCompile Include="..\lodepng\lodepng.cpp">
+      <Filter>Source Files\misc\lodepng</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="gameplay\GameObject.h">
@@ -146,9 +167,6 @@
     <ClInclude Include="dx\DXInstancedMesh.h">
       <Filter>Source Files\dx</Filter>
     </ClInclude>
-    <ClInclude Include="misc\Macros.h">
-      <Filter>Source Files\misc</Filter>
-    </ClInclude>
     <ClInclude Include="input\DXInput.h">
       <Filter>Source Files\input</Filter>
     </ClInclude>
@@ -183,6 +201,27 @@
       <Filter>Source Files\dx</Filter>
     </ClInclude>
     <ClInclude Include="dx\DXDeferred.h">
+      <Filter>Source Files\dx</Filter>
+    </ClInclude>
+    <ClInclude Include="dx\DXInstancedSprite.h">
+      <Filter>Source Files\dx</Filter>
+    </ClInclude>
+    <ClInclude Include="gameplay\RectTransform.h">
+      <Filter>Source Files\gameplay</Filter>
+    </ClInclude>
+    <ClInclude Include="gameplay\ITransform.h">
+      <Filter>Source Files\gameplay</Filter>
+    </ClInclude>
+    <ClInclude Include="components\RawImage.h">
+      <Filter>Source Files\components</Filter>
+    </ClInclude>
+    <ClInclude Include="..\lodepng\lodepng_util.h">
+      <Filter>Source Files\misc\lodepng</Filter>
+    </ClInclude>
+    <ClInclude Include="..\lodepng\lodepng.h">
+      <Filter>Source Files\misc\lodepng</Filter>
+    </ClInclude>
+    <ClInclude Include="dx\DXTexture.h">
       <Filter>Source Files\dx</Filter>
     </ClInclude>
   </ItemGroup>
@@ -232,5 +271,8 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="ClassDiagram.cd" />
+    <None Include="..\lodepng\README.md">
+      <Filter>Source Files\misc</Filter>
+    </None>
   </ItemGroup>
 </Project>
