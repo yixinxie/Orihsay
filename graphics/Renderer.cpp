@@ -43,7 +43,26 @@ void Renderer::updateInstancedObject(const int id, const Vector3& position, cons
 	oit->rotation = rotation;
 	oit->scale = scale;
 }
+int Renderer::registerSpriteObject(){
+	int res;
+	ObjectRectTransformDesc* desc = new ObjectRectTransformDesc();
+	desc->position = Vector2(0, 0);
 
+	spriteObjects.insert({ spriteIndexIncrementer, desc });
+	res = spriteIndexIncrementer;
+	spriteIndexIncrementer++;
+	return res;
+}
+void Renderer::updateSpriteObject(const int id, const Vector2& position, const Vector2& widthHeight){
+
+	ObjectRectTransformDesc* desc = spriteObjects[id];
+	if (desc == nullptr){
+		TRACE("cannot find a sprite object with id" << id);
+		return;
+	}
+	desc->position = position;
+	desc->widthHeight = widthHeight;
+}
 int Renderer::registerLightSource(){
 	int res;
 	LightSourceDesc* lightSourceDesc = new LightSourceDesc();

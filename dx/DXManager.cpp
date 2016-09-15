@@ -19,7 +19,9 @@ DXManager::DXManager(void){
 	viewProjMatrixCB = nullptr;
 	
 	objectIndexIncrementer = 0; // this should not be here probably...
+	spriteIndexIncrementer = 0;
 	lightIndexIncrementer = 0;
+
 	
 }
 void DXManager::dispose()
@@ -30,6 +32,7 @@ void DXManager::dispose()
 
 
 	SAFE_DISPOSE(shadowMap);
+	SAFE_DISPOSE(instancedSprites);
 	SAFE_DISPOSE(instancedMesh);
 	SAFE_DISPOSE(instancedQuads);
 	SAFE_DISPOSE(deferredShading);
@@ -285,6 +288,9 @@ void DXManager::render(){
 		deferredShading->setShaderConstants_Shading(nullptr, shadowMap->samplerState);
 		instancedQuads->drawQuad();
 		deferredShading->postDraw();
+
+
+		//instancedSprites->draw();
 	}
 	else{
 		prepareCamera();
@@ -364,6 +370,12 @@ void DXManager::assembleDrawables(){
 	}
 	instancedMesh->updateInstanceBuffer(instancedObjects);
 
+	if (instancedSprites == nullptr){
+		instancedSprites = new DXInstancedSprite(dev, devcon);
+		instancedSprites->init();
+	}
+	instancedSprites->updateInstanceBuffer(spriteObjects);
+
 }
 int DXManager::createTexture(unsigned int width, unsigned int height, const unsigned char* initialData){
 
@@ -371,9 +383,9 @@ int DXManager::createTexture(unsigned int width, unsigned int height, const unsi
 
 
 	D3D11_TEXTURE2D_DESC textureDesc;
-	D3D11_SHADER_RESOURCE_VIEW_DESC shaderResourceViewDesc;
+	
 	HRESULT hr;
-
+	D3D11_SHADER_RESOURCE_VIEW_DESC shaderResourceViewDesc;
 	ZeroMemory(&textureDesc, sizeof(textureDesc));
 	ZeroMemory(&textureDesc, sizeof(shaderResourceViewDesc));
 
@@ -400,7 +412,8 @@ int DXManager::createTexture(unsigned int width, unsigned int height, const unsi
 	if (FAILED(hr)){
 		return false;
 	}
-
+	
+	
 	// Setup the description of the shader resource view.
 	shaderResourceViewDesc.Format = textureDesc.Format;
 	shaderResourceViewDesc.ViewDimension = D3D11_SRV_DIMENSION_TEXTURE2D;

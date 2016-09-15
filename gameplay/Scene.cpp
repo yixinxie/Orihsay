@@ -44,7 +44,20 @@ void Scene::deserialize(){
 	
 	for (unsigned int i = 0; i < parsed.Size(); i++){
 		const Value& gameObjectNode = parsed[i];
-		GameObject* go = GameObject::instantiate(GameObject::UseTransform);
+		GameObject* go = nullptr;
+		
+		// transform type
+		const char* typeStr = gameObjectNode["type"].GetString();
+		if (strcmp(typeStr, "T") == 0){
+			go = GameObject::instantiate(GameObject::UseTransform);
+		}
+		else if (strcmp(typeStr, "R") == 0){
+			go = GameObject::instantiate(GameObject::UseRectTransform);
+		}
+		else if (strcmp(typeStr, "N") == 0){
+			go = GameObject::instantiate(GameObject::UseNoTransform);
+		}
+		
 		gameObjects.push_back(go);
 		go->setName(gameObjectNode["name"].GetString());
 		const Value& components = gameObjectNode["components"];
@@ -62,6 +75,7 @@ void Scene::deserialize(){
 
 			}
 			else if (std::strcmp(componentNode["className"].GetString(), "Transform") == 0){
+				// so for the transform component we just set the values.
 				const Value& fields = componentNode["fields"];
 				const char* tmpPosition = fields["position"].GetString();
 				go->transform()->position = CharHelper::charToVec3(tmpPosition);
@@ -71,7 +85,14 @@ void Scene::deserialize(){
 
 				const char* tmpScale = fields["scale"].GetString();
 				go->transform()->scale = CharHelper::charToVec3(tmpScale);
-
+				
+			}
+			else if (std::strcmp(componentNode["className"].GetString(), "RectTransform") == 0){
+				const Value& fields = componentNode["fields"];
+				const char* tmpPosition = fields["position"].GetString();
+				go->rectTransform()->position = CharHelper::charToVec2(tmpPosition);
+				go->rectTransform()->widthHeight = Vector2(100, 100);
+				// for rest of the component types we need to add it to the game object.
 			}
 			else if (std::strcmp(componentNode["className"].GetString(), "Cube") == 0){
 
@@ -88,6 +109,13 @@ void Scene::deserialize(){
 				MonoBehaviour* component = (MonoBehaviour*)classFactory.construct("LightSource");
 				go->addComponent(component);
 			}
+			else{
+				const char* classNameStr = componentNode["className"].GetString();
+				MonoBehaviour* component = (MonoBehaviour*)classFactory.construct(classNameStr);
+				go->addComponent(component);
+
+			}
+
 		}
 	}
 

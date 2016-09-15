@@ -17,6 +17,10 @@ struct PerVertexData{
 	D3DXVECTOR4 color;
 	D3DXVECTOR3 normal;
 };
+struct SpriteVertexData{
+	D3DXVECTOR3 position;
+	D3DXVECTOR2 uv;
+};
 
 struct PerVertexData_Quad{
 	D3DXVECTOR3 position;

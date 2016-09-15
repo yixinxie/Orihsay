@@ -6,8 +6,7 @@ GameObject::GameObject(void){
 
 }
 GameObject* GameObject::instantiate(int mode){
-	GameObject* res = nullptr;
-	res = new GameObject();
+	GameObject* res = new GameObject();;
 	if (mode == UseNoTransform){
 	}
 	else if (mode == UseTransform){

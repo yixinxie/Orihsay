@@ -81,6 +81,14 @@ Vector3 CharHelper::charToVec3(const char* tmp){
 	float z = std::stod(splitString[2]);
 	return Vector3(x, y, z);
 }
+Vector2 CharHelper::charToVec2(const char* tmp){
+	std::vector<std::string> splitString = CharHelper::split((tmp), ',');
+	//go->transform->position = Vector3()
+	float x = std::stod(splitString[0]);
+	float y = std::stod(splitString[1]);
+
+	return Vector2(x, y);
+}
 float CharHelper::charToFloat(const char* tmp){
 	std::string _tmp = std::string(tmp);
 	return std::stod(_tmp);

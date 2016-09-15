@@ -15,5 +15,6 @@ float4 main(PixelInputType input) : SV_TARGET
 {
 	
 
-	return input.color;
+	//return input.color;
+	return float4(1,1,1,1);
 }

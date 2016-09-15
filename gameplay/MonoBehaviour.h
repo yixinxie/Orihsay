@@ -11,5 +11,6 @@ public:
 	virtual void update(void);
 	virtual void lateUpdate(void);
 	virtual void fixedUpdate(void);	
+	virtual void onRender(void);
 	virtual void onDestroy(void);
 };

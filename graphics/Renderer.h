@@ -25,15 +25,20 @@ namespace OriGraphics{
 		int windowHeight;
 
 		vector<CameraDesc*> cameras;
+
 		int objectIndexIncrementer;
 		std::unordered_map<int, ObjectTransformDesc*> instancedObjects;
+
+		int spriteIndexIncrementer;
+		std::unordered_map<int, ObjectRectTransformDesc*> spriteObjects;
+
 		int lightIndexIncrementer;
 		std::unordered_map<int, LightSourceDesc*> lightSources;
 	public:
 		virtual void init(HWND hwnd, int _width, int _height) = 0;
 		virtual void dispose(void) = 0;
 		virtual void render(void) = 0;
-		virtual int createTexture(unsigned int w, unsigned int h) = 0;
+		virtual int createTexture(unsigned int w, unsigned int h, const unsigned char* initialData) = 0;
 		void setMainCamera(const Vector3& pos, const Vector3& rot, const float fov, const float _nearPlane, const float _farPlane);
 		void updateMainCamera(const Vector3& pos, const Vector3& rot);
 		int registerInstancedObject(void);
@@ -42,6 +47,8 @@ namespace OriGraphics{
 		int registerLightSource(void);
 		void updateLightSource(const int id, const Vector3& position, const Vector3& rotation);
 
+		int registerSpriteObject(void);
+		void updateSpriteObject(const int id, const Vector2& position, const Vector2& widthHeight);
 		
 	};
 }

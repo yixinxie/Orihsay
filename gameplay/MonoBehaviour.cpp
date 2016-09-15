@@ -18,6 +18,9 @@ void MonoBehaviour::lateUpdate(void){
 void MonoBehaviour::fixedUpdate(void){
 
 }
+void MonoBehaviour::onRender(void){
+
+}
 void MonoBehaviour::onDestroy(void){
 
 }

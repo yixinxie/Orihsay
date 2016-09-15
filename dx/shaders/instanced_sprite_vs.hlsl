@@ -4,13 +4,8 @@
 struct VertexInputType
 {
 	float3 position : POSITION;
-	float4 color : COLOR;
-	float3 normal : NORMAL;
-
-	float4 worldMatrix0 : INSTANCE_MATRIX0;
-	float4 worldMatrix1 : INSTANCE_MATRIX1;
-	float4 worldMatrix2 : INSTANCE_MATRIX2;
-	float4 worldMatrix3 : INSTANCE_MATRIX3;
+	float2 uv : TEXTURE_UV;
+	//float3 normal : NORMAL;
 	//matrix instanceMatrix : INSTANCE_MATRIX;
 };
 cbuffer VSHADER_CB
@@ -39,15 +34,15 @@ PixelInputType main(VertexInputType input)
 	PixelInputType output;
 
 	// Calculate the position of the vertex against the world, view, and projection matrices.
-//	matrix world = CreateMatrixFromCols(input.worldMatrix0, input.worldMatrix1, input.worldMatrix2, input.worldMatrix3);
-	matrix world = float4x4(input.worldMatrix0, input.worldMatrix1, input.worldMatrix2, input.worldMatrix3);
+
+	//matrix world = float4x4(input.worldMatrix0, input.worldMatrix1, input.worldMatrix2, input.worldMatrix3);
 	output.position.w = 1.0f;
 	output.position.xyz = input.position;
-	output.position = mul(output.position, world);
+	//output.position = mul(output.position, world);
 	output.position = mul(output.position, viewMatrix);
 	output.position = mul(output.position, projectionMatrix);
 
-	output.color = input.color;
+	output.color = float4(1,1,1,1);
 
 	//output.position = input.position;
 
