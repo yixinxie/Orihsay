@@ -262,6 +262,7 @@ void DXManager::render(){
 	assembleDrawables();
 	// gather light sources
 	// for each light source, render the scene
+	
 	if (lightSources.size() > 0){
 		// create or update the view projection matrix buffer for the light source.
 
@@ -299,7 +300,9 @@ void DXManager::render(){
 		instancedMesh->render(&viewProjMatrixCB);
 	}
 	// 2d rendering
-	instancedSprites->render(&viewProjMatrixCB);
+	devcon->ClearDepthStencilView(depthStencilView, D3D11_CLEAR_DEPTH, 1.0f, 0);
+	//prepareCamera();
+	instancedSprites->render(&viewProjMatrixCB, &textures[0].textureSRV);
 	hr = swapchain->Present(0, 0);
 	if (FAILED(hr)){
 		TRACE("present failed!");
@@ -404,7 +407,7 @@ int DXManager::createTexture(unsigned int width, unsigned int height, const unsi
 	// 
 	D3D11_SUBRESOURCE_DATA initData;
 	initData.pSysMem = initialData;
-	initData.SysMemPitch = width;
+	initData.SysMemPitch = width * 4;
 	initData.SysMemSlicePitch = 0;
 
 	// Create the texture.
@@ -425,8 +428,8 @@ int DXManager::createTexture(unsigned int width, unsigned int height, const unsi
 	if (FAILED(hr)){
 		return false;
 	}
-
+	int ret = textures.size();
 	textures.push_back(tex);
 
-	return textures.size();
+	return ret;
 }

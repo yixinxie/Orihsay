@@ -18,8 +18,8 @@ struct PerVertexData{
 	D3DXVECTOR3 normal;
 };
 struct SpriteVertexData{
-	D3DXVECTOR3 position;
-	D3DXVECTOR2 uv;
+	Vector3 position;
+	Vector2 uv;
 };
 
 struct PerVertexData_Quad{

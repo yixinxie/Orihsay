@@ -91,7 +91,10 @@ void Scene::deserialize(){
 				const Value& fields = componentNode["fields"];
 				const char* tmpPosition = fields["position"].GetString();
 				go->rectTransform()->position = CharHelper::charToVec2(tmpPosition);
-				go->rectTransform()->widthHeight = Vector2(100, 100);
+				
+
+				const char* tmpSize = fields["size"].GetString();
+				go->rectTransform()->widthHeight = CharHelper::charToVec2(tmpSize);
 				// for rest of the component types we need to add it to the game object.
 			}
 			else if (std::strcmp(componentNode["className"].GetString(), "Cube") == 0){

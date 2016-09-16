@@ -33,11 +33,13 @@ private:
 	void initShadersAndInputLayout(void);
 	//void initInstanceBuffer(void);
 	void initVertexBuffer(void);
+	// the sampler state could become per texture.
+	ID3D11SamplerState* samplerState;
 public:
 	DXInstancedSprite(ID3D11Device *_dev, ID3D11DeviceContext *_devcon);
 	void init(void);
 	void updateInstanceBuffer(const std::unordered_map<int, ObjectRectTransformDesc*>& sprites);
-	void render(ID3D11Buffer** viewProjCB);
+	void render(ID3D11Buffer** viewProjCB, ID3D11ShaderResourceView **shaderRV);
 	void dispose(void);
 
 	//void setVertexAndIndexBuffers(void);

@@ -9,6 +9,7 @@ DXInstancedSprite::DXInstancedSprite(ID3D11Device *_dev, ID3D11DeviceContext *_d
 	vertexBuffer = nullptr;
 	//indexBuffer = nullptr;
 	//instanceBuffer = nullptr;
+	samplerState = nullptr;
 
 	instanceCount = 0;
 	instanceMaxSize = 4;
@@ -22,6 +23,30 @@ void DXInstancedSprite::init(){
 
 void DXInstancedSprite::initShadersAndInputLayout(){
 	HRESULT hr;
+
+	D3D11_SAMPLER_DESC samplerDesc;
+	samplerDesc.Filter = D3D11_FILTER_MIN_MAG_MIP_LINEAR;
+	samplerDesc.AddressU = D3D11_TEXTURE_ADDRESS_CLAMP;
+	samplerDesc.AddressV = D3D11_TEXTURE_ADDRESS_CLAMP;
+	samplerDesc.AddressW = D3D11_TEXTURE_ADDRESS_CLAMP;
+	samplerDesc.MipLODBias = 0.0f;
+	samplerDesc.MaxAnisotropy = 1;
+	samplerDesc.ComparisonFunc = D3D11_COMPARISON_ALWAYS;
+	samplerDesc.BorderColor[0] = 0;
+	samplerDesc.BorderColor[1] = 0;
+	samplerDesc.BorderColor[2] = 0;
+	samplerDesc.BorderColor[3] = 0;
+	samplerDesc.MinLOD = 0;
+	//samplerDesc.MaxLOD = D3D11_FLOAT32_MAX;
+	samplerDesc.MaxLOD = 0;
+
+	// Create the texture sampler state.
+	hr = dev->CreateSamplerState(&samplerDesc, &samplerState);
+	if (FAILED(hr))
+	{
+		TRACE("depth map texture sampler state create failed.");
+	}
+
 	// shader
 
 	CharBuffer* vsBuffer = CharHelper::loadFile("instanced_sprite_vs.cso");
@@ -43,7 +68,6 @@ void DXInstancedSprite::initShadersAndInputLayout(){
 		{ "TEXTURE_UV", 0, DXGI_FORMAT_R32G32_FLOAT, 0, 12, D3D11_INPUT_PER_VERTEX_DATA, 0 },
 		//{ "NORMAL", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 28, D3D11_INPUT_PER_VERTEX_DATA, 0 },
 
-		
 		//{ "INSTANCE_MATRIX", 0, DXGI_FORMAT_R32G32B32A32_FLOAT, 1, 0, D3D11_INPUT_PER_INSTANCE_DATA, 1 },
 		//{ "INSTANCE_MATRIX", 1, DXGI_FORMAT_R32G32B32A32_FLOAT, 1, 16, D3D11_INPUT_PER_INSTANCE_DATA, 1 },
 		//{ "INSTANCE_MATRIX", 2, DXGI_FORMAT_R32G32B32A32_FLOAT, 1, 32, D3D11_INPUT_PER_INSTANCE_DATA, 1 },
@@ -161,37 +185,44 @@ void DXInstancedSprite::updateInstanceBuffer(const std::unordered_map<int, Objec
 		ObjectRectTransformDesc* transformDesc = it->second;
 		vertexData[inc].position.x = transformDesc->position.x - transformDesc->widthHeight.x;
 		vertexData[inc].position.y = transformDesc->position.y - transformDesc->widthHeight.y;
-		vertexData[inc].position.z = 1;
+		vertexData[inc].position.z = 0;
+		vertexData[inc].uv = Vector2(0, 0);
+
 		//vertexData[inc].position.z = vertexData[inc].position.y;
 		inc++;
 
 		vertexData[inc].position.x = transformDesc->position.x - transformDesc->widthHeight.x;
 		vertexData[inc].position.y = transformDesc->position.y + transformDesc->widthHeight.y;
-		vertexData[inc].position.z = 1;
+		vertexData[inc].position.z = 0;
 		//vertexData[inc].position.z = vertexData[inc].position.y;
+		vertexData[inc].uv = Vector2(0, 1);
 		inc++;
 
 		vertexData[inc].position.x = transformDesc->position.x + transformDesc->widthHeight.x;
 		vertexData[inc].position.y = transformDesc->position.y + transformDesc->widthHeight.y;
-		vertexData[inc].position.z = 1;
+		vertexData[inc].position.z = 0;
 		//vertexData[inc].position.z = vertexData[inc].position.y;
+		vertexData[inc].uv = Vector2(1, 1);
 		inc++;
 
 		vertexData[inc].position.x = transformDesc->position.x - transformDesc->widthHeight.x;
 		vertexData[inc].position.y = transformDesc->position.y - transformDesc->widthHeight.y;
-		vertexData[inc].position.z = 1;
+		vertexData[inc].position.z = 0;
+		//vertexData[inc].position.z = vertexData[inc].position.y;
+		vertexData[inc].uv = Vector2(0, 0);
+		inc++;
+
+		vertexData[inc].position.x = transformDesc->position.x + transformDesc->widthHeight.x;
+		vertexData[inc].position.y = transformDesc->position.y + transformDesc->widthHeight.y;
+		vertexData[inc].position.z = 0;
+		vertexData[inc].uv = Vector2(1, 1);
 		//vertexData[inc].position.z = vertexData[inc].position.y;
 		inc++;
 
 		vertexData[inc].position.x = transformDesc->position.x + transformDesc->widthHeight.x;
-		vertexData[inc].position.y = transformDesc->position.y - transformDesc->widthHeight.y;
-		vertexData[inc].position.z = 1;
-		//vertexData[inc].position.z = vertexData[inc].position.y;
-		inc++;
-
-		vertexData[inc].position.x = transformDesc->position.x + transformDesc->widthHeight.x;
-		vertexData[inc].position.y = transformDesc->position.y + transformDesc->widthHeight.x;
-		vertexData[inc].position.z = 1;
+		vertexData[inc].position.y = transformDesc->position.y - transformDesc->widthHeight.x;
+		vertexData[inc].position.z = 0;
+		vertexData[inc].uv = Vector2(1, 0);
 		//vertexData[inc].position.z = vertexData[inc].position.y;
 		inc++;
 	}
@@ -200,7 +231,7 @@ void DXInstancedSprite::updateInstanceBuffer(const std::unordered_map<int, Objec
 
 	instanceCount = transformCount;
 }
-void DXInstancedSprite::render(ID3D11Buffer** viewProjCB){
+void DXInstancedSprite::render(ID3D11Buffer** viewProjCB, ID3D11ShaderResourceView **shaderRV){
 	unsigned int strides[1];
 	unsigned int offsets[1];
 	ID3D11Buffer* bufferPointers[1];
@@ -224,11 +255,16 @@ void DXInstancedSprite::render(ID3D11Buffer** viewProjCB){
 	
 	devcon->PSSetShader(pixelShader, NULL, 0);
 
+	devcon->PSSetShaderResources(0, 1, shaderRV);
+	//ID3D11SamplerState* samplers[DEFERRED_G_BUFFER_COUNT];
+
+	devcon->PSSetSamplers(0, 1, &samplerState);
+
 	// Set the sampler state in the pixel shader.
 	//devcon->PSSetSamplers(0, 1, &m_sampleState);
 
 	//devcon->DrawIndexedInstanced(36, instanceCount, 0, 0, 0);
-	devcon->Draw(instanceCount * 6, 0);
+	devcon->Draw(instanceCount*6, 0);
 }
 
 
@@ -257,6 +293,7 @@ void DXInstancedSprite::render(ID3D11Buffer** viewProjCB){
 //
 //}
 void DXInstancedSprite::dispose(){
+	SAFE_RELEASE(samplerState);
 	SAFE_RELEASE(vertexBuffer);
 	//SAFE_RELEASE(indexBuffer);
 	//SAFE_RELEASE(instanceBuffer);

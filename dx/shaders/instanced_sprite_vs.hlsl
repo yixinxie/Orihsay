@@ -17,6 +17,7 @@ cbuffer VSHADER_CB
 struct PixelInputType
 {
 	float4 position : SV_POSITION;
+	float2 uv : TEXCOORD0;
 	float4 color : COLOR;
 };
 
@@ -39,10 +40,12 @@ PixelInputType main(VertexInputType input)
 	output.position.w = 1.0f;
 	output.position.xyz = input.position;
 	//output.position = mul(output.position, world);
-	output.position = mul(output.position, viewMatrix);
-	output.position = mul(output.position, projectionMatrix);
-
+	//output.position = mul(output.position, viewMatrix);
+	//output.position = mul(output.position, projectionMatrix);
+	
+	output.uv = input.uv;
 	output.color = float4(1,1,1,1);
+	
 
 	//output.position = input.position;
 
