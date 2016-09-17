@@ -19,6 +19,7 @@ float4 main(PixelInputType input) : SV_TARGET
 {
 	
 	float4 output = spriteTex.Sample(samplerClamp, input.uv);
+	//output.a = 0.5f;
 	//return input.color;
 	return output;
 }

@@ -26,17 +26,13 @@ CharBuffer* CharHelper::loadFile(std::string File)
 CharBuffer* CharHelper::loadTextFile(std::string File)
 {
 	CharBuffer* fileData = new CharBuffer;
-
 	// open the file
-
 	std::ifstream file(File, std::ios::in | std::ios::ate);
-
 	// if open was successful
 	if (file.is_open())
 	{
 		// find the length of the file
 		int Length = (int)file.tellg();
-
 		// collect the file data
 		fileData->buffer = new char[Length + 1];
 		fileData->length = Length + 1;

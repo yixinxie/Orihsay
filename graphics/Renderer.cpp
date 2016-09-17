@@ -18,7 +18,6 @@ void Renderer::updateMainCamera(const Vector3& pos, const Vector3& rot){
 	if (cameras.size() == 0 || cameras[0] == nullptr)return;
 	cameras[0]->position = pos;
 	cameras[0]->rotation = rot;
-
 }
 int Renderer::registerInstancedObject(){
 	int res;

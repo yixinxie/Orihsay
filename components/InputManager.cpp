@@ -7,7 +7,7 @@ void InputManager::awake(void){
 	leftButtonDown = false;
 }
 void InputManager::update(void){
-	
+	if (G::instance()->input == nullptr)return;
 	if (G::instance()->input->getMouseButton(0) == true){
 		// pan the camera
 		IntVector2 thisMousePos = G::instance()->input->mousePosition();

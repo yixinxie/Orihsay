@@ -1,5 +1,6 @@
 #pragma once
 #include <d3dx11.h>
+#include "../math/EasyMath.h"
 // shader constant buffer structs
 struct ViewProjection{
 

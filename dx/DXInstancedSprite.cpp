@@ -10,6 +10,7 @@ DXInstancedSprite::DXInstancedSprite(ID3D11Device *_dev, ID3D11DeviceContext *_d
 	//indexBuffer = nullptr;
 	//instanceBuffer = nullptr;
 	samplerState = nullptr;
+	alphaBlendState = nullptr;
 
 	instanceCount = 0;
 	instanceMaxSize = 4;
@@ -18,9 +19,23 @@ void DXInstancedSprite::init(){
 	initShadersAndInputLayout();
 	initVertexBuffer();
 	//initInstanceBuffer();
-	
+	initBlendState();
 }
+void DXInstancedSprite::initBlendState(void){
+	D3D11_BLEND_DESC omDesc;
+	ZeroMemory(&omDesc, sizeof(D3D11_BLEND_DESC));
+	omDesc.RenderTarget[0].BlendEnable = true;
+	omDesc.RenderTarget[0].SrcBlend = D3D11_BLEND_SRC_ALPHA;
+	omDesc.RenderTarget[0].DestBlend = D3D11_BLEND_INV_SRC_ALPHA;
+	omDesc.RenderTarget[0].BlendOp = D3D11_BLEND_OP_ADD;
+	omDesc.RenderTarget[0].SrcBlendAlpha = D3D11_BLEND_ONE;
+	omDesc.RenderTarget[0].DestBlendAlpha = D3D11_BLEND_ZERO;
+	omDesc.RenderTarget[0].BlendOpAlpha = D3D11_BLEND_OP_ADD;
+	omDesc.RenderTarget[0].RenderTargetWriteMask = D3D11_COLOR_WRITE_ENABLE_ALL;
+	
+	dev->CreateBlendState(&omDesc, &alphaBlendState);
 
+}
 void DXInstancedSprite::initShadersAndInputLayout(){
 	HRESULT hr;
 
@@ -186,13 +201,27 @@ void DXInstancedSprite::updateInstanceBuffer(const std::unordered_map<int, Objec
 		vertexData[inc].position.x = transformDesc->position.x - transformDesc->widthHeight.x;
 		vertexData[inc].position.y = transformDesc->position.y - transformDesc->widthHeight.y;
 		vertexData[inc].position.z = 0;
-		vertexData[inc].uv = Vector2(0, 0);
+		vertexData[inc].uv = Vector2(0, 1);
 
 		//vertexData[inc].position.z = vertexData[inc].position.y;
 		inc++;
 
 		vertexData[inc].position.x = transformDesc->position.x - transformDesc->widthHeight.x;
 		vertexData[inc].position.y = transformDesc->position.y + transformDesc->widthHeight.y;
+		vertexData[inc].position.z = 0;
+		//vertexData[inc].position.z = vertexData[inc].position.y;
+		vertexData[inc].uv = Vector2(0, 0);
+		inc++;
+
+		vertexData[inc].position.x = transformDesc->position.x + transformDesc->widthHeight.x;
+		vertexData[inc].position.y = transformDesc->position.y + transformDesc->widthHeight.y;
+		vertexData[inc].position.z = 0;
+		//vertexData[inc].position.z = vertexData[inc].position.y;
+		vertexData[inc].uv = Vector2(1, 0);
+		inc++;
+
+		vertexData[inc].position.x = transformDesc->position.x - transformDesc->widthHeight.x;
+		vertexData[inc].position.y = transformDesc->position.y - transformDesc->widthHeight.y;
 		vertexData[inc].position.z = 0;
 		//vertexData[inc].position.z = vertexData[inc].position.y;
 		vertexData[inc].uv = Vector2(0, 1);
@@ -201,28 +230,14 @@ void DXInstancedSprite::updateInstanceBuffer(const std::unordered_map<int, Objec
 		vertexData[inc].position.x = transformDesc->position.x + transformDesc->widthHeight.x;
 		vertexData[inc].position.y = transformDesc->position.y + transformDesc->widthHeight.y;
 		vertexData[inc].position.z = 0;
-		//vertexData[inc].position.z = vertexData[inc].position.y;
-		vertexData[inc].uv = Vector2(1, 1);
-		inc++;
-
-		vertexData[inc].position.x = transformDesc->position.x - transformDesc->widthHeight.x;
-		vertexData[inc].position.y = transformDesc->position.y - transformDesc->widthHeight.y;
-		vertexData[inc].position.z = 0;
-		//vertexData[inc].position.z = vertexData[inc].position.y;
-		vertexData[inc].uv = Vector2(0, 0);
-		inc++;
-
-		vertexData[inc].position.x = transformDesc->position.x + transformDesc->widthHeight.x;
-		vertexData[inc].position.y = transformDesc->position.y + transformDesc->widthHeight.y;
-		vertexData[inc].position.z = 0;
-		vertexData[inc].uv = Vector2(1, 1);
+		vertexData[inc].uv = Vector2(1, 0);
 		//vertexData[inc].position.z = vertexData[inc].position.y;
 		inc++;
 
 		vertexData[inc].position.x = transformDesc->position.x + transformDesc->widthHeight.x;
 		vertexData[inc].position.y = transformDesc->position.y - transformDesc->widthHeight.x;
 		vertexData[inc].position.z = 0;
-		vertexData[inc].uv = Vector2(1, 0);
+		vertexData[inc].uv = Vector2(1, 1);
 		//vertexData[inc].position.z = vertexData[inc].position.y;
 		inc++;
 	}
@@ -264,6 +279,7 @@ void DXInstancedSprite::render(ID3D11Buffer** viewProjCB, ID3D11ShaderResourceVi
 	//devcon->PSSetSamplers(0, 1, &m_sampleState);
 
 	//devcon->DrawIndexedInstanced(36, instanceCount, 0, 0, 0);
+	devcon->OMSetBlendState(alphaBlendState, nullptr, 0xffffffff);
 	devcon->Draw(instanceCount*6, 0);
 }
 
@@ -293,6 +309,7 @@ void DXInstancedSprite::render(ID3D11Buffer** viewProjCB, ID3D11ShaderResourceVi
 //
 //}
 void DXInstancedSprite::dispose(){
+	SAFE_RELEASE(alphaBlendState);
 	SAFE_RELEASE(samplerState);
 	SAFE_RELEASE(vertexBuffer);
 	//SAFE_RELEASE(indexBuffer);

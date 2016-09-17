@@ -36,7 +36,9 @@ void GameObject::start(void){
 }
 void GameObject::update(void){
 	for (unsigned int i = 0; i < components.size(); i++){
+		printf("mono %d start", i);
 		components.at(i)->update();
+		printf("mono %d end", i);
 	}
 }
 void GameObject::addComponent(MonoBehaviour* mono){

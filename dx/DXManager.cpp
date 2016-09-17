@@ -52,6 +52,7 @@ void DXManager::init(HWND hWnd, int _width, int _height)
 	HRESULT hr;
 	windowWidth = _width;
 	windowHeight = _height;
+	printf("init window %d x %d\n", _width, _height);
 	// create a struct to hold information about the swap chain
 	DXGI_SWAP_CHAIN_DESC scd;
 
@@ -79,14 +80,18 @@ void DXManager::init(HWND hWnd, int _width, int _height)
 		NULL,
 		&devcon);
 	if (FAILED(hr)){
+		
 		TRACE("create device failed");
+		
 	}
 
 	// get the address of the back buffer
 	ID3D11Texture2D *backBufferTex;
 	hr = swapchain->GetBuffer(0, __uuidof(ID3D11Texture2D), (LPVOID*)&backBufferTex);
 	if (FAILED(hr)){
+		
 		TRACE("GetBuffer failed");
+		
 	}
 	
 	hr = dev->CreateRenderTargetView(backBufferTex, NULL, &backbuffer);
@@ -98,6 +103,7 @@ void DXManager::init(HWND hWnd, int _width, int _height)
 	width = backBufferDesc.Width;
 	height = backBufferDesc.Height;
 	backBufferTex->Release();
+	printf("back buffer size: %d, %d\n", width, height);
 	initDepthStencil();
 
 	devcon->OMSetRenderTargets(1, &backbuffer, depthStencilView);
@@ -302,6 +308,7 @@ void DXManager::render(){
 	// 2d rendering
 	devcon->ClearDepthStencilView(depthStencilView, D3D11_CLEAR_DEPTH, 1.0f, 0);
 	//prepareCamera();
+	
 	instancedSprites->render(&viewProjMatrixCB, &textures[0].textureSRV);
 	hr = swapchain->Present(0, 0);
 	if (FAILED(hr)){

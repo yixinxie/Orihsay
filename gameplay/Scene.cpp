@@ -16,18 +16,19 @@ Scene::Scene(void) :state(0){
 void Scene::update(void){
 	if (state == 0){
 		deserialize();
-
 		for (unsigned int i = 0; i < gameObjects.size(); i++){
 			gameObjects.at(i)->awake();
 		}
-
 		for (unsigned int i = 0; i < gameObjects.size(); i++){
 			gameObjects.at(i)->start();
 		}
 		state = 1;
 	}
+	
 	for (unsigned int i = 0; i < gameObjects.size(); i++){
+		printf("update go: %s start\n",  gameObjects.at(i)->name);
 		gameObjects.at(i)->update();
+		printf("update go: %s ok\n", gameObjects.at(i)->name);
 	}
 }
 void Scene::serialize(){
@@ -36,7 +37,6 @@ void Scene::serialize(){
 
 void Scene::deserialize(){
 	CharBuffer* rawJSON = CharHelper::loadTextFile("scene0.json");
-
 	Document parsed;
 	parsed.Parse(rawJSON->buffer);
 	bool d = parsed.HasParseError();

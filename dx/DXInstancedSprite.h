@@ -33,8 +33,10 @@ private:
 	void initShadersAndInputLayout(void);
 	//void initInstanceBuffer(void);
 	void initVertexBuffer(void);
+	void initBlendState(void);
 	// the sampler state could become per texture.
 	ID3D11SamplerState* samplerState;
+	ID3D11BlendState* alphaBlendState;
 public:
 	DXInstancedSprite(ID3D11Device *_dev, ID3D11DeviceContext *_devcon);
 	void init(void);

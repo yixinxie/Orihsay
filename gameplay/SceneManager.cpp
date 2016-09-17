@@ -5,6 +5,7 @@ SceneManager::SceneManager(void){
 	scenes.push_back(testScene);
 }
 void SceneManager::update(void){
+	
 	scenes.at(currentSceneIndex)->update();
 }
 void SceneManager::onDestroy(){

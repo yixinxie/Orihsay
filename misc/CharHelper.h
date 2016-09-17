@@ -3,7 +3,7 @@
 #include <sstream>
 #include <vector>
 #include "../math/EasyMath.h"
-#define TRACE(x)	do {std::stringstream s; s << x; OutputDebugStringA(s.str().c_str()); } while (0)
+#define TRACE(x)	do {std::stringstream s; s << x; OutputDebugStringA(s.str().c_str()); printf(s.str().c_str());} while (0)
 
 struct CharBuffer{
 	char* buffer;

@@ -11,36 +11,90 @@
 ClassFactory classFactory;
 using namespace OriGraphics;
 
-// the WindowProc function prototype
+// global variables
+DXInput* input = nullptr;
+Renderer* renderer = nullptr;
+SceneManager* sceneManager = nullptr;
+
+int testVar;
 LRESULT CALLBACK WindowProc(HWND hWnd,
 	UINT message,
 	WPARAM wParam,
 	LPARAM lParam);
-HWND systemInit(const HINSTANCE instance, const int cmdShow, const int width, const int height);
+HWND createWindow(const HINSTANCE instance, const int cmdShow, const int width, const int height);
 
-MSG gameLoop(Renderer* renderer, DXInput* input);
+extern "C" __declspec(dllexport) int test(void){
+	OutputDebugString(L"c++ test invoked.\n");
+	testVar = 427;
+	return 1983;
+}
+extern "C" __declspec(dllexport) int engineStart(HWND hwnd
+	//, HINSTANCE hInstance
+	){
+	AllocConsole();
+	AttachConsole(GetCurrentProcessId());
+	freopen("CON", "w", stdout);
 
+
+	printf("Engine started.\n");
+	renderer = new DXManager();
+	G::instance()->renderer = renderer;
+	renderer->init(hwnd, 1024, 768);
+
+	registerComponentClasses();
+	sceneManager = new SceneManager();
+
+	printf("Engine initialized.\n");
+
+	
+
+	return testVar;
+}
+extern "C" __declspec(dllexport) void engineUpdate(void){
+	
+	sceneManager->update();
+	renderer->render();
+	//Sleep(16); // going to fix the gameloop a bit later...
+}
+extern "C" __declspec(dllexport) void engineShutdown(void){
+	sceneManager->onDestroy();
+	SAFE_DISPOSE(renderer);
+	printf("Engine shutdown.\n");
+}
 int WINAPI WinMain(HINSTANCE hInstance,
 	HINSTANCE hPrevInstance,
 	LPSTR lpCmdLine,
 	int nCmdShow)
+
 {
-	// the handle for the window, filled by a function
-	HWND window = systemInit(hInstance, nCmdShow, 1024, 768);
-	Renderer* renderer = new DXManager();
-	G::instance()->renderer = renderer;
-	renderer->init(window, 1024, 768);
 
-	DXInput* input = new DXInput();
-	G::instance()->input = input;
-	input->init(hInstance, window);
 	
-	MSG msg = gameLoop(renderer, input);
+	// the handle for the window, filled by a function
+	HWND hwnd = createWindow(hInstance, nCmdShow, 1024, 768);
+	
+	input = new DXInput();
+	G::instance()->input = input;
+	input->init(hInstance, hwnd);
 
-	SAFE_DISPOSE(renderer);
+	engineStart(hwnd);
+
+	MSG msg;
+	while (GetMessage(&msg, NULL, 0, 0))
+	{
+		TranslateMessage(&msg);
+		DispatchMessage(&msg);
+		if (input != nullptr)
+			input->update();
+		engineUpdate();
+		Sleep(16); // going to fix the gameloop a bit later...
+	}
+	engineShutdown();
+
+
 	SAFE_DISPOSE(input);
+
 	// return this part of the WM_QUIT message to Windows
-	return msg.wParam;
+	return 0;
 }
 
 // this is the main message handler for the program
@@ -67,7 +121,7 @@ LRESULT CALLBACK WindowProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lPara
 	// Handle any messages the switch statement didn't
 	return DefWindowProc(hWnd, message, wParam, lParam);
 }
-HWND systemInit(const HINSTANCE instance, const int cmdShow, const int width, const int height){
+HWND createWindow(const HINSTANCE instance, const int cmdShow, const int width, const int height){
 	HWND hWnd;
 
 	// this struct holds information for the window class
@@ -105,20 +159,4 @@ HWND systemInit(const HINSTANCE instance, const int cmdShow, const int width, co
 	// display the window on the screen
 	ShowWindow(hWnd, cmdShow);
 	return hWnd;
-}
-MSG gameLoop(Renderer* renderer, DXInput* input){
-	MSG msg;
-	registerComponentClasses();
-	SceneManager sceneManager;
-	
-	while (GetMessage(&msg, NULL, 0, 0))
-	{
-		TranslateMessage(&msg);
-		DispatchMessage(&msg);
-		input->update();
-		sceneManager.update();
-		renderer->render();
-		Sleep(16); // going to fix the gameloop a bit later...
-	}
-	return msg;
 }
