@@ -28,9 +28,7 @@ extern "C" __declspec(dllexport) int test(void){
 	testVar = 427;
 	return 1983;
 }
-extern "C" __declspec(dllexport) int engineStart(HWND hwnd
-	//, HINSTANCE hInstance
-	){
+extern "C" __declspec(dllexport) int engineStart(HWND hwnd, int width, int size){
 	AllocConsole();
 	AttachConsole(GetCurrentProcessId());
 	freopen("CON", "w", stdout);
@@ -39,15 +37,12 @@ extern "C" __declspec(dllexport) int engineStart(HWND hwnd
 	printf("Engine started.\n");
 	renderer = new DXManager();
 	G::instance()->renderer = renderer;
-	renderer->init(hwnd, 1024, 768);
+	renderer->init(hwnd, width, size);
 
 	registerComponentClasses();
 	sceneManager = new SceneManager();
 
 	printf("Engine initialized.\n");
-
-	
-
 	return testVar;
 }
 extern "C" __declspec(dllexport) void engineUpdate(void){
@@ -76,7 +71,7 @@ int WINAPI WinMain(HINSTANCE hInstance,
 	G::instance()->input = input;
 	input->init(hInstance, hwnd);
 
-	engineStart(hwnd);
+	engineStart(hwnd, 1024, 768);
 
 	MSG msg;
 	while (GetMessage(&msg, NULL, 0, 0))

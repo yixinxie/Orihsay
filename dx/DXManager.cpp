@@ -84,7 +84,7 @@ void DXManager::init(HWND hWnd, int _width, int _height)
 		TRACE("create device failed");
 		
 	}
-
+	printf("create device hr: %d\n", hr);
 	// get the address of the back buffer
 	ID3D11Texture2D *backBufferTex;
 	hr = swapchain->GetBuffer(0, __uuidof(ID3D11Texture2D), (LPVOID*)&backBufferTex);
