@@ -14,3 +14,7 @@ RectTransform::RectTransform(){
 void RectTransform::setGameObject(GameObject* _go){
 	gameObject = _go;
 }
+void RectTransform::setParent(int val){
+}
+void RectTransform::addChild(int val){
+}

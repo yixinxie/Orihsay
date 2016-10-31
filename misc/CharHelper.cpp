@@ -71,7 +71,6 @@ std::vector<std::string> CharHelper::split(const std::string &s, char delim) {
 }
 Vector3 CharHelper::charToVec3(const char* tmp){
 	std::vector<std::string> splitString = CharHelper::split((tmp), ',');
-	//go->transform->position = Vector3()
 	float x = std::stod(splitString[0]);
 	float y = std::stod(splitString[1]);
 	float z = std::stod(splitString[2]);
@@ -79,7 +78,6 @@ Vector3 CharHelper::charToVec3(const char* tmp){
 }
 Vector2 CharHelper::charToVec2(const char* tmp){
 	std::vector<std::string> splitString = CharHelper::split((tmp), ',');
-	//go->transform->position = Vector3()
 	float x = std::stod(splitString[0]);
 	float y = std::stod(splitString[1]);
 
@@ -89,3 +87,25 @@ float CharHelper::charToFloat(const char* tmp){
 	std::string _tmp = std::string(tmp);
 	return std::stod(_tmp);
 }
+IntVector2 CharHelper::charToIntVec2(const char* tmp){
+	std::vector<std::string> splitString = CharHelper::split((tmp), ',');
+	int x = std::stoi(splitString[0]);
+	int y = std::stoi(splitString[1]);
+
+	return IntVector2(x, y);
+}
+
+int CharHelper::charToInt(const char* tmp){
+	std::string _tmp = std::string(tmp);
+	int x = std::stoi(_tmp);
+
+	return x;
+}
+unsigned __int64 CharHelper::charToUInt64(const char* tmp){
+	return strtoull(tmp, nullptr, 10);
+}
+//void CharHelper::genGUID(OriGUID* guid){
+//	GUID result;
+//	UuidCreate(&result);
+//	memcpy(guid, &result, sizeof(GUID));
+//}

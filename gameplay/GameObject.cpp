@@ -2,6 +2,7 @@
 
 GameObject::GameObject(void){
 	_transform = nullptr;
+	parent = nullptr;
 		 
 
 }

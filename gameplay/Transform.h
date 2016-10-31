@@ -24,4 +24,7 @@ public:
 	Vector3 getUp(void);
 	Vector3 getRight(void);
 	static void getLookatAndUp(const Vector3& euler, Vector3* lookat, Vector3* up);
+
+	void setParent(int val);
+	void addChild(int val);
 };

@@ -37,6 +37,7 @@ namespace OriGraphics{
 	public:
 		virtual void init(HWND hwnd, int _width, int _height) = 0;
 		virtual void dispose(void) = 0;
+		void updateRectTransforms(void);
 		virtual void render(void) = 0;
 		virtual int createTexture(unsigned int w, unsigned int h, const unsigned char* initialData) = 0;
 		void setMainCamera(const Vector3& pos, const Vector3& rot, const float fov, const float _nearPlane, const float _farPlane);
@@ -49,6 +50,6 @@ namespace OriGraphics{
 
 		int registerSpriteObject(void);
 		void updateSpriteObject(const int id, const Vector2& position, const Vector2& widthHeight);
-		
+		void updateRectTransforms(int idx, int parentLeft, int parentBottom, int parentTop, int parentRight);
 	};
 }

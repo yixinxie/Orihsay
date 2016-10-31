@@ -104,8 +104,11 @@
     <ClCompile Include="Graphics\Renderer.cpp" />
     <ClCompile Include="input\DXInput.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="misc\Auxi.cpp" />
     <ClCompile Include="misc\CharHelper.cpp" />
     <ClCompile Include="misc\ClassFactory.cpp" />
+    <ClCompile Include="misc\GUID.cpp" />
+    <ClCompile Include="stl\IntIntKVP.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\lodepng\lodepng.h" />
@@ -138,8 +141,11 @@
     <ClInclude Include="graphics\Renderer.h" />
     <ClInclude Include="input\DXInput.h" />
     <ClInclude Include="math\EasyMath.h" />
+    <ClInclude Include="misc\Auxi.h" />
     <ClInclude Include="misc\CharHelper.h" />
     <ClInclude Include="misc\ClassFactory.h" />
+    <ClInclude Include="misc\GUID.h" />
+    <ClInclude Include="stl\IntIntKVP.h" />
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="dx\shaders\deferred_quad_ps.hlsl">

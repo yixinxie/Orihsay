@@ -56,6 +56,12 @@ extern "C" __declspec(dllexport) void engineShutdown(void){
 	SAFE_DISPOSE(renderer);
 	printf("Engine shutdown.\n");
 }
+extern "C" __declspec(dllexport) void OE_CreateGameObject(void){
+
+	sceneManager->onDestroy();
+	SAFE_DISPOSE(renderer);
+	printf("Engine shutdown.\n");
+}
 int WINAPI WinMain(HINSTANCE hInstance,
 	HINSTANCE hPrevInstance,
 	LPSTR lpCmdLine,

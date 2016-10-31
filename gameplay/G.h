@@ -1,6 +1,7 @@
 #include "../graphics/Renderer.h"
 #include "../input/DXInput.h"
 using namespace OriGraphics;
+// G is the global variable holder.
 class G{
 private:
 	G(void);

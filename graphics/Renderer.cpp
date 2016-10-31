@@ -46,7 +46,7 @@ int Renderer::registerSpriteObject(){
 	int res;
 	ObjectRectTransformDesc* desc = new ObjectRectTransformDesc();
 	desc->position = Vector2(0, 0);
-
+	desc->dirty = 1;
 	spriteObjects.insert({ spriteIndexIncrementer, desc });
 	res = spriteIndexIncrementer;
 	spriteIndexIncrementer++;
@@ -59,6 +59,7 @@ void Renderer::updateSpriteObject(const int id, const Vector2& position, const V
 		TRACE("cannot find a sprite object with id" << id);
 		return;
 	}
+	desc->dirty = 1;
 	desc->position = position;
 	desc->widthHeight = widthHeight;
 }
@@ -80,4 +81,28 @@ void Renderer::updateLightSource(const int id, const Vector3& position, const Ve
 	}
 	lightSourceDesc->position = position;
 	lightSourceDesc->rotation = rotation;
+}
+void Renderer::updateRectTransforms(int idx, int parentLeft, int parentBottom, int parentTop, int parentRight){
+	for (int i = 0; i < spriteObjects.size(); i++){
+		ObjectRectTransformDesc* desc = spriteObjects.at(i);
+		if (desc->dirty != 0 && desc->children != nullptr){
+			int parentWidthHalf = (parentRight - parentLeft) / 2;
+			int parentHeightHalf = (parentTop - parentBottom) / 2;
+			
+			int thisLeft, thisBottom, thisRight, thisTop;
+			int minX = (desc->anchorMin & 0x3);
+			thisLeft = parentLeft + parentWidthHalf * minX + desc->offsetMin.x;
+			int minY = (desc->anchorMin >> 2) & 0x3;
+			thisBottom = parentBottom + parentHeightHalf * minY + desc->offsetMin.y;
+
+			int maxX = (desc->anchorMax & 0x3);
+			thisRight = parentLeft + parentWidthHalf * maxX + desc->offsetMax.x;
+			int maxY = (desc->anchorMax >> 2) & 0x3;
+			thisTop = parentBottom + parentHeightHalf * maxY + desc->offsetMax.y;
+			desc->dirty = 0;
+			//desc->p
+			for (int j = 0; j < desc->children[0]; j++)
+				updateRectTransforms(desc->children[1 + j], thisLeft, thisBottom, thisTop, thisRight);
+		}
+	}
 }

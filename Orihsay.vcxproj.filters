@@ -43,6 +43,9 @@
     <Filter Include="Source Files\misc\lodepng">
       <UniqueIdentifier>{958de8d1-48a9-40d2-8faa-a29cf9c07339}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\stl">
+      <UniqueIdentifier>{4bcd292d-f6f0-4f82-9339-794beb97a7eb}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -125,6 +128,15 @@
     </ClCompile>
     <ClCompile Include="..\lodepng\lodepng.cpp">
       <Filter>Source Files\misc\lodepng</Filter>
+    </ClCompile>
+    <ClCompile Include="misc\GUID.cpp">
+      <Filter>Source Files\misc</Filter>
+    </ClCompile>
+    <ClCompile Include="misc\Auxi.cpp">
+      <Filter>Source Files\misc</Filter>
+    </ClCompile>
+    <ClCompile Include="stl\IntIntKVP.cpp">
+      <Filter>Source Files\stl</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -223,6 +235,15 @@
     </ClInclude>
     <ClInclude Include="dx\DXTexture.h">
       <Filter>Source Files\dx</Filter>
+    </ClInclude>
+    <ClInclude Include="misc\GUID.h">
+      <Filter>Source Files\misc</Filter>
+    </ClInclude>
+    <ClInclude Include="misc\Auxi.h">
+      <Filter>Source Files\misc</Filter>
+    </ClInclude>
+    <ClInclude Include="stl\IntIntKVP.h">
+      <Filter>Source Files\stl</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
