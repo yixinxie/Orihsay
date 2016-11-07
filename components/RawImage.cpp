@@ -30,6 +30,7 @@ void RawImage::loadPNG(const IntVector2& _dim, const char* fileName){
 	// create texture in GPU.
 	resourceHandle = G::instance()->renderer->createTexture(width, height, imageBuffer);
 	assert(resourceHandle >= 0);
+	// once the texture is decompressed and uploaded to v-ram, it's deleted from the main memory.
 }
 void RawImage::onRender(void){
 

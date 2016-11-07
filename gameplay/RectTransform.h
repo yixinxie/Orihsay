@@ -15,7 +15,7 @@ public:
 	// core values
 	unsigned char anchorMin, anchorMax;
 	IntVector2 offsetMin, offsetMax;
-	IntVector2 pivot; // pivot uv.
+	Vector2 pivot; // pivot uv.
 	// end of core values.
 
 	float rotation; // z rotation around the pivot.
@@ -24,6 +24,7 @@ public:
 	
 	RectTransform(void);
 	void setGameObject(GameObject* _go);
+	GameObject* getGameObject(void);
 	void setParent(int val);
 	void addChild(int val);
 

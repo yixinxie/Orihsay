@@ -17,20 +17,28 @@ Scene::Scene(void) :state(0){
 void Scene::update(void){
 	if (state == 0){
 		deserialize();
-		for (unsigned int i = 0; i < gameObjects.size(); i++){
-			gameObjects.at(i)->awake();
+		//for (unsigned int i = 0; i < gameObjects.size(); i++){
+		//	gameObjects.at(i)->awake();
+		//}
+		//for (unsigned int i = 0; i < gameObjects.size(); i++){
+		//	gameObjects.at(i)->start();
+		//}
+		for (auto it = gameObjects.begin(); it != gameObjects.end(); ++it){
+			it->second->awake();
 		}
-		for (unsigned int i = 0; i < gameObjects.size(); i++){
-			gameObjects.at(i)->start();
+		for (auto it = gameObjects.begin(); it != gameObjects.end(); ++it){
+			it->second->start();
 		}
 		state = 1;
 	}
-	
-	for (unsigned int i = 0; i < gameObjects.size(); i++){
-		//printf("update go: %s start\n",  gameObjects.at(i)->name);
-		gameObjects.at(i)->update();
-		//printf("update go: %s ok\n", gameObjects.at(i)->name);
+	for (auto it = gameObjects.begin(); it != gameObjects.end(); ++it){
+		it->second->update();
 	}
+	//for (unsigned int i = 0; i < gameObjects.size(); i++){
+	//	//printf("update go: %s start\n",  gameObjects.at(i)->name);
+	//	gameObjects.at(i)->update();
+	//	//printf("update go: %s ok\n", gameObjects.at(i)->name);
+	//}
 }
 void Scene::serialize(){
 
@@ -44,9 +52,9 @@ void Scene::deserialize(){
 	ParseErrorCode code = parsed.GetParseError();
 	
 	for (unsigned int i = 0; i < parsed.Size(); i++){
-		OriGUID guid;
-		OriGUIDHelper::genGUID(&guid);
-		printf_s("%lld,%lld\n", guid.d0, guid.d1);
+		//OriGUID guid;
+		//OriGUIDHelper::genGUID(&guid);
+		//printf_s("%lld,%lld\n", guid.d0, guid.d1);
 		const Value& gameObjectNode = parsed[i];
 		GameObject* go = nullptr;
 		
@@ -132,7 +140,7 @@ void Scene::deserialize(){
 				go->rectTransform()->offsetMax = CharHelper::charToIntVec2(tmp4);
 
 				const char* tmp5 = fields["pivot"].GetString();
-				go->rectTransform()->pivot = CharHelper::charToIntVec2(tmp5);
+				go->rectTransform()->pivot = CharHelper::charToVec2(tmp5);
 			}
 			// for rest of the component types we need to add it to the game object.
 			else if (std::strcmp(componentNode["className"].GetString(), "Cube") == 0){
@@ -164,10 +172,12 @@ void Scene::deserialize(){
 
 }
 void Scene::onDestroy(){
-	for (unsigned int i = 0; i < gameObjects.size(); i++){
-		gameObjects.at(i)->onDestroy();
-		delete gameObjects.at(i);
+
+	for (auto it = gameObjects.begin(); it != gameObjects.end(); ++it){
+		it->second->onDestroy();
+		delete it->second;
 	}
+	gameObjects.clear();
 
 }
 void Scene::newGameObjectTransform(char *objName, float f0, float f1, float f2, float f3, float f4, float f5, float f6, float f7, float f8){

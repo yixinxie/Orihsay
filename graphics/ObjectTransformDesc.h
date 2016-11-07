@@ -14,10 +14,11 @@ struct ObjectRectTransformDesc{
 	int textureHandle;
 	int* children; // the first element indicates the size.
 	int parent;
-	IntVector2 pivot; // range 0..1
+	
 	unsigned char anchorMin; // low 4 bit for x,
 	unsigned char anchorMax;
 	IntVector2 offsetMin;
 	IntVector2 offsetMax;
+	IntVector2 pivot; // range 0..1
 	
 };
