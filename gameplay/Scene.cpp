@@ -81,8 +81,8 @@ void Scene::deserialize(){
 			if (parentId >= 0){
 				int arrayIndex = gameObjectIndexLookup.at(parentId);
 				GameObject* parentGO = gameObjects.at(arrayIndex);
-				go->parent = parentGO;
-				parentGO->children.push_back(go);
+				go->_transform->setParent(parentGO);
+				parentGO->_transform->addChild(go);
 			}
 		}
 		
@@ -120,9 +120,8 @@ void Scene::deserialize(){
 			}
 			else if (std::strcmp(componentNode["className"].GetString(), "RectTransform") == 0){
 				const Value& fields = componentNode["fields"];
-				const char* tmpPosition = fields["pivot"].GetString();
-				go->rectTransform()->position = CharHelper::charToVec2(tmpPosition);
-				
+				//const char* tmpPosition = fields["pivot"].GetString();
+				//go->rectTransform()->position = CharHelper::charToVec2(tmpPosition);
 
 				const char* tmpSize = fields["anchorMin"].GetString();
 				int encodedByte = 0;

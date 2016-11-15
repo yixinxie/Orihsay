@@ -6,6 +6,7 @@
 #include "CameraDesc.h"
 #include "LightSourceDesc.h"
 #include "ObjectTransformDesc.h"
+#include "../gameplay/RectTransform.h"
 using namespace std;
 namespace OriGraphics{
 
@@ -49,7 +50,7 @@ namespace OriGraphics{
 		void updateLightSource(const int id, const Vector3& position, const Vector3& rotation);
 
 		int registerSpriteObject(void);
-		void updateSpriteObject(const int id, const Vector2& position, const Vector2& widthHeight);
+		void updateSpriteObject(const int id, const RectTransform& rect);
 
 		int registerRectTransform(void);
 		void updateRectTransforms(int idx, int parentLeft, int parentBottom, int parentTop, int parentRight);

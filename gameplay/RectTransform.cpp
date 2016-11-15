@@ -11,21 +11,11 @@ RectTransform::RectTransform(){
 	pivot = Vector2(0.5f, 0.5f);
 
 
-	position = Vector2(0, 0);
+	/*position = Vector2(0, 0);
 	widthHeight = Vector2(0, 0);
 	
 	rotation = 0;
-	scale = Vector2(1, 1);
+	scale = Vector2(1, 1);*/
 	G::instance()->renderer->registerSpriteObject();
 }
 
-void RectTransform::setGameObject(GameObject* _go){
-	gameObject = _go;
-}
-void RectTransform::setParent(int val){
-}
-void RectTransform::addChild(int val){
-}
-GameObject* RectTransform::getGameObject(void){
-	return gameObject;
-}

@@ -24,12 +24,11 @@ public:
 	static const int UseRectTransform = 2;
 
 	// hierarchy section
-	vector<GameObject*> children;
-	GameObject* parent;
+	//vector<GameObject*> children;
+	//GameObject* parent;
 	unsigned int guid;
 
-
-	ITransform* _transform;
+	BaseTransform* _transform;
 	char name[64];
 
 	static GameObject* instantiate(int mode);

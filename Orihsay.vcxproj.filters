@@ -138,6 +138,9 @@
     <ClCompile Include="stl\IntIntKVP.cpp">
       <Filter>Source Files\stl</Filter>
     </ClCompile>
+    <ClCompile Include="gameplay\BaseTransform.cpp">
+      <Filter>Source Files\gameplay</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="gameplay\GameObject.h">
@@ -221,9 +224,6 @@
     <ClInclude Include="gameplay\RectTransform.h">
       <Filter>Source Files\gameplay</Filter>
     </ClInclude>
-    <ClInclude Include="gameplay\ITransform.h">
-      <Filter>Source Files\gameplay</Filter>
-    </ClInclude>
     <ClInclude Include="components\RawImage.h">
       <Filter>Source Files\components</Filter>
     </ClInclude>
@@ -244,6 +244,9 @@
     </ClInclude>
     <ClInclude Include="stl\IntIntKVP.h">
       <Filter>Source Files\stl</Filter>
+    </ClInclude>
+    <ClInclude Include="gameplay\BaseTransform.h">
+      <Filter>Source Files\gameplay</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

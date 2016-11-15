@@ -2,9 +2,6 @@
 
 GameObject::GameObject(void){
 	_transform = nullptr;
-	parent = nullptr;
-		 
-
 }
 GameObject* GameObject::instantiate(int mode){
 	GameObject* res = new GameObject();;

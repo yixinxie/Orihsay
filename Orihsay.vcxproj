@@ -94,6 +94,7 @@
     <ClCompile Include="dx\DXInstancedMesh.cpp" />
     <ClCompile Include="dx\DXInstancing.cpp" />
     <ClCompile Include="dx\DXShadowMap.cpp" />
+    <ClCompile Include="gameplay\BaseTransform.cpp" />
     <ClCompile Include="gameplay\G.cpp" />
     <ClCompile Include="gameplay\GameObject.cpp" />
     <ClCompile Include="gameplay\MonoBehaviour.cpp" />
@@ -129,7 +130,7 @@
     <ClInclude Include="dx\DXTexture.h" />
     <ClInclude Include="gameplay\G.h" />
     <ClInclude Include="gameplay\GameObject.h" />
-    <ClInclude Include="gameplay\ITransform.h" />
+    <ClInclude Include="gameplay\BaseTransform.h" />
     <ClInclude Include="gameplay\MonoBehaviour.h" />
     <ClInclude Include="gameplay\RectTransform.h" />
     <ClInclude Include="gameplay\Scene.h" />

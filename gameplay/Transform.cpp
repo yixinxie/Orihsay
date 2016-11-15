@@ -9,9 +9,6 @@ Transform::Transform(){
 void Transform::fromEuler(const Vector3 euler){
 	quaternion = glm::quat(glm::vec3(glm::radians(euler.x), glm::radians(euler.y), glm::radians(euler.z)));
 }
-void Transform::setGameObject(GameObject* _gameObject){
-	gameObject = _gameObject;
-}
 Vector3 Transform::getEuler(){
 	glm::vec3 euler = glm::eulerAngles(quaternion);
 	
@@ -62,8 +59,4 @@ void Transform::getLookatAndUp(const Vector3& euler, Vector3* lookat, Vector3* u
 	up->x = res.x;
 	up->y = res.y;
 	up->z = res.z;
-}
-void Transform::setParent(int val){
-}
-void Transform::addChild(int val){
 }

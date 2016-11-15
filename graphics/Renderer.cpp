@@ -106,7 +106,7 @@ int Renderer::registerSpriteObject(){
 	spriteIndexIncrementer++;
 	return res;
 }
-void Renderer::updateSpriteObject(const int id, const Vector2& position, const Vector2& widthHeight){
+void Renderer::updateSpriteObject(const int id, const RectTransform& rect){
 
 	ObjectRectTransformDesc* desc = spriteObjects[id];
 	if (desc == nullptr){
@@ -114,6 +114,6 @@ void Renderer::updateSpriteObject(const int id, const Vector2& position, const V
 		return;
 	}
 	desc->dirty = 1;
-	desc->position = position;
-	desc->widthHeight = widthHeight;
+	//desc->position = position;
+	//desc->widthHeight = widthHeight;
 }
