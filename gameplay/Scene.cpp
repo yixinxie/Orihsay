@@ -120,8 +120,11 @@ void Scene::deserialize(){
 			}
 			else if (std::strcmp(componentNode["className"].GetString(), "RectTransform") == 0){
 				const Value& fields = componentNode["fields"];
-				//const char* tmpPosition = fields["pivot"].GetString();
-				//go->rectTransform()->position = CharHelper::charToVec2(tmpPosition);
+				const char* tmpPosition = fields["tmppos"].GetString();
+				go->rectTransform()->position = CharHelper::charToVec2(tmpPosition);
+
+				const char* tmpSize2 = fields["tmpsize"].GetString();
+				go->rectTransform()->widthHeight = CharHelper::charToVec2(tmpSize2);
 
 				const char* tmpSize = fields["anchorMin"].GetString();
 				int encodedByte = 0;
@@ -139,7 +142,7 @@ void Scene::deserialize(){
 				go->rectTransform()->offsetMax = CharHelper::charToIntVec2(tmp4);
 
 				const char* tmp5 = fields["pivot"].GetString();
-				go->rectTransform()->pivot = CharHelper::charToVec2(tmp5);
+				go->rectTransform()->pivot = CharHelper::charToIntVec2(tmp5);
 			}
 			// for rest of the component types we need to add it to the game object.
 			else if (std::strcmp(componentNode["className"].GetString(), "Cube") == 0){

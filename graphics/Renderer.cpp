@@ -114,6 +114,12 @@ void Renderer::updateSpriteObject(const int id, const RectTransform& rect){
 		return;
 	}
 	desc->dirty = 1;
-	//desc->position = position;
-	//desc->widthHeight = widthHeight;
+	desc->anchorMin = rect.anchorMin;
+	desc->anchorMax = rect.anchorMax;
+	desc->offsetMin = rect.offsetMin;
+	desc->offsetMax = rect.offsetMax;
+	desc->pivot = rect.pivot;
+
+	desc->position = rect.position;
+	desc->widthHeight = rect.widthHeight;
 }

@@ -8,7 +8,7 @@ RectTransform::RectTransform(){
 	anchorMax = 0;
 	offsetMin = IntVector2(0, 0);
 	offsetMax = IntVector2(0, 0);
-	pivot = Vector2(0.5f, 0.5f);
+	pivot = IntVector2(0, 0);
 
 
 	/*position = Vector2(0, 0);

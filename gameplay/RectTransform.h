@@ -8,15 +8,15 @@ class RectTransform : public BaseTransform{
 	
 	
 public:
-	/*
+	
 	Vector2 position; // anchored position
 	Vector2 widthHeight; // sizeDelta
-	*/
+	
 
 	// core values
 	unsigned char anchorMin, anchorMax;
 	IntVector2 offsetMin, offsetMax;
-	Vector2 pivot; // pivot uv.
+	IntVector2 pivot; // pivot uv.
 	// end of core values.
 
 	/*float rotation; // z rotation around the pivot.
