@@ -8,7 +8,7 @@ private:
 	
 	
 	int resourceHandle;
-	int drawId;
+	//int drawId;
 public:
 	int renderable = 1;
 	void awake(void);

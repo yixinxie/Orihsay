@@ -8,10 +8,9 @@ void RawImage::awake(void){
 	//loadPNG(IntVector2(214, 86), "assets/button_normal.png");
 	loadPNG(IntVector2(256, 256), "assets/test_blue.png");
 
-	drawId = G::instance()->renderer->registerSpriteObject();
 	RectTransform* rt = gameObject->rectTransform();
 
-	G::instance()->renderer->updateSpriteObject(drawId, *rt);
+	G::instance()->renderer->updateSpriteObject(rt->spriteHandle, *rt);
 	
 
 }

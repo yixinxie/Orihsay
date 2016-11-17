@@ -35,6 +35,8 @@ namespace OriGraphics{
 
 		int lightIndexIncrementer;
 		std::unordered_map<int, LightSourceDesc*> lightSources;
+
+		void updateRectTransforms(int idx, int parentLeft, int parentBottom, int parentTop, int parentRight);
 	public:
 		virtual void init(HWND hwnd, int _width, int _height) = 0;
 		virtual void dispose(void) = 0;
@@ -51,8 +53,9 @@ namespace OriGraphics{
 
 		int registerSpriteObject(void);
 		void updateSpriteObject(const int id, const RectTransform& rect);
-
-		int registerRectTransform(void);
-		void updateRectTransforms(int idx, int parentLeft, int parentBottom, int parentTop, int parentRight);
+		inline int getPixelWidth(void){ return width; }
+		inline int getPixelHeight(void){ return height; }
+		//int registerRectTransform(void);
+		
 	};
 }

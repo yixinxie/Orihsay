@@ -16,6 +16,6 @@ RectTransform::RectTransform(){
 	
 	rotation = 0;
 	scale = Vector2(1, 1);*/
-	G::instance()->renderer->registerSpriteObject();
+	spriteHandle = G::instance()->renderer->registerSpriteObject();
 }
 

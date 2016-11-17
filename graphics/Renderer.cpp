@@ -62,16 +62,16 @@ void Renderer::updateLightSource(const int id, const Vector3& position, const Ve
 	lightSourceDesc->position = position;
 	lightSourceDesc->rotation = rotation;
 }
-int Renderer::registerRectTransform(){
-	int res;
-	ObjectRectTransformDesc* desc = new ObjectRectTransformDesc();
-	desc->position = Vector2(0, 0);
-	desc->dirty = 1;
-	spriteObjects.insert({ spriteIndexIncrementer, desc });
-	res = spriteIndexIncrementer;
-	spriteIndexIncrementer++;
-	return res;
-}
+//int Renderer::registerRectTransform(){
+//	int res;
+//	ObjectRectTransformDesc* desc = new ObjectRectTransformDesc();
+//	desc->position = Vector2(0, 0);
+//	desc->dirty = 1;
+//	spriteObjects.insert({ spriteIndexIncrementer, desc });
+//	res = spriteIndexIncrementer;
+//	spriteIndexIncrementer++;
+//	return res;
+//}
 void Renderer::updateRectTransforms(int idx, int parentLeft, int parentBottom, int parentTop, int parentRight){
 	for (int i = 0; i < spriteObjects.size(); i++){
 		ObjectRectTransformDesc* desc = spriteObjects.at(i);

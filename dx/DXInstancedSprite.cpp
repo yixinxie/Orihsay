@@ -1,6 +1,7 @@
 #include "DXInstancedSprite.h"
 #include "DXManager.h"
 #include "../misc/CharHelper.h"
+#include "../gameplay/G.h"
 DXInstancedSprite::DXInstancedSprite(ID3D11Device *_dev, ID3D11DeviceContext *_devcon) :dev(_dev), devcon(_devcon){
 	inputLayout = nullptr;
 	vertexShader = nullptr;
@@ -194,6 +195,9 @@ void DXInstancedSprite::updateInstanceBuffer(const std::unordered_map<int, Objec
 	D3D11_MAPPED_SUBRESOURCE resource;
 	hr = devcon->Map(vertexBuffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &resource);
 
+	float pixelWidth = 1 / (float)G::instance()->renderer->getPixelWidth();
+	float pixelHeight = 1 / (float)G::instance()->renderer->getPixelHeight();
+
 	SpriteVertexData* vertexData = (SpriteVertexData*)resource.pData;
 	int inc = 0;
 	for (auto it = sprites.begin(); it != sprites.end(); ++it){
@@ -235,7 +239,7 @@ void DXInstancedSprite::updateInstanceBuffer(const std::unordered_map<int, Objec
 		inc++;
 
 		vertexData[inc].position.x = transformDesc->position.x + transformDesc->widthHeight.x;
-		vertexData[inc].position.y = transformDesc->position.y - transformDesc->widthHeight.x;
+		vertexData[inc].position.y = transformDesc->position.y - transformDesc->widthHeight.y;
 		vertexData[inc].position.z = 0;
 		vertexData[inc].uv = Vector2(1, 1);
 		//vertexData[inc].position.z = vertexData[inc].position.y;
