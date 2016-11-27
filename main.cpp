@@ -1,6 +1,7 @@
 #include <iostream>
 #include <windows.h>
 #include <windowsx.h>
+#include "misc/BasicMem.h"
 #include "graphics/Renderer.h"
 #include "gameplay/G.h"
 #include "dx/DXManager.h"
@@ -9,6 +10,7 @@
 #include "gameplay/SceneManager.h"
 #include "misc/ClassFactory.h"
 ClassFactory classFactory;
+BasicMemory basicMem;
 using namespace OriGraphics;
 
 // global variables
@@ -33,8 +35,9 @@ extern "C" __declspec(dllexport) int engineStart(HWND hwnd, int width, int size)
 	AttachConsole(GetCurrentProcessId());
 	freopen("CON", "w", stdout);
 
-
+	basicMem.initHeap(1024 * 1024);
 	printf("Engine started.\n");
+
 	renderer = new DXManager();
 	G::instance()->renderer = renderer;
 	renderer->init(hwnd, width, size);

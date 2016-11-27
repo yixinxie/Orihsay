@@ -55,7 +55,8 @@ namespace OriGraphics{
 		void updateLightSource(const int id, const Vector3& position, const Vector3& rotation);
 
 		int registerSpriteObject(void);
-		void updateSpriteObject(const int id, RectTransform& rect);
+		void updateSpriteObjectParent(const int id, const int parentId);
+		void updateSpriteObject(const int id, RectTransform* rect);
 		inline int getPixelWidth(void){ return width; }
 		inline int getPixelHeight(void){ return height; }
 		//int registerRectTransform(void);

@@ -19,3 +19,10 @@ RectTransform::RectTransform(){
 	spriteHandle = G::instance()->renderer->registerSpriteObject();
 }
 
+void RectTransform::setParent(BaseTransform* _rect){
+	BaseTransform::setParent(_rect);
+	int parentId = 0;
+	if (_rect != nullptr)
+		parentId = ((RectTransform*)_rect)->spriteHandle;
+	G::instance()->renderer->updateSpriteObjectParent(this->spriteHandle, parentId);
+}

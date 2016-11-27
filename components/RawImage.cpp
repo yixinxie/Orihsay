@@ -11,7 +11,7 @@ void RawImage::awake(void){
 
 	RectTransform* rt = gameObject->rectTransform();
 
-	G::instance()->renderer->updateSpriteObject(rt->spriteHandle, *rt);
+	G::instance()->renderer->updateSpriteObject(rt->spriteHandle, rt);
 	
 
 }

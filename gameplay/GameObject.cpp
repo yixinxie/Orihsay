@@ -15,6 +15,10 @@ GameObject* GameObject::instantiate(int mode){
 		res->_transform = new RectTransform();
 		res->_transform->setGameObject(res);
 	}
+	else if (mode == HierarchyOnly){
+		res->_transform = new BaseTransform();
+		res->_transform->setGameObject(res);
+	}
     
 	return res;
 }

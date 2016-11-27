@@ -22,6 +22,7 @@ public:
 	static const int UseNoTransform = 0;
 	static const int UseTransform = 1;
 	static const int UseRectTransform = 2;
+	static const int HierarchyOnly = 3;
 
 	// hierarchy section
 	//vector<GameObject*> children;

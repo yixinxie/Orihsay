@@ -69,11 +69,17 @@ void Scene::deserialize(){
 		else if (strcmp(typeStr, "N") == 0){
 			go = GameObject::instantiate(GameObject::UseNoTransform);
 		}
+		else if (strcmp(typeStr, "H") == 0){
+			go = GameObject::instantiate(GameObject::HierarchyOnly);
+		}
+		go->setName(gameObjectNode["name"].GetString());
+		const Value& components = gameObjectNode["components"];
 		// guid
 		{
 			const char* tt = gameObjectNode["guid"].GetString();
 			go->guid = CharHelper::charToInt(tt);
 		}
+
 		// by using the parent guid, locate the parent gameobject
 		{
 			const char* tt = gameObjectNode["parent"].GetString();
@@ -81,17 +87,17 @@ void Scene::deserialize(){
 			if (parentId >= 0){
 				int arrayIndex = gameObjectIndexLookup.at(parentId);
 				GameObject* parentGO = gameObjects.at(arrayIndex);
-				go->_transform->setParent(parentGO);
-				parentGO->_transform->addChild(go);
+				go->_transform->setParent(parentGO->_transform);
+			}
+			else{
+				// set root.
+				go->_transform->setParent(nullptr);
 			}
 		}
-		
 		gameObjects.insert({ guidIncre, go });
 		gameObjectIndexLookup.insert({ go->guid, guidIncre });
 		guidIncre++;
-
-		go->setName(gameObjectNode["name"].GetString());
-		const Value& components = gameObjectNode["components"];
+		
 		// deserialize components
 		for (unsigned int j = 0; j < components.Size(); j++){
 			const Value& componentNode = components[j];

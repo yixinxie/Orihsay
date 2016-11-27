@@ -25,5 +25,5 @@ public:
 	
 	RectTransform(void);
 	
-
+	virtual void setParent(BaseTransform* _rect);
 };

@@ -2,10 +2,10 @@
 #include <string>
 #include <unordered_map>
 #include "../misc/CharHelper.h"
-
+#include "../misc/BasicMem.h"
 using namespace OriGraphics;
 void Renderer::setMainCamera(const Vector3& pos, const Vector3& rot, const float fov, const float _nearPlane, const float _farPlane){
-	CameraDesc* params = new CameraDesc();
+	CameraDesc* params = ori_alloc(CameraDesc);
 	//params->position = pos;
 	//params->rotation = rot;
 	params->fieldOfView = fov;
@@ -21,7 +21,8 @@ void Renderer::updateMainCamera(const Vector3& pos, const Vector3& rot){
 }
 int Renderer::registerInstancedObject(){
 	int res;
-	ObjectTransformDesc* oit = new ObjectTransformDesc();
+	ObjectTransformDesc* oit = ori_alloc(ObjectTransformDesc);
+	oit->cns();
 	oit->position = Vector3(-1, -1, -1);
 	oit->rotation = Vector3(-1, -1, -1);
 	oit->scale = Vector3(-1, -1, -1);
@@ -45,7 +46,7 @@ void Renderer::updateInstancedObject(const int id, const Vector3& position, cons
 
 int Renderer::registerLightSource(){
 	int res;
-	LightSourceDesc* lightSourceDesc = new LightSourceDesc();
+	LightSourceDesc* lightSourceDesc = ori_alloc(LightSourceDesc);
 
 	lightSources.insert({ lightIndexIncrementer, lightSourceDesc});
 	res = lightIndexIncrementer;
@@ -74,7 +75,7 @@ void Renderer::updateRectTransforms(int idx, int parentLeft, int parentBottom, i
 			
 		int parentWidthHalf = (parentRight - parentLeft) / 2;
 		int parentHeightHalf = (parentTop - parentBottom) / 2;
-		// calculate the sizeDelta.
+
 		int rectLeft, rectBottom, rectRight, rectTop;
 		int minX = multipliers[desc->anchorMin * 2];
 		// parentLeft + parentWidthHalf is the anchor left
@@ -93,11 +94,9 @@ void Renderer::updateRectTransforms(int idx, int parentLeft, int parentBottom, i
 
 		desc->dirty = 0;
 		//desc->p
-		if (desc->children != nullptr){
-			for (int j = 0; j < desc->children[0]; j++)
-				if (desc->children[1 + j] >= 0)
-					updateRectTransforms(desc->children[1 + j], rectLeft, rectBottom, rectTop, rectRight);
-		}
+		for (int j = 0; j < desc->children.length; ++j)
+			if (desc->children[j] >= 0)
+				updateRectTransforms(desc->children[j], rectLeft, rectBottom, rectRight, rectTop);
 	}
 }
 void Renderer::preRender(){
@@ -106,16 +105,40 @@ void Renderer::preRender(){
 }
 int Renderer::registerSpriteObject(){
 	int res;
-	ObjectRectTransformDesc* desc = new ObjectRectTransformDesc();
-	//desc->position = Vector2(0, 0);
-	desc->dirty = 1;
-	desc->children = nullptr;
+	ObjectRectTransformDesc* desc = ori_alloc(ObjectRectTransformDesc);
+	desc->cns();
 	spriteObjects.insert({ spriteIndexIncrementer, desc });
 	res = spriteIndexIncrementer;
 	spriteIndexIncrementer++;
 	return res;
 }
-void Renderer::updateSpriteObject(const int id, RectTransform& rect){
+void Renderer::updateSpriteObjectParent(const int id, const int parentId){
+	
+
+	// here we first try to determine if the current node is already in newParent's children list.
+	ObjectRectTransformDesc* parentDesc = spriteObjects[parentId];
+	bool found = false;
+	for (int i = 0; i < parentDesc->children.length; ++i){
+		if (parentDesc->children[i] == id){
+			found = true;
+			break;
+		}
+	}
+	if (found == false){
+		parentDesc->dirty = 1;
+		parentDesc->children.push(id);
+		// detach from the old parrent.
+		ObjectRectTransformDesc* current = spriteObjects[id];
+		//current->parent = parentId;
+		if (current->parent >= 0){
+			ObjectRectTransformDesc* oldParentDesc = spriteObjects[parentId];
+
+			oldParentDesc->children.remove(id);
+		}
+		current->parent = parentId;
+	}
+}
+void Renderer::updateSpriteObject(const int id, RectTransform* rect){
 
 	ObjectRectTransformDesc* desc = spriteObjects[id];
 	if (desc == nullptr){
@@ -123,16 +146,13 @@ void Renderer::updateSpriteObject(const int id, RectTransform& rect){
 		return;
 	}
 	desc->dirty = 1;
-	desc->anchorMin = rect.anchorMin;
-	desc->anchorMax = rect.anchorMax;
-	desc->offsetMin = rect.offsetMin;
-	desc->offsetMax = rect.offsetMax;
-	desc->pivot = rect.pivot;
+	desc->anchorMin = rect->anchorMin;
+	desc->anchorMax = rect->anchorMax;
+	desc->offsetMin = rect->offsetMin;
+	desc->offsetMax = rect->offsetMax;
+	desc->pivot = rect->pivot;
 
-	//rect.getGameObject();
-
-	//desc->position = rect.position;
-	//desc->widthHeight = rect.widthHeight;
+	
 }
 void Renderer::render(){
 	//pre render

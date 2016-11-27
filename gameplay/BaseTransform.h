@@ -6,12 +6,16 @@ class BaseTransform{
 protected:
 	GameObject* gameObject;
 
-	GameObject* parent;
-	vector<GameObject*> children;
+	BaseTransform* parent;
+	vector<BaseTransform*> children;
 public:
 	BaseTransform(void);
 	void setGameObject(GameObject* _go);
-	void setParent(GameObject* _go);
-	void addChild(GameObject* _go);
+	virtual void setParent(BaseTransform* _transform);
+	void addChild(BaseTransform* _transform);
+	//void addChild(BaseTransform* _transform);
 	GameObject* getGameObject(void);
+	inline BaseTransform* getParent(){
+		return parent;
+	}
 };

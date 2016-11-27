@@ -102,10 +102,13 @@
     <ClCompile Include="gameplay\Scene.cpp" />
     <ClCompile Include="gameplay\SceneManager.cpp" />
     <ClCompile Include="gameplay\Transform.cpp" />
+    <ClCompile Include="graphics\ObjectTransformDesc.cpp" />
     <ClCompile Include="Graphics\Renderer.cpp" />
     <ClCompile Include="input\DXInput.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="misc\ArrayInt.cpp" />
     <ClCompile Include="misc\Auxi.cpp" />
+    <ClCompile Include="misc\BasicMem.cpp" />
     <ClCompile Include="misc\CharHelper.cpp" />
     <ClCompile Include="misc\ClassFactory.cpp" />
     <ClCompile Include="misc\GUID.cpp" />
@@ -142,7 +145,9 @@
     <ClInclude Include="graphics\Renderer.h" />
     <ClInclude Include="input\DXInput.h" />
     <ClInclude Include="math\EasyMath.h" />
+    <ClInclude Include="misc\ArrayInt.h" />
     <ClInclude Include="misc\Auxi.h" />
+    <ClInclude Include="misc\BasicMem.h" />
     <ClInclude Include="misc\CharHelper.h" />
     <ClInclude Include="misc\ClassFactory.h" />
     <ClInclude Include="misc\GUID.h" />
