@@ -63,7 +63,7 @@ public:
 	
 	void initInstancing(void);
 	void disposeInstancing(void);
-	void render(void);
+	void platformRender(void);
 
 	// experimental
 	void renderWithShadowMap(void);

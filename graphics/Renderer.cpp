@@ -62,51 +62,60 @@ void Renderer::updateLightSource(const int id, const Vector3& position, const Ve
 	lightSourceDesc->position = position;
 	lightSourceDesc->rotation = rotation;
 }
-//int Renderer::registerRectTransform(){
-//	int res;
-//	ObjectRectTransformDesc* desc = new ObjectRectTransformDesc();
-//	desc->position = Vector2(0, 0);
-//	desc->dirty = 1;
-//	spriteObjects.insert({ spriteIndexIncrementer, desc });
-//	res = spriteIndexIncrementer;
-//	spriteIndexIncrementer++;
-//	return res;
-//}
-void Renderer::updateRectTransforms(int idx, int parentLeft, int parentBottom, int parentTop, int parentRight){
-	for (int i = 0; i < spriteObjects.size(); i++){
-		ObjectRectTransformDesc* desc = spriteObjects.at(i);
-		if (desc->dirty != 0 && desc->children != nullptr){
-			int parentWidthHalf = (parentRight - parentLeft) / 2;
-			int parentHeightHalf = (parentTop - parentBottom) / 2;
+void Renderer::updateRectTransforms(int idx, int parentLeft, int parentBottom, int parentRight, int parentTop){
+	const int multipliers[] = {
+		0, 0, 1, 0, 2, 0,
+		0, 1, 1, 1, 2, 1,
+		0, 2, 1, 2, 2, 2,
+	};
+	ObjectRectTransformDesc* desc = spriteObjects.at(idx);
+	if (desc->dirty != 0){
+		// this is to help calculate the min/max anchor positions.
+			
+		int parentWidthHalf = (parentRight - parentLeft) / 2;
+		int parentHeightHalf = (parentTop - parentBottom) / 2;
+		// calculate the sizeDelta.
+		int rectLeft, rectBottom, rectRight, rectTop;
+		int minX = multipliers[desc->anchorMin * 2];
+		// parentLeft + parentWidthHalf is the anchor left
+		rectLeft = parentLeft + parentWidthHalf * minX + desc->offsetMin.x;
+		int minY = multipliers[desc->anchorMin * 2 + 1];
+		rectBottom = parentBottom + parentHeightHalf * minY + desc->offsetMin.y;
 
-			int thisLeft, thisBottom, thisRight, thisTop;
-			int minX = (desc->anchorMin & 0x3);
-			thisLeft = parentLeft + parentWidthHalf * minX + desc->offsetMin.x;
-			int minY = (desc->anchorMin >> 2) & 0x3;
-			thisBottom = parentBottom + parentHeightHalf * minY + desc->offsetMin.y;
+		int maxX = multipliers[desc->anchorMax * 2];
+		rectRight = parentLeft + parentWidthHalf * maxX + desc->offsetMax.x;
+		int maxY = multipliers[desc->anchorMax * 2 + 1];
+		rectTop = parentBottom + parentHeightHalf * maxY + desc->offsetMax.y;
+		// now (rectRight - rectLeft, rectTop - rectBottom) is the sizeDelta of the rect transform.
 
-			int maxX = (desc->anchorMax & 0x3);
-			thisRight = parentLeft + parentWidthHalf * maxX + desc->offsetMax.x;
-			int maxY = (desc->anchorMax >> 2) & 0x3;
-			thisTop = parentBottom + parentHeightHalf * maxY + desc->offsetMax.y;
-			desc->dirty = 0;
-			//desc->p
+		desc->rectMin = Vector2(rectLeft, rectBottom);
+		desc->rectMax = Vector2(rectRight, rectTop);
+
+		desc->dirty = 0;
+		//desc->p
+		if (desc->children != nullptr){
 			for (int j = 0; j < desc->children[0]; j++)
-				updateRectTransforms(desc->children[1 + j], thisLeft, thisBottom, thisTop, thisRight);
+				if (desc->children[1 + j] >= 0)
+					updateRectTransforms(desc->children[1 + j], rectLeft, rectBottom, rectTop, rectRight);
 		}
 	}
+}
+void Renderer::preRender(){
+	
+
 }
 int Renderer::registerSpriteObject(){
 	int res;
 	ObjectRectTransformDesc* desc = new ObjectRectTransformDesc();
-	desc->position = Vector2(0, 0);
+	//desc->position = Vector2(0, 0);
 	desc->dirty = 1;
+	desc->children = nullptr;
 	spriteObjects.insert({ spriteIndexIncrementer, desc });
 	res = spriteIndexIncrementer;
 	spriteIndexIncrementer++;
 	return res;
 }
-void Renderer::updateSpriteObject(const int id, const RectTransform& rect){
+void Renderer::updateSpriteObject(const int id, RectTransform& rect){
 
 	ObjectRectTransformDesc* desc = spriteObjects[id];
 	if (desc == nullptr){
@@ -120,6 +129,17 @@ void Renderer::updateSpriteObject(const int id, const RectTransform& rect){
 	desc->offsetMax = rect.offsetMax;
 	desc->pivot = rect.pivot;
 
-	desc->position = rect.position;
-	desc->widthHeight = rect.widthHeight;
+	//rect.getGameObject();
+
+	//desc->position = rect.position;
+	//desc->widthHeight = rect.widthHeight;
+}
+void Renderer::render(){
+	//pre render
+	updateRectTransforms(0, 0, 0, width, height);
+	platformRender();
+	postRender();
+}
+void Renderer::postRender(){
+
 }

@@ -69,15 +69,18 @@ int WINAPI WinMain(HINSTANCE hInstance,
 
 {
 
-	
+	const int windowBorderX = 16;
+	const int windowBorderY = 39;
+	const int screenWidth = 1280;
+	const int screenHeight = 720;
 	// the handle for the window, filled by a function
-	HWND hwnd = createWindow(hInstance, nCmdShow, 1024, 768);
+	HWND hwnd = createWindow(hInstance, nCmdShow, screenWidth + windowBorderX, screenHeight + windowBorderY);
 	
 	input = new DXInput();
 	G::instance()->input = input;
 	input->init(hInstance, hwnd);
-
-	engineStart(hwnd, 1024, 768);
+	
+	engineStart(hwnd, screenWidth + windowBorderX, screenHeight + windowBorderY);
 
 	MSG msg;
 	while (GetMessage(&msg, NULL, 0, 0))

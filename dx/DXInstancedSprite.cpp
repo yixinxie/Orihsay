@@ -195,54 +195,56 @@ void DXInstancedSprite::updateInstanceBuffer(const std::unordered_map<int, Objec
 	D3D11_MAPPED_SUBRESOURCE resource;
 	hr = devcon->Map(vertexBuffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &resource);
 
-	float pixelWidth = 1 / (float)G::instance()->renderer->getPixelWidth();
-	float pixelHeight = 1 / (float)G::instance()->renderer->getPixelHeight();
+	float halfWidth = (float)G::instance()->renderer->getPixelWidth() / 2;
+	float halfHeight = (float)G::instance()->renderer->getPixelHeight() / 2;
 
 	SpriteVertexData* vertexData = (SpriteVertexData*)resource.pData;
 	int inc = 0;
 	for (auto it = sprites.begin(); it != sprites.end(); ++it){
+		// for dx 11, the transformed xy coordinate ranges from -1 to 1(left to right, bottom to top),
+		// while the z is the depth value written to the depth buffer with 1 being the farthest.
+		float depth = 0.999f-(float)inc * 0.001f; // good for now
 		ObjectRectTransformDesc* transformDesc = it->second;
-		vertexData[inc].position.x = transformDesc->position.x - transformDesc->widthHeight.x;
-		vertexData[inc].position.y = transformDesc->position.y - transformDesc->widthHeight.y;
-		vertexData[inc].position.z = 0;
+		Vector2 rectMin = Vector2(
+			(transformDesc->rectMin.x - halfWidth) / halfWidth,
+			(transformDesc->rectMin.y - halfHeight) / halfHeight);
+		Vector2 rectMax = Vector2(
+			(transformDesc->rectMax.x - halfWidth) / halfWidth,
+			(transformDesc->rectMax.y - halfHeight) / halfHeight);
+		vertexData[inc].position.x = rectMin.x;
+		vertexData[inc].position.y = rectMin.y;
+		vertexData[inc].position.z = depth;
 		vertexData[inc].uv = Vector2(0, 1);
-
-		//vertexData[inc].position.z = vertexData[inc].position.y;
 		inc++;
 
-		vertexData[inc].position.x = transformDesc->position.x - transformDesc->widthHeight.x;
-		vertexData[inc].position.y = transformDesc->position.y + transformDesc->widthHeight.y;
-		vertexData[inc].position.z = 0;
-		//vertexData[inc].position.z = vertexData[inc].position.y;
+		vertexData[inc].position.x = rectMin.x;
+		vertexData[inc].position.y = rectMax.y;
+		vertexData[inc].position.z = depth;
 		vertexData[inc].uv = Vector2(0, 0);
 		inc++;
 
-		vertexData[inc].position.x = transformDesc->position.x + transformDesc->widthHeight.x;
-		vertexData[inc].position.y = transformDesc->position.y + transformDesc->widthHeight.y;
-		vertexData[inc].position.z = 0;
-		//vertexData[inc].position.z = vertexData[inc].position.y;
+		vertexData[inc].position.x = rectMax.x;
+		vertexData[inc].position.y = rectMax.y;
+		vertexData[inc].position.z = depth;
 		vertexData[inc].uv = Vector2(1, 0);
 		inc++;
 
-		vertexData[inc].position.x = transformDesc->position.x - transformDesc->widthHeight.x;
-		vertexData[inc].position.y = transformDesc->position.y - transformDesc->widthHeight.y;
-		vertexData[inc].position.z = 0;
-		//vertexData[inc].position.z = vertexData[inc].position.y;
+		vertexData[inc].position.x = rectMin.x;
+		vertexData[inc].position.y = rectMin.y;
+		vertexData[inc].position.z = depth;
 		vertexData[inc].uv = Vector2(0, 1);
 		inc++;
 
-		vertexData[inc].position.x = transformDesc->position.x + transformDesc->widthHeight.x;
-		vertexData[inc].position.y = transformDesc->position.y + transformDesc->widthHeight.y;
-		vertexData[inc].position.z = 0;
+		vertexData[inc].position.x = rectMax.x;
+		vertexData[inc].position.y = rectMax.y;
+		vertexData[inc].position.z = depth;
 		vertexData[inc].uv = Vector2(1, 0);
-		//vertexData[inc].position.z = vertexData[inc].position.y;
 		inc++;
 
-		vertexData[inc].position.x = transformDesc->position.x + transformDesc->widthHeight.x;
-		vertexData[inc].position.y = transformDesc->position.y - transformDesc->widthHeight.y;
-		vertexData[inc].position.z = 0;
+		vertexData[inc].position.x = rectMax.x;
+		vertexData[inc].position.y = rectMin.y;
+		vertexData[inc].position.z = depth;
 		vertexData[inc].uv = Vector2(1, 1);
-		//vertexData[inc].position.z = vertexData[inc].position.y;
 		inc++;
 	}
 

@@ -5,6 +5,7 @@ using namespace std;
 class BaseTransform{
 protected:
 	GameObject* gameObject;
+
 	GameObject* parent;
 	vector<GameObject*> children;
 public:

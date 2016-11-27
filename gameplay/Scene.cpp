@@ -120,11 +120,6 @@ void Scene::deserialize(){
 			}
 			else if (std::strcmp(componentNode["className"].GetString(), "RectTransform") == 0){
 				const Value& fields = componentNode["fields"];
-				const char* tmpPosition = fields["tmppos"].GetString();
-				go->rectTransform()->position = CharHelper::charToVec2(tmpPosition);
-
-				const char* tmpSize2 = fields["tmpsize"].GetString();
-				go->rectTransform()->widthHeight = CharHelper::charToVec2(tmpSize2);
 
 				const char* tmpSize = fields["anchorMin"].GetString();
 				int encodedByte = 0;

@@ -36,12 +36,15 @@ namespace OriGraphics{
 		int lightIndexIncrementer;
 		std::unordered_map<int, LightSourceDesc*> lightSources;
 
-		void updateRectTransforms(int idx, int parentLeft, int parentBottom, int parentTop, int parentRight);
+		void updateRectTransforms(int idx, int parentLeft, int parentBottom, int parentRight, int parentTop);
+		virtual void preRender(void);
+		virtual void postRender(void);
 	public:
 		virtual void init(HWND hwnd, int _width, int _height) = 0;
 		virtual void dispose(void) = 0;
 		
-		virtual void render(void) = 0;
+		void render(void);
+		virtual void platformRender(void) = 0;
 		virtual int createTexture(unsigned int w, unsigned int h, const unsigned char* initialData) = 0;
 		void setMainCamera(const Vector3& pos, const Vector3& rot, const float fov, const float _nearPlane, const float _farPlane);
 		void updateMainCamera(const Vector3& pos, const Vector3& rot);
@@ -52,7 +55,7 @@ namespace OriGraphics{
 		void updateLightSource(const int id, const Vector3& position, const Vector3& rotation);
 
 		int registerSpriteObject(void);
-		void updateSpriteObject(const int id, const RectTransform& rect);
+		void updateSpriteObject(const int id, RectTransform& rect);
 		inline int getPixelWidth(void){ return width; }
 		inline int getPixelHeight(void){ return height; }
 		//int registerRectTransform(void);

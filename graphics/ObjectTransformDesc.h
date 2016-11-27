@@ -8,7 +8,8 @@ struct ObjectTransformDesc{
 struct ObjectRectTransformDesc{
 	unsigned char dirty;
 	Vector2 position; // pivot position
-	Vector2 widthHeight;
+	Vector2 rectMin;
+	Vector2 rectMax;
 	Vector2 rotation;
 	Vector2 scale;
 	int textureHandle;
@@ -20,5 +21,4 @@ struct ObjectRectTransformDesc{
 	IntVector2 offsetMin;
 	IntVector2 offsetMax;
 	IntVector2 pivot; // range 0..1
-	
 };

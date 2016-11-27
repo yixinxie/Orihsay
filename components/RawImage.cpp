@@ -6,7 +6,8 @@
 void RawImage::awake(void){
 	selfRectTransform = gameObject->rectTransform();
 	//loadPNG(IntVector2(214, 86), "assets/button_normal.png");
-	loadPNG(IntVector2(256, 256), "assets/test_blue.png");
+	//loadPNG(IntVector2(256, 256), "assets/test_blue.png");
+	loadPNG(IntVector2(256, 256), "assets/test_solid_color.png");
 
 	RectTransform* rt = gameObject->rectTransform();
 

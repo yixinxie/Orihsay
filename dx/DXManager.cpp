@@ -263,7 +263,7 @@ void DXManager::renderWithShadowMap(){
 	}
 }
 // render with deferred-shading
-void DXManager::render(){
+void DXManager::platformRender(){
 	HRESULT hr;
 	assembleDrawables();
 	// gather light sources

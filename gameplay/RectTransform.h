@@ -9,8 +9,8 @@ class RectTransform : public BaseTransform{
 	
 public:
 	int spriteHandle;
-	Vector2 position; // anchored position
-	Vector2 widthHeight; // sizeDelta
+	// Vector2 position; // anchored position
+	//Vector2 widthHeight; // sizeDelta
 	
 
 	// core values
