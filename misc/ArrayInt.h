@@ -9,12 +9,13 @@ private:
 public:
 	int length;
 	
-	ArrayInt(int defaultSize = 4);
+	void c(int defaultSize = 4);
+	void d(void);
 	void clear(void);
 	void push(int val); // add at the end of the array.
 	void removeAt(int idx); // at index idx
 	void remove(int val); // delete the first appearance of the element that equals to 'val'.
-	~ArrayInt();
+	
 	int& operator[] (int idx) {
 		assert(idx >= 0 && idx < length);
 		return arrayData[idx];

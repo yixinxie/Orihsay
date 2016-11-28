@@ -1,6 +1,7 @@
 #include "DXInstancedSprite.h"
 #include "DXManager.h"
 #include "../misc/CharHelper.h"
+#include "../misc/BasicMem.h"
 #include "../gameplay/G.h"
 DXInstancedSprite::DXInstancedSprite(ID3D11Device *_dev, ID3D11DeviceContext *_devcon) :dev(_dev), devcon(_devcon){
 	inputLayout = nullptr;

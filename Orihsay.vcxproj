@@ -107,6 +107,7 @@
     <ClCompile Include="input\DXInput.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="misc\ArrayInt.cpp" />
+    <ClCompile Include="misc\ArrayPtr.cpp" />
     <ClCompile Include="misc\Auxi.cpp" />
     <ClCompile Include="misc\BasicMem.cpp" />
     <ClCompile Include="misc\CharHelper.cpp" />
@@ -146,6 +147,7 @@
     <ClInclude Include="input\DXInput.h" />
     <ClInclude Include="math\EasyMath.h" />
     <ClInclude Include="misc\ArrayInt.h" />
+    <ClInclude Include="misc\ArrayPtr.h" />
     <ClInclude Include="misc\Auxi.h" />
     <ClInclude Include="misc\BasicMem.h" />
     <ClInclude Include="misc\CharHelper.h" />

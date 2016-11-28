@@ -5,13 +5,19 @@ struct ObjectTransformDesc{
 	Vector3 position;
 	Vector3 rotation;
 	Vector3 scale;
-	void cns(void){}
+	void c(void){}
 };
 struct ObjectRectTransformDesc{
 private:
 	void resize(void);
 public:
+	IntVector2 offsetMin;
+	IntVector2 offsetMax;
+	IntVector2 pivot; // range 0..1
+	unsigned char anchorMin; // low 4 bit for x,
+	unsigned char anchorMax;
 	unsigned char dirty;
+
 	Vector2 position; // pivot position
 	Vector2 rectMin;
 	Vector2 rectMax;
@@ -20,14 +26,11 @@ public:
 	int textureHandle;
 
 	ArrayInt children;
-
 	int parent;
 	
-	unsigned char anchorMin; // low 4 bit for x,
-	unsigned char anchorMax;
-	IntVector2 offsetMin;
-	IntVector2 offsetMax;
-	IntVector2 pivot; // range 0..1
-	void cns(void);
+	
+	
+	void c(void);
+	void d(void);
 
 };

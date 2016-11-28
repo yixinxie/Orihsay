@@ -4,6 +4,7 @@
 #include "Transform.h"
 #include "RectTransform.h"
 #include "../misc/GUID.h"
+#include "../misc/ArrayPtr.h"
 class Transform;
 class RectTransform;
 
@@ -11,9 +12,9 @@ using namespace std;
 
 class GameObject{
 private:
-	GameObject(void);
-	
-	vector<MonoBehaviour*> components;
+	void c(void);
+	void d(void);
+	ArrayPtr components;
 	//int parent;
 	//vector<int> children;
 	void dispose(void);

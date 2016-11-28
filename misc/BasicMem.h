@@ -1,5 +1,6 @@
 // basic memory management
 #pragma once
+
 class BasicMemory{
 private:
 	unsigned char* heapStart;
@@ -13,3 +14,5 @@ public:
 };
 extern BasicMemory basicMem;
 #define ori_alloc(TYPE) (TYPE*)basicMem.alloc(sizeof(TYPE));
+#define ori_alloc_array(TYPE, COUNT) (TYPE*)basicMem.alloc(sizeof(TYPE) * (COUNT));
+#define ori_dealloc(PTR) basicMem.dealloc(PTR);

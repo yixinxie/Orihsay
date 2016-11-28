@@ -22,7 +22,7 @@ void Renderer::updateMainCamera(const Vector3& pos, const Vector3& rot){
 int Renderer::registerInstancedObject(){
 	int res;
 	ObjectTransformDesc* oit = ori_alloc(ObjectTransformDesc);
-	oit->cns();
+	oit->c();
 	oit->position = Vector3(-1, -1, -1);
 	oit->rotation = Vector3(-1, -1, -1);
 	oit->scale = Vector3(-1, -1, -1);
@@ -47,7 +47,7 @@ void Renderer::updateInstancedObject(const int id, const Vector3& position, cons
 int Renderer::registerLightSource(){
 	int res;
 	LightSourceDesc* lightSourceDesc = ori_alloc(LightSourceDesc);
-
+	lightSourceDesc->c();
 	lightSources.insert({ lightIndexIncrementer, lightSourceDesc});
 	res = lightIndexIncrementer;
 	lightIndexIncrementer++;
@@ -106,7 +106,7 @@ void Renderer::preRender(){
 int Renderer::registerSpriteObject(){
 	int res;
 	ObjectRectTransformDesc* desc = ori_alloc(ObjectRectTransformDesc);
-	desc->cns();
+	desc->c();
 	spriteObjects.insert({ spriteIndexIncrementer, desc });
 	res = spriteIndexIncrementer;
 	spriteIndexIncrementer++;

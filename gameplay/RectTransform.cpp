@@ -1,8 +1,10 @@
 #include "RectTransform.h"
 #include "../gameplay/G.h"
 #include "glm/gtx/rotate_vector.hpp"
-RectTransform::RectTransform(){
+void RectTransform::c(){
 	gameObject = nullptr;
+	parent = nullptr;
+	children.c();
 
 	anchorMin = 0;
 	anchorMax = 0;
@@ -17,6 +19,9 @@ RectTransform::RectTransform(){
 	rotation = 0;
 	scale = Vector2(1, 1);*/
 	spriteHandle = G::instance()->renderer->registerSpriteObject();
+}
+void RectTransform::d(){
+	children.d();
 }
 
 void RectTransform::setParent(BaseTransform* _rect){

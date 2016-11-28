@@ -150,6 +150,9 @@
     <ClCompile Include="misc\BasicMem.cpp">
       <Filter>Source Files\misc</Filter>
     </ClCompile>
+    <ClCompile Include="misc\ArrayPtr.cpp">
+      <Filter>Source Files\misc</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="gameplay\GameObject.h">
@@ -261,6 +264,9 @@
       <Filter>Source Files\misc</Filter>
     </ClInclude>
     <ClInclude Include="misc\BasicMem.h">
+      <Filter>Source Files\misc</Filter>
+    </ClInclude>
+    <ClInclude Include="misc\ArrayPtr.h">
       <Filter>Source Files\misc</Filter>
     </ClInclude>
   </ItemGroup>

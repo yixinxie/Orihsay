@@ -1,10 +1,16 @@
 #include "Transform.h"
 #include "glm/gtx/rotate_vector.hpp"
-Transform::Transform(){
-	
+void Transform::c(){
+	gameObject = nullptr;
+	parent = nullptr;
+	children.c();
+
 	position = Vector3(0, 0, 0);
 	//rotation = Vector3(0, 0, 0);
 	scale = Vector3(1, 1, 1);
+}
+void Transform::d(){
+	children.d();
 }
 void Transform::fromEuler(const Vector3 euler){
 	quaternion = glm::quat(glm::vec3(glm::radians(euler.x), glm::radians(euler.y), glm::radians(euler.z)));

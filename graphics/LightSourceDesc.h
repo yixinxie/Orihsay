@@ -8,6 +8,10 @@ public:
 	int shadowMode; // 0 - none, 1 - shadow map, 2 - cascaded shadow map?
 	Vector3 color;
 	float intensity;
-	LightSourceDesc() :type(0), shadowMode(0), intensity(1.0f){}
+	void c(void){
+		type = 0;
+		shadowMode = 0;
+		intensity = 1.0f;
+	}
 
 };

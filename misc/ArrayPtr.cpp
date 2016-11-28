@@ -1,33 +1,33 @@
 #pragma once
-#include "ArrayInt.h"
+#include "ArrayPtr.h"
 #include "BasicMem.h"
-void ArrayInt::c(int defaultSize){
+void ArrayPtr::c(int defaultSize){
 	arraySize = defaultSize;
-	arrayData = ori_alloc_array(int, arraySize);
+	arrayData = ori_alloc_array(void*, arraySize);
 	length = 0;
 
 }
-void ArrayInt::d(){
+void ArrayPtr::d(){
 	ori_dealloc(arrayData);
 }
-void ArrayInt::clear(){
+void ArrayPtr::clear(){
 	length = 0;
 }
-void ArrayInt::push(int val){
+void ArrayPtr::push(void* val){
 	if (length == arraySize){
 		resize();
 	}
 	arrayData[length] = val;
 	length++;
 }
-void ArrayInt::removeAt(int idx){
+void ArrayPtr::removeAt(const int idx){
 	assert(idx >= 0 && idx < length);
 	length--;
 	for (int i = idx; i < length; ++i){
 		arrayData[i] = arrayData[i + 1];
 	}
 }
-void ArrayInt::remove(int val){
+void ArrayPtr::remove(const void* val){
 	for (int i = 0; i < length; ++i){
 		if (arrayData[i] == val){
 			removeAt(i);
@@ -35,15 +35,15 @@ void ArrayInt::remove(int val){
 		}
 	}
 }
-void ArrayInt::resize(){
+void ArrayPtr::resize(){
 	int newSize = arraySize * 2;
 
-	int* newArray = new int[newSize];
+	void** newArray = ori_alloc_array(void*, newSize);
 
 	for (int i = 0; i < arraySize; ++i){
 		newArray[i] = arrayData[i];
 	}
-	delete arrayData;
+	ori_dealloc(arrayData);
 	arrayData = newArray;
 	arraySize = newSize;
 }
