@@ -1,13 +1,13 @@
 #pragma once
 #include "ArrayInt.h"
 #include "BasicMem.h"
-void ArrayInt::c(int defaultSize){
+ArrayInt::ArrayInt(int defaultSize){
 	arraySize = defaultSize;
 	arrayData = ori_alloc_array(int, arraySize);
 	length = 0;
 
 }
-void ArrayInt::d(){
+ArrayInt::~ArrayInt(){
 	ori_dealloc(arrayData);
 }
 void ArrayInt::clear(){

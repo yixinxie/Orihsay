@@ -13,8 +13,8 @@ public:
 	//
 	Vector3 scale;
 	
-	void c(void);
-	void d(void);
+	Transform(void);
+	~Transform();
 
 	void rotate(const Vector3 axis, const float degree);
 	void fromEuler(const Vector3 euler);

@@ -58,7 +58,7 @@ public:
 	DXManager(void);
 	// overrides
 	void init(HWND hWnd, int _width, int _height);
-	void dispose(void);
+	virtual void dispose(void);
 	int createTexture(unsigned int width, unsigned int height, const unsigned char* initialData);
 	
 	void initInstancing(void);

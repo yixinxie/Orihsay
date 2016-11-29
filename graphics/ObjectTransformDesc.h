@@ -5,7 +5,8 @@ struct ObjectTransformDesc{
 	Vector3 position;
 	Vector3 rotation;
 	Vector3 scale;
-	void c(void){}
+	ObjectTransformDesc(void){}
+	~ObjectTransformDesc(){}
 };
 struct ObjectRectTransformDesc{
 private:
@@ -30,7 +31,7 @@ public:
 	
 	
 	
-	void c(void);
-	void d(void);
+	ObjectRectTransformDesc(void);
+	~ObjectRectTransformDesc();
 
 };

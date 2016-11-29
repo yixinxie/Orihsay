@@ -12,8 +12,8 @@ using namespace std;
 
 class GameObject{
 private:
-	void c(void);
-	void d(void);
+	GameObject(void);
+	
 	ArrayPtr components;
 	//int parent;
 	//vector<int> children;
@@ -25,14 +25,12 @@ public:
 	static const int UseRectTransform = 2;
 	static const int HierarchyOnly = 3;
 
-	// hierarchy section
-	//vector<GameObject*> children;
-	//GameObject* parent;
 	unsigned int guid;
 
 	BaseTransform* _transform;
 	char name[64];
 
+	~GameObject();
 	static GameObject* instantiate(int mode);
 
 	inline Transform* transform(){

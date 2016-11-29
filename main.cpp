@@ -56,7 +56,9 @@ extern "C" __declspec(dllexport) void engineUpdate(void){
 }
 extern "C" __declspec(dllexport) void engineShutdown(void){
 	sceneManager->onDestroy();
+	
 	SAFE_DISPOSE(renderer);
+	basicMem.report();
 	printf("Engine shutdown.\n");
 }
 extern "C" __declspec(dllexport) void OE_CreateGameObject(void){

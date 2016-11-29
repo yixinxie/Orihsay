@@ -1,31 +1,35 @@
 #include "GameObject.h"
 #include "../misc/BasicMem.h"
-void GameObject::c(void){
+GameObject::GameObject(void){
 	_transform = nullptr;
-	components.c();
 }
-void GameObject::d(){
-
+GameObject::~GameObject(){
+	components.~ArrayPtr();
+	//ori_dealloc(_transform);
 }
 GameObject* GameObject::instantiate(int mode){
 	GameObject* res = ori_alloc(GameObject);
-	res->c();
+	//res->c();
+	new (res)(GameObject)();
 	if (mode == UseNoTransform){
 	}
 	else if (mode == UseTransform){
 		res->_transform = ori_alloc(Transform);
-		res->transform()->c();
-		res->transform()->setGameObject(res);
+		new (res->_transform)(Transform)();
+		//res->transform()->c();
+		//res->transform()->setGameObject(res);
 	}
 	else if (mode == UseRectTransform){
 		res->_transform = ori_alloc(RectTransform);
-		res->rectTransform()->c();
-		res->rectTransform()->setGameObject(res);
+		new (res->_transform)(RectTransform)();
+		//res->rectTransform()->c();
+		//res->rectTransform()->setGameObject(res);
 	}
 	else if (mode == HierarchyOnly){
 		res->_transform = ori_alloc(BaseTransform);
-		res->_transform->c();
-		res->_transform->setGameObject(res);
+		new (res->_transform)(BaseTransform)();
+		//res->_transform->c();
+		//res->_transform->setGameObject(res);
 	}
     
 	return res;
@@ -57,9 +61,10 @@ void GameObject::addComponent(MonoBehaviour* mono){
 }
 void GameObject::onDestroy(){
 	for (unsigned int i = 0; i < components.length; i++){
+		
+		//delete components[i];
 		ori_dealloc(components[i]);
-		//delete components.at(i);
 	}
-	//delete _transform;
 	ori_dealloc(_transform);
+	
 }

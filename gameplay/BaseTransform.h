@@ -10,10 +10,10 @@ protected:
 	BaseTransform* parent;
 	ArrayPtr children;
 public:
-	void c(void);
-	void d(void);
+	BaseTransform(void);
+	~BaseTransform(void);
 	void setGameObject(GameObject* _go);
-	void setParent(BaseTransform* _transform);
+	virtual void setParent(BaseTransform* _transform);
 	void addChild(BaseTransform* _transform);
 	//void addChild(BaseTransform* _transform);
 	GameObject* getGameObject(void);

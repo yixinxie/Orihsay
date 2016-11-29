@@ -46,6 +46,7 @@ void DXManager::dispose()
 	SAFE_RELEASE(backbuffer);
 	SAFE_RELEASE(dev);
 	SAFE_RELEASE(devcon);
+	Renderer::dispose();
 }
 void DXManager::init(HWND hWnd, int _width, int _height)
 {

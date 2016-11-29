@@ -1,6 +1,5 @@
 #include <vector>
 #include "GameObject.h"
-#include <vector>
 #include <unordered_map>
 #include "../misc/GUID.h"
 using namespace std;

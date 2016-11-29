@@ -14,6 +14,20 @@ void Renderer::setMainCamera(const Vector3& pos, const Vector3& rot, const float
 	
 	cameras.push_back(params);
 }
+void Renderer::dispose(void){
+	for (int i = 0; i < cameras.size(); ++i){
+		ori_dealloc(cameras[i]);
+	}
+	for (auto it = instancedObjects.begin(); it != instancedObjects.end(); ++it){
+		ori_dealloc(it->second);
+	}
+	for (auto it = spriteObjects.begin(); it != spriteObjects.end(); ++it){
+		ori_dealloc(it->second);
+	}
+	for (auto it = lightSources.begin(); it != lightSources.end(); ++it){
+		ori_dealloc(it->second);
+	}
+}
 void Renderer::updateMainCamera(const Vector3& pos, const Vector3& rot){
 	if (cameras.size() == 0 || cameras[0] == nullptr)return;
 	cameras[0]->position = pos;
@@ -22,7 +36,7 @@ void Renderer::updateMainCamera(const Vector3& pos, const Vector3& rot){
 int Renderer::registerInstancedObject(){
 	int res;
 	ObjectTransformDesc* oit = ori_alloc(ObjectTransformDesc);
-	oit->c();
+	new (oit)(ObjectTransformDesc)();
 	oit->position = Vector3(-1, -1, -1);
 	oit->rotation = Vector3(-1, -1, -1);
 	oit->scale = Vector3(-1, -1, -1);
@@ -47,7 +61,7 @@ void Renderer::updateInstancedObject(const int id, const Vector3& position, cons
 int Renderer::registerLightSource(){
 	int res;
 	LightSourceDesc* lightSourceDesc = ori_alloc(LightSourceDesc);
-	lightSourceDesc->c();
+	new (lightSourceDesc)(LightSourceDesc)();
 	lightSources.insert({ lightIndexIncrementer, lightSourceDesc});
 	res = lightIndexIncrementer;
 	lightIndexIncrementer++;
@@ -106,7 +120,7 @@ void Renderer::preRender(){
 int Renderer::registerSpriteObject(){
 	int res;
 	ObjectRectTransformDesc* desc = ori_alloc(ObjectRectTransformDesc);
-	desc->c();
+	new (desc)(ObjectRectTransformDesc)();
 	spriteObjects.insert({ spriteIndexIncrementer, desc });
 	res = spriteIndexIncrementer;
 	spriteIndexIncrementer++;

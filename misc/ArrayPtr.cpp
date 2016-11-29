@@ -1,13 +1,13 @@
 #pragma once
 #include "ArrayPtr.h"
 #include "BasicMem.h"
-void ArrayPtr::c(int defaultSize){
+ArrayPtr::ArrayPtr(int defaultSize){
 	arraySize = defaultSize;
 	arrayData = ori_alloc_array(void*, arraySize);
 	length = 0;
 
 }
-void ArrayPtr::d(){
+ArrayPtr::~ArrayPtr(){
 	ori_dealloc(arrayData);
 }
 void ArrayPtr::clear(){

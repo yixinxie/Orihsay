@@ -41,7 +41,7 @@ namespace OriGraphics{
 		virtual void postRender(void);
 	public:
 		virtual void init(HWND hwnd, int _width, int _height) = 0;
-		virtual void dispose(void) = 0;
+		virtual void dispose(void);
 		
 		void render(void);
 		virtual void platformRender(void) = 0;

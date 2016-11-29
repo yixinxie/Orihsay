@@ -23,8 +23,8 @@ public:
 	Vector2 scale;*/
 
 	
-	void c(void);
-	void d(void);
+	RectTransform(void);
+	~RectTransform();
 	
-	void setParent(BaseTransform* _rect);
+	virtual void setParent(BaseTransform* _rect);
 };

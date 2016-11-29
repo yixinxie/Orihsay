@@ -7,6 +7,7 @@
 #include "rapidjson/writer.h"
 #include "rapidjson/stringbuffer.h"
 #include "../misc/Macros.h"
+#include "../misc/BasicMem.h"
 using namespace rapidjson;
 
 using namespace std;
@@ -57,36 +58,24 @@ void Scene::deserialize(){
 		//printf_s("%lld,%lld\n", guid.d0, guid.d1);
 		const Value& gameObjectNode = parsed[i];
 		GameObject* go = nullptr;
-		int parentId = -1;
-		{
-			const char* tt = gameObjectNode["parent"].GetString();
-			parentId = CharHelper::charToInt(tt);
-		}
+		
 		// transform type
 		const char* typeStr = gameObjectNode["type"].GetString();
 		if (strcmp(typeStr, "T") == 0){
 			go = GameObject::instantiate(GameObject::UseTransform);
-			if (parentId >= 0){
-				int arrayIndex = gameObjectIndexLookup.at(parentId);
-				GameObject* parentGO = gameObjects.at(arrayIndex);
-				go->transform()->setParent(parentGO->_transform);
-			}
-			else{
-				// set root.
-				go->transform()->setParent(nullptr);
-			}
+			
 		}
 		else if (strcmp(typeStr, "R") == 0){
 			go = GameObject::instantiate(GameObject::UseRectTransform);
-			if (parentId >= 0){
-				int arrayIndex = gameObjectIndexLookup.at(parentId);
-				GameObject* parentGO = gameObjects.at(arrayIndex);
-				go->rectTransform()->setParent(parentGO->_transform);
-			}
-			else{
-				// set root.
-				go->rectTransform()->setParent(nullptr);
-			}
+			//if (parentId >= 0){
+			//	int arrayIndex = gameObjectIndexLookup.at(parentId);
+			//	GameObject* parentGO = gameObjects.at(arrayIndex);
+			//	go->rectTransform()->setParent(parentGO->_transform);
+			//}
+			//else{
+			//	// set root.
+			//	go->rectTransform()->setParent(nullptr);
+			//}
 		}
 		else if (strcmp(typeStr, "N") == 0){
 			go = GameObject::instantiate(GameObject::UseNoTransform);
@@ -104,7 +93,19 @@ void Scene::deserialize(){
 
 		// by using the parent guid, locate the parent gameobject
 		{
-			
+			int parentId = -1;
+			const char* tt = gameObjectNode["parent"].GetString();
+			parentId = CharHelper::charToInt(tt);
+
+			if (parentId >= 0){
+				int arrayIndex = gameObjectIndexLookup.at(parentId);
+				GameObject* parentGO = gameObjects.at(arrayIndex);
+				go->_transform->setParent(parentGO->_transform);
+			}
+			else{
+				// set root.
+				go->_transform->setParent(nullptr);
+			}
 		}
 		gameObjects.insert({ guidIncre, go });
 		gameObjectIndexLookup.insert({ go->guid, guidIncre });
@@ -190,7 +191,8 @@ void Scene::onDestroy(){
 
 	for (auto it = gameObjects.begin(); it != gameObjects.end(); ++it){
 		it->second->onDestroy();
-		delete it->second;
+		it->second->~GameObject();
+		ori_dealloc(it->second);
 	}
 	gameObjects.clear();
 

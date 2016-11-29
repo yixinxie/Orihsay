@@ -20,8 +20,26 @@ void* BasicMemory::alloc(int _size){
 	}
 	ret += used;
 	used += _size;
+	sizes.insert({ (int)ret, _size });
 	return (void*)ret;
 }
 void BasicMemory::dealloc(void* ptr){
-
+	int sdf = 0;
+	auto res = sizes.find((int)ptr);
+	if (res == sizes.end()){
+		// key not found!
+		printf("allocation not found %d.\n", (int)ptr);
+	}else if (sizes[(int)ptr] == 0){
+		printf("repeated deallocation at %d.\n", (int)ptr);
+	}
+	else{
+		sizes[(int)ptr] = 0;
+	}
+}
+void BasicMemory::report(void){
+	for (auto it = sizes.begin(); it != sizes.end(); ++it){
+		printf("%d size %d\n", it->first, it->second);
+		
+	}
+	
 }

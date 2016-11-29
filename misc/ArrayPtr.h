@@ -9,8 +9,8 @@ private:
 public:
 	int length;
 	
-	void c(int defaultSize = 4);
-	void d(void);
+	ArrayPtr(int defaultSize = 4);
+	~ArrayPtr();
 	void clear(void);
 	void push(void* val); // add at the end of the array.
 	void removeAt(const int idx); // at index idx

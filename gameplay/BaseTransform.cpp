@@ -2,14 +2,12 @@
 #include "glm/gtx/rotate_vector.hpp"
 #include "BaseTransform.h"
 #include "GameObject.h"
-void BaseTransform::c(){
-	gameObject = nullptr;
-	parent = nullptr;
-	children.c();
+BaseTransform::BaseTransform(){
+	//new (children)(ArrayPtr)();
 }
-void BaseTransform::d(){
-
-	children.d();
+BaseTransform::~BaseTransform(){
+	children.~ArrayPtr();
+	//children.d();
 }
 void BaseTransform::setParent(BaseTransform* _transform){
 	parent = _transform;
