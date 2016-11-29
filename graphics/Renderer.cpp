@@ -16,15 +16,19 @@ void Renderer::setMainCamera(const Vector3& pos, const Vector3& rot, const float
 }
 void Renderer::dispose(void){
 	for (int i = 0; i < cameras.size(); ++i){
+		
 		ori_dealloc(cameras[i]);
 	}
 	for (auto it = instancedObjects.begin(); it != instancedObjects.end(); ++it){
+		it->second->~ObjectTransformDesc();
 		ori_dealloc(it->second);
 	}
 	for (auto it = spriteObjects.begin(); it != spriteObjects.end(); ++it){
+		it->second->~ObjectRectTransformDesc();
 		ori_dealloc(it->second);
 	}
 	for (auto it = lightSources.begin(); it != lightSources.end(); ++it){
+		it->second->~LightSourceDesc();
 		ori_dealloc(it->second);
 	}
 }

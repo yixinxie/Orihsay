@@ -6,7 +6,7 @@ BaseTransform::BaseTransform(){
 	//new (children)(ArrayPtr)();
 }
 BaseTransform::~BaseTransform(){
-	children.~ArrayPtr();
+	//children.~ArrayPtr();
 	//children.d();
 }
 void BaseTransform::setParent(BaseTransform* _transform){

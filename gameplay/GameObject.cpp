@@ -10,7 +10,6 @@ GameObject::~GameObject(){
 		delete components[i];
 		//ori_dealloc(components[i]);
 	}
-	components.~ArrayPtr();
 	_transform->~BaseTransform();
 	ori_dealloc(_transform);
 }
