@@ -11,7 +11,7 @@ protected:
 	ArrayPtr children;
 public:
 	BaseTransform(void);
-	~BaseTransform(void);
+	virtual ~BaseTransform(void);
 	void setGameObject(GameObject* _go);
 	virtual void setParent(BaseTransform* _transform);
 	void addChild(BaseTransform* _transform);

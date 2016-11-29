@@ -17,6 +17,7 @@ RectTransform::RectTransform(){
 	spriteHandle = G::instance()->renderer->registerSpriteObject();
 }
 RectTransform::~RectTransform(){
+	//BaseTransform::~BaseTransform();
 }
 
 void RectTransform::setParent(BaseTransform* _rect){

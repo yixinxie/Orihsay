@@ -5,5 +5,5 @@ ObjectRectTransformDesc::ObjectRectTransformDesc(){
 	parent = -1;
 }
 ObjectRectTransformDesc::~ObjectRectTransformDesc(){
-
+	children.~ArrayInt();
 }

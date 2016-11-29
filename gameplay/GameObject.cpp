@@ -4,8 +4,19 @@ GameObject::GameObject(void){
 	_transform = nullptr;
 }
 GameObject::~GameObject(){
+	
+	for (unsigned int i = 0; i < components.length; i++){
+
+		delete components[i];
+		//ori_dealloc(components[i]);
+	}
 	components.~ArrayPtr();
-	//ori_dealloc(_transform);
+	_transform->~BaseTransform();
+	ori_dealloc(_transform);
+}
+void GameObject::onDestroy(){
+	
+
 }
 GameObject* GameObject::instantiate(int mode){
 	GameObject* res = ori_alloc(GameObject);
@@ -58,13 +69,4 @@ void GameObject::update(void){
 void GameObject::addComponent(MonoBehaviour* mono){
 	mono->gameObject = this;
 	components.push(mono);
-}
-void GameObject::onDestroy(){
-	for (unsigned int i = 0; i < components.length; i++){
-		
-		//delete components[i];
-		ori_dealloc(components[i]);
-	}
-	ori_dealloc(_transform);
-	
 }

@@ -3,7 +3,7 @@
 #include "BasicMem.h"
 ArrayInt::ArrayInt(int defaultSize){
 	arraySize = defaultSize;
-	arrayData = ori_alloc_array(int, arraySize);
+	arrayData = ori_alloc_array_r(int, arraySize, "array int");
 	length = 0;
 
 }
@@ -38,12 +38,12 @@ void ArrayInt::remove(int val){
 void ArrayInt::resize(){
 	int newSize = arraySize * 2;
 
-	int* newArray = new int[newSize];
+	int* newArray = ori_alloc_array_r(int, newSize, "array int re");
 
 	for (int i = 0; i < arraySize; ++i){
 		newArray[i] = arrayData[i];
 	}
-	delete arrayData;
+	ori_dealloc(arrayData);
 	arrayData = newArray;
 	arraySize = newSize;
 }

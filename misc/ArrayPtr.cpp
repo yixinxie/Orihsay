@@ -3,7 +3,7 @@
 #include "BasicMem.h"
 ArrayPtr::ArrayPtr(int defaultSize){
 	arraySize = defaultSize;
-	arrayData = ori_alloc_array(void*, arraySize);
+	arrayData = ori_alloc_array_r(void*, arraySize, "array ptr");
 	length = 0;
 
 }
@@ -38,7 +38,7 @@ void ArrayPtr::remove(const void* val){
 void ArrayPtr::resize(){
 	int newSize = arraySize * 2;
 
-	void** newArray = ori_alloc_array(void*, newSize);
+	void** newArray = ori_alloc_array_r(void*, newSize,"array int re");
 
 	for (int i = 0; i < arraySize; ++i){
 		newArray[i] = arrayData[i];

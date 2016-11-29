@@ -6,7 +6,7 @@ Transform::Transform(){
 	scale = Vector3(1, 1, 1);
 }
 Transform::~Transform(){
-
+	//BaseTransform::~BaseTransform();
 }
 void Transform::fromEuler(const Vector3 euler){
 	quaternion = glm::quat(glm::vec3(glm::radians(euler.x), glm::radians(euler.y), glm::radians(euler.z)));

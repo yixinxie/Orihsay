@@ -23,6 +23,19 @@ void* BasicMemory::alloc(int _size){
 	sizes.insert({ (int)ret, _size });
 	return (void*)ret;
 }
+void* BasicMemory::alloc_r(int _size, const char* _remarks){
+	unsigned char* ret = heapStart;
+	if (used == 0){
+		int sdf = 0;
+	}
+	ret += used;
+	used += _size;
+	sizes.insert({ (int)ret, _size });
+	char *dbg = new char[64];
+	strcpy_s(dbg, 64, _remarks);
+	remarks.insert({ (int)ret, dbg });
+	return (void*)ret;
+}
 void BasicMemory::dealloc(void* ptr){
 	int sdf = 0;
 	auto res = sizes.find((int)ptr);
@@ -37,9 +50,22 @@ void BasicMemory::dealloc(void* ptr){
 	}
 }
 void BasicMemory::report(void){
+	int leakedCount = 0;
 	for (auto it = sizes.begin(); it != sizes.end(); ++it){
-		printf("%d size %d\n", it->first, it->second);
+		printf("%d size %d", it->first, it->second);
+		if (it->second != 0){
+			leakedCount++;
+		}
+		auto found = remarks.find(it->first);
+		if (found != remarks.end()){
+			printf(" remark: %s\n",  remarks[it->first]);
+		}
+		else{
+			printf("\n");
+
+		}
 		
 	}
+	printf("leak count: %d\n", leakedCount);
 	
 }
